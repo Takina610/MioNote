@@ -1,0 +1,14 @@
+# 换行符交给 git 规范化：仓库里存 LF，检出时按平台走。
+# 这台机器的 core.autocrlf=true，但那是全局设置——写进仓库才能在别的机器上也有同样的行为。
+* text=auto
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary

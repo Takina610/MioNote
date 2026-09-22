@@ -72,7 +72,16 @@ if (plan.pending.length === 0 && plan.extra.length === 0) {
 }
 
 const result = applyContent(plan)
-const after = plan.presentKeys.size - result.deleted + result.written
+
+/*
+ * 快照里现在有多少文件 = 原有的 - 删掉的 + **新增的**。
+ *
+ * 注意不能直接用 result.written：它同时包含"新增"和"覆盖旧的"两类，
+ * 而后者本来就在 presentKeys 里，加进去会重复计数（我第一版就是这么写错的，
+ * 覆盖 3 个文件后它报"现在有 1608 个"，实际是 1605）。
+ */
+const added = plan.pending.filter((item) => item.reason === 'missing').length
+const after = plan.presentKeys.size - result.deleted + added
 
 console.log('')
 console.log(`  写入 ${result.written} 个（${humanBytes(result.bytes)}）· 删除 ${result.deleted} 个`)

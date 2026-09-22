@@ -49,18 +49,18 @@
   /*
    * 对称曲线：慢起慢收，跟上面那条正相反。
    *
-   * 用在"面板宽度"这种要看清始末的移动上——收起时把前 1/4 的时间让给内容的"下沉"，
-   * 宽度留到最后才关（理由写在 .app--collapsed 那段）。**新加的曲线必须在这里定义**：
+   * 用在面板的几何收拢上——收起时宽、高两条边同步地缩向开关所在的角/中点，
+   * 曲线必须一致才不会歪着缩（理由写在 .app--collapsed 那段）。**新加的曲线必须在这里定义**：
    * 用了不存在的 var() 时整条 transition 声明会失效（computed-value 阶段变成 unset），
    * 表现是"完全没有过渡"，很难看出是缺了个变量。
    */
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   /*
-   * 侧栏 / 右侧目录收起和展开的时长。比树里那 190ms 长：面板收起时不只是宽度在变，
-   * 里面的东西还要整个往下沉一段（见 --panel-sink），240ms 才看得清是在"沉下去"。
+   * 侧栏 / 右侧目录收起和展开的时长。面板的几何收拢（clip-path + 栅格轨道）共用它，
+   * 比树里那 190ms 长：收的是一整块面板，太快了看不清是"缩向一个点"。
    */
   --sidebar-dur: 240ms;
-  /* 面板收起时内容下沉的距离。两个面板用同一个值，动作才是一回事。 */
+  /* 搜索面板在没有原点可用时的默认起始下沉量（有原点时组件改算朝向搜索框的位移）。 */
   --panel-sink: 20vh;
   /* 上一篇/下一篇的换页时长。跨的是一整页内容，跟侧栏一个节奏。 */
   --page-dur: 220ms;
@@ -104,6 +104,19 @@ body,
 #root {
   height: 100%;
   margin: 0;
+}
+
+html {
+  /*
+   * 根元素禁止横向滚动条。整个应用是 100dvh 的固定栅格布局，横向滚动没有任何
+   * 合法来源；但目录开合这类布局动画的过渡帧里，文档宽度会瞬时多出十几像素
+   * （来源是内容层的重排时序，不是真实可读的内容），Windows 上根滚动条
+   * ——就是屏幕最底部那条带箭头的原生滚动条——会跟着闪一下。
+   * hidden/clip 双写：认识 clip 的用 clip（连编程滚动都不给），
+   * 不认识的退回 hidden（不画滚动条）。竖向不受影响。
+   */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -286,16 +299,17 @@ mark {
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   height: 100vh;
   height: 100dvh;
-  /* 展开：宽度先让出来（前段发力），侧栏里的内容跟着升回原位 */
+  /* 展开：宽度先让出来（前段发力），和 .sidebar 的 clip 用同一条曲线——
+     宽度和高度才是同步地"从左下角长回来" */
   transition: grid-template-columns var(--sidebar-dur) var(--expand-ease);
 }
 
 /*
- * 收起：宽度改用对称曲线（前段慢、后段也慢），把前 100ms 让给内容的"下沉"。
+ * 收起：宽度改用对称曲线，和 .sidebar 的 clip 同步 —— 宽度向左收、高度向下收
+ * 是同一个动作的两条边，曲线不同步的话可见矩形会歪着缩，不指向左下角那个开关。
  *
- * 这条不能省。宽度是"把面板藏起来"的那件事，用前段发力的曲线，面板 70ms 就只剩十几像素宽了
- * ——里面的东西再往下沉也没人看得见，用户看到的就是"闪没了"。换成对称曲线之后：
- * 前 1/4 宽度几乎没动（内容正往下沉，看得清清楚楚），最后才把已经空掉的面板关掉。
+ * 这条不能省。宽度若用前段发力的曲线，面板 70ms 就只剩十几像素宽，
+ * clip 那条高度收拢还没演几下，"缩向角落"就成了"闪没了"。
  */
 .app--collapsed {
   transition: grid-template-columns var(--sidebar-dur) var(--ease-in-out);
@@ -340,15 +354,10 @@ mark {
   scrollbar-width: none;
 
   /*
-   * 展开：内容从下面升回来。淡入要快（半个时长），不然会出现"已经到位了还在变淡"。
-   *
-   * 收起那侧的规则在下一条——两边各自声明自己的过渡，这是 CSS 过渡改方向的常规写法：
-   * 真正生效的是"目标状态"上那条。
+   * 收起/展开的动画不在这层：动的是整个面板的可见几何（.sidebar 的 clip-path，
+   * 桌面那一节）。这层要是再自己动（位移、缩放），可见区域的边界就对不上
+   * 裁切边了——两层动画叠起来没法看。
    */
-  transition:
-    transform var(--sidebar-dur) var(--expand-ease),
-    opacity calc(var(--sidebar-dur) * 0.5) linear,
-    visibility 0s linear var(--sidebar-dur);
 }
 
 .sidebar__inner::-webkit-scrollbar {
@@ -381,37 +390,45 @@ mark {
    * 收起时把内容的宽度冻住（列宽在动，内容不动）。
    *
    * 不冻的话文字会跟着列宽一路重排、换行，再被右侧裁掉——看起来是"挤扁"，不是"收"。
-   * 冻住之后只有那道裁切边在动，配合下面那点下沉，才是「整条侧栏往下收」。
+   * 冻住之后只有那道裁切边在动，配合 clip 的收拢，才是「整条侧栏缩向左下角」。
    */
   .sidebar__inner {
     min-width: var(--sidebar-width);
+  }
+
+  /*
+   * 展开/收起动画（跟换主题的圆形裁剪是一族）：动的是**可见区域的几何**，
+   * 不是位移、也不是透明度。开关钉在左下角，收起就是高度和宽度一齐缩向那个角落——
+   * 高度靠 clip-path 把上边界一路压到底边（内容原地不动、不重排，只是被抹掉），
+   * 宽度靠下面的栅格轨道收拢（见 .app--collapsed）。展开反过来：从左下角把
+   * 宽和高一齐长回来。
+   *
+   * 两条边必须用同一条曲线，可见矩形才是"等比地缩向角落"，不会一边快一边慢。
+   * visibility 仍由它管可聚焦性：clip 只管看不见，收起后树里的按钮还得摘出
+   * Tab 序（收起侧排在动画末尾，展开侧不带延迟立刻可见）。
+   */
+  .sidebar {
+    clip-path: inset(0 0 0 0);
+    transition:
+      clip-path var(--sidebar-dur) var(--expand-ease),
+      visibility 0s;
   }
 
   .app--collapsed {
     grid-template-columns: 0 minmax(0, 1fr);
   }
 
-  .app--collapsed .sidebar {
-    border-right-width: 0;
-  }
-
   /*
-   * 收回时：全部内容一起往下沉一段、沉出画面，同时淡出。
-   *
-   * 方向是"打开它的按钮在哪儿"决定的——开关就钉在左下角，所以整条侧栏是往下收进那个角落的，
-   * 展开时再从那下面升上来。下沉用前段发力的 --expand-ease（点下去立刻看见它在掉），
-   * 淡出用 linear 铺满全程：用同一条前段发力的曲线，内容头两帧就淡没了，又是"闪没"。
-   *
-   * visibility 仍然排在动画末尾（跟 .branch__inner 同一条规矩）：
-   * 属性一变就隐藏的话，内容根本来不及沉下去。
+   * 收起：高度（clip 上边界压到底）和宽度（栅格轨道收到 0）同时进行，
+   * 都用对称曲线 —— 慢起让"开始收"看得见，同步让可见矩形始终缩向左下角那一点，
+   * 开关就在那儿等着。border 收掉的理由同右侧目录（宽度归零后 1px 还留在屏幕左缘）。
    */
-  .app--collapsed .sidebar__inner {
-    opacity: 0;
-    transform: translateY(var(--panel-sink));
+  .app--collapsed .sidebar {
+    clip-path: inset(100% 0 0 0);
     visibility: hidden;
+    border-right-width: 0;
     transition:
-      transform var(--sidebar-dur) var(--expand-ease),
-      opacity var(--sidebar-dur) linear,
+      clip-path var(--sidebar-dur) var(--ease-in-out),
       visibility 0s linear var(--sidebar-dur);
   }
 }
@@ -425,6 +442,13 @@ mark {
 
 .reader {
   overflow-y: auto;
+  /*
+   * 正文这一层在横向永不滚动：宽表格、代码块都自带滚动容器（见 .markdown table、
+   * .code-block__body），轮不到整层出面。必须用 clip 而不是默认的 auto——
+   * overflow-y 一旦是 auto，overflow-x 就跟着算成 auto，哪篇笔记里有个
+   * 比正文宽的元素，底部就会闪出一条横向滚动条（目录开合改宽度的那一下尤其明显）。
+   */
+  overflow-x: clip;
   min-width: 0;
   overscroll-behavior: contain;
   scroll-behavior: smooth;
@@ -441,6 +465,17 @@ mark {
   border-left-width: 0;
   background: var(--surface);
   overscroll-behavior: contain;
+  /*
+   * 目录整列不画滚动条（跟 .sidebar__inner 同一待遇）：竖向靠滚轮/键盘照常滚，
+   * 横向那一条则彻底失去出现的机会——开合动画会反复把这层提升/降级成合成层，
+   * 顺带把滚动条画出来闪一下，用户看到的就是"展开时横向进度条闪现"。
+   */
+  scrollbar-width: none;
+}
+
+.toc-col::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .toc-col:has(> .toc) {
@@ -451,8 +486,12 @@ mark {
  * 目录的收起 / 展开（桌面端专有；窄屏它在正文上方是一条 34vh 的横条，收起是另一回事，
  * 见下面窄屏那一节）。
  *
- * 跟左侧栏一套动作：收起时里面的东西整个往下沉、淡出，宽度后段再关；展开反过来。
- * 两点是"它在右边"决定的：
+ * 跟左侧栏同一族几何收拢（都是 clip-path + 栅格轨道，跟换主题的圆形裁剪是一路的），
+ * 只有锚点不同：目录的开关在右缘中间，所以收起是**上下两条边同时向中间合拢**
+ * （clip 上下各压 50%），宽度同时向右收进屏幕右缘（栅格轨道，见 --toc-track）——
+ * 最后消失的一点正好是开关出现的地方。展开反过来，从那一点向上下长回来。
+ *
+ * 还有两点是"它在右边"决定的：
  *
  *   1. **内容钉在右边缘**。列变窄时它的左边缘往右走，内容要是跟着走，文字就会右移
  *      再被右边缘切掉——看起来是"划走"。所以改成靠右对齐的 flex 列：容器比内容窄时，
@@ -469,7 +508,7 @@ mark {
    */
   .view {
     grid-template-columns: minmax(0, 1fr) var(--toc-track, auto);
-    /* 展开：宽度先让出来（前段发力），目录内容跟着升回原位 */
+    /* 展开：宽度先让出来（前段发力），面板从右缘中间长出来 */
     transition: grid-template-columns var(--sidebar-dur) var(--expand-ease);
   }
 
@@ -482,19 +521,25 @@ mark {
     flex-direction: column;
     align-items: flex-end;
     /* 列要能缩到比内容窄：min-width: auto 会以内容的最小宽度（252px）顶住不缩。
-       这条 overflow 也让自动最小尺寸按规范变成 0（overflow-x 不再算 visible）。 */
+       overflow-x 必须是 clip：这层的横向滚动条没有任何存在意义（内容靠右对齐、
+       由裁切边收放），hidden 语义上仍是"可滚动、只是不画"，只有 clip 是连滚动
+       区域都不建，横向滚动条在这层不可能出现。clip 同样不算 visible，
+       自动最小尺寸照旧是 0。 */
     min-width: 0;
-    overflow-x: hidden;
-  }
+    overflow-x: clip;
 
-  .toc {
+    /*
+     * 几何收拢的可见区域：clip 曲线必须和轨道那条一致（展开 --expand-ease /
+     * 收起 --ease-in-out），上下合拢和左右收窄才是同步的一个动作。
+     * visibility 管可聚焦性（clip 只管看不见），时机规矩跟 .sidebar 一样。
+     */
+    clip-path: inset(0 0 0 0);
     transition:
-      transform var(--sidebar-dur) var(--expand-ease),
-      opacity calc(var(--sidebar-dur) * 0.5) linear,
-      visibility 0s linear var(--sidebar-dur);
+      clip-path var(--sidebar-dur) var(--expand-ease),
+      visibility 0s;
   }
 
-  /* 收起：内容先沉下去（看得见），宽度用对称曲线在后面慢慢关（理由同 .app--collapsed） */
+  /* 收起：上下向中间合拢（clip）、宽度向右缘收窄（轨道），同一条对称曲线 */
   .app--toc-collapsed .view:has(> .toc-col > .toc) {
     --toc-track: 0px;
     transition: grid-template-columns var(--sidebar-dur) var(--ease-in-out);
@@ -502,15 +547,10 @@ mark {
 
   .app--toc-collapsed .toc-col:has(> .toc) {
     border-left-width: 0;
-  }
-
-  .app--toc-collapsed .toc {
-    opacity: 0;
-    transform: translateY(var(--panel-sink));
+    clip-path: inset(50% 0 50% 0);
     visibility: hidden;
     transition:
-      transform var(--sidebar-dur) var(--expand-ease),
-      opacity var(--sidebar-dur) linear,
+      clip-path var(--sidebar-dur) var(--ease-in-out),
       visibility 0s linear var(--sidebar-dur);
   }
 }
@@ -577,13 +617,13 @@ mark {
 /* ---------- 自定义滚动条 ---------- */
 
 /*
- * 会滚动的那几个区域共用同一套样式：正文、目录、搜索面板、搜索命中列表、
- * 代码块（横向）、markdown 里的宽表格和 pre。列表写在这里是唯一的真相来源——
+ * 会滚动的那几个区域共用同一套样式：正文、搜索面板、搜索命中列表、
+ * 代码块（横向）、源码文件、markdown 里的宽表格和 pre。目录列不在此列——
+ * 它的滚动条整个不画（见 .toc-col 那条）。列表写在这里是唯一的真相来源——
  * 加一个新的滚动区域时记得把它加进来。
  */
 :is(
   .reader,
-  .toc-col,
   .palette__body,
   .hits,
   .code-block__body,
@@ -599,7 +639,6 @@ mark {
 /* Chromium / WebKit */
 :is(
   .reader,
-  .toc-col,
   .palette__body,
   .hits,
   .code-block__body,
@@ -613,7 +652,6 @@ mark {
 
 :is(
   .reader,
-  .toc-col,
   .palette__body,
   .hits,
   .code-block__body,
@@ -626,7 +664,6 @@ mark {
 
 :is(
   .reader,
-  .toc-col,
   .palette__body,
   .hits,
   .code-block__body,
@@ -643,7 +680,6 @@ mark {
 
 :is(
   .reader,
-  .toc-col,
   .palette__body,
   .hits,
   .code-block__body,
@@ -655,7 +691,7 @@ mark {
   background-clip: padding-box;
 }
 
-:is(.reader, .toc-col, .palette__body)::-webkit-scrollbar-corner {
+:is(.reader, .palette__body)::-webkit-scrollbar-corner {
   background: transparent;
 }
 
@@ -1569,15 +1605,18 @@ html[data-theme='dark']::view-transition-new(root) {
   overflow: hidden;
 
   /*
-   * 从"打开它的那个地方"展开：原点由组件按点击位置算好（见 SearchPalette），
-   * 夹在面板自己的范围内。收起时组件不再改它，于是原路缩回去。缩放幅度只有 4%
-   * ——面板有 700px 宽，再大就不是"长出来"而是"放大"了。
-   *
-   * 位移方向跟侧栏是一回事（往下收、往上开），只是幅度小得多：面板本来就贴在
-   * 触发它的那个输入框下面，起点再低一点就够了，抬到侧栏那个高度会像从屏幕外飞进来。
+   * 从「打开它的那个搜索框」长出来：原点和位移都由组件按触发位置算好
+   * （见 SearchPalette），原点夹在面板自己的范围内。位移是面板朝原点那侧
+   * 偏过去的一小步——起点真的落在搜索框的方向上，收起时原路缩回那里，
+   * 而不是永远从下方浮上来。缩放幅度只有 4%：面板有 700px 宽，
+   * 再大就不是"长出来"而是"放大"了。
    */
   transform-origin: var(--palette-origin, 50% 0%);
-  transform: translateY(calc(var(--panel-sink) * 0.25)) scale(0.96);
+  transform: translate(
+      var(--palette-shift-x, 0px),
+      var(--palette-shift-y, calc(var(--panel-sink) * 0.25))
+    )
+    scale(0.96);
   transition: transform var(--expand-dur) var(--expand-ease);
 }
 
@@ -1733,7 +1772,9 @@ html[data-theme='dark']::view-transition-new(root) {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  background: #fff;
+  /* 不用 #fff：暗色主题下 iframe 载入前的这一大块白就是「打开后闪一下」的来源，
+     先给个中性的表面色，等内容真正载入完再淡入（见 .frame__inner--ready）。 */
+  background: var(--surface);
 }
 
 .frame__inner {
@@ -1741,6 +1782,13 @@ html[data-theme='dark']::view-transition-new(root) {
   width: 100%;
   height: min(74vh, 900px);
   border: 0;
+  /* 载入完成前不露出来：白底一闪就是从这里来的 */
+  opacity: 0;
+}
+
+.frame__inner--ready {
+  opacity: 1;
+  transition: opacity 160ms ease;
 }
 
 .source {
@@ -2183,5 +2231,9 @@ html[data-nav='prev']::view-transition-new(doc) {
 
   .reader {
     scroll-behavior: auto;
+  }
+
+  .frame__inner--ready {
+    transition: none;
   }
 }

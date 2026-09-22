@@ -18,14 +18,11 @@ export interface ResourceState<T> {
  * 内容缓存。
  *
  * 笔记是只读的，所以缓存可以很激进：命中就直接用，不重新请求。
- * 唯一的失效入口是文件监听推来的 vault:changed（见 App），
- * 那条路径会把整块缓存清掉——「数据旧了」可以接受，「数据错了」不行。
+ * 内容按当前策略是快照——dev server 启动时扫一次，运行期间不会变，
+ * 所以这个缓存在整个页面生命周期里都有效，没有失效入口。
+ * 改了笔记要重启 dev server（顺带刷新页面）才能看到。
  */
 const cache = new Map<string, unknown>()
-
-export function invalidateContentCache(): void {
-  cache.clear()
-}
 
 function readCache<T>(key: string): T | undefined {
   return cache.get(key) as T | undefined
@@ -89,13 +86,8 @@ function useResource<T>(key: string | null, load: () => Promise<T>): ResourceSta
   return state
 }
 
-/**
- * refreshToken 由「笔记改动」递增（文件监听推来的 vault:changed）。
- * 它换一个缓存 key，从而绕过本地缓存重新请求——这样就不用在渲染期清缓存，
- * 渲染期做副作用会在并发渲染下出错。
- */
-export function useVaultIndex(refreshToken = 0): ResourceState<VaultIndex> {
-  return useResource<VaultIndex>(`vault-index#${refreshToken}`, () => contentSource.getIndex())
+export function useVaultIndex(): ResourceState<VaultIndex> {
+  return useResource<VaultIndex>('vault-index', () => contentSource.getIndex())
 }
 
 export function useNote(sectionId: string, path: string): ResourceState<NotePayload> {
@@ -104,20 +96,27 @@ export function useNote(sectionId: string, path: string): ResourceState<NotePayl
 }
 
 /**
- * 预取一篇笔记进缓存。
+ * 预取一篇内容进缓存。
  *
  * 「下一篇」按下去的那一刻就得有内容：页面过渡会当场拍一张新快照，
  * 慢一步的话拍到的是"正在读取笔记…"，动画就从"翻页"变成了"翻到一张加载页"。
- * 失败不报错——真点过去时 useNote 会再请求一次，把错误正常显示出来。
+ * 侧栏的悬停预取也走这里：没预取的文件第一次打开都要先渲染一帧加载占位，
+ * 内容到了再整个换掉——用户看到的就是"闪一下、滚回顶部"。
+ * 失败不报错——真点过去时对应的 use* 会再请求一次，把错误正常显示出来。
  */
 const pending = new Set<string>()
 
-export function preloadNote(sectionId: string, path: string): void {
-  const key = `note:${sectionId}\u0000${path}`
+function preload(kind: 'note' | 'demo' | 'file', sectionId: string, path: string): void {
+  const key = `${kind}:${sectionId}\u0000${path}`
   if (cache.has(key) || pending.has(key)) return
   pending.add(key)
-  void contentSource
-    .getNote(sectionId, path)
+  const request =
+    kind === 'note'
+      ? contentSource.getNote(sectionId, path)
+      : kind === 'demo'
+        ? contentSource.getDemo(sectionId, path)
+        : contentSource.getFile(sectionId, path)
+  void request
     .then((data) => {
       writeCache(key, data)
     })
@@ -127,6 +126,18 @@ export function preloadNote(sectionId: string, path: string): void {
     .finally(() => {
       pending.delete(key)
     })
+}
+
+export function preloadNote(sectionId: string, path: string): void {
+  preload('note', sectionId, path)
+}
+
+export function preloadDemo(sectionId: string, path: string): void {
+  preload('demo', sectionId, path)
+}
+
+export function preloadFile(sectionId: string, path: string): void {
+  preload('file', sectionId, path)
 }
 
 export function useDemo(sectionId: string, path: string): ResourceState<DemoPayload> {

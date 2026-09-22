@@ -16,7 +16,10 @@ const ASSET_PREFIX = '/@vault/'
  * 各自实现同一套约定，界面代码一行都不用改。
  *
  * 这个插件只做「读」：没有上传、没有发布状态、也没有手动重扫的入口。
- * 笔记改动靠文件监听自动发现，监听失灵时重启 dev server 即可。
+ * 内容按当前策略是**快照**：dev server 启动时扫一次，之后一直用这份；
+ * 改了笔记重启 dev server 就能看到。不做文件监听、不做运行中重建——
+ * 外部程序（云同步、索引器）碰一下笔记文件夹就会触发重建，把前端的
+ * 内容缓存反复清空，"首次打开闪一下"这类问题全是它带出来的。
  */
 export function vaultPlugin(config: VaultConfig): Plugin {
   const store = new VaultStore(config)
@@ -27,7 +30,6 @@ export function vaultPlugin(config: VaultConfig): Plugin {
 
     configureServer(server) {
       server.middlewares.use(createHandler(server, store))
-      attachWatchers(server, store, config)
 
       const report = () => printReport(server, store)
       if (server.httpServer) server.httpServer.once('listening', report)
@@ -140,76 +142,6 @@ function sendError(res: ServerResponse, status: number, message: string): void {
   res.statusCode = status
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
   res.end(JSON.stringify({ error: message }))
-}
-
-function escapeRegExp(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-/**
- * 监听笔记文件夹，改动后让前端重新取数据。
- *
- * 没有"手动重新扫描"的入口（那个按钮去掉了）：递归监听在个别环境下会失灵，
- * 但那种情况下重启 dev server 就够了，不值得为它在界面上常驻一个按钮。
- */
-function attachWatchers(server: ViteDevServer, store: VaultStore, config: VaultConfig): void {
-  const ignoreRe =
-    config.ignoreDirs.length > 0
-      ? new RegExp(`(^|[\\\\/])(${config.ignoreDirs.map(escapeRegExp).join('|')})([\\\\/]|$)`)
-      : null
-
-  let timer: NodeJS.Timeout | null = null
-  const pending = new Set<string>()
-  // fs.watch 递归监听起来时会先报一批已存在的文件，那不是真的改动。
-  // 不设宽限期的话每次启动都会白重建一次索引，日志里还会出现假的「笔记已更新」。
-  const startedAt = Date.now()
-  const GRACE_MS = 2500
-
-  const flush = () => {
-    timer = null
-    const files = [...pending]
-    pending.clear()
-    store.invalidate()
-    store.getIndex() // 立即重建，这样前端拿到的是新数据而不是等下一次请求
-    const hot = server.hot ?? server.ws
-    hot.send({ type: 'custom', event: 'vault:changed', data: { at: Date.now(), files } })
-    const shown = files.slice(0, 3).join('、')
-    server.config.logger.info(
-      `[mionote] 笔记已更新：${shown}${files.length > 3 ? ` 等 ${files.length} 个文件` : ''}`,
-    )
-  }
-
-  const watchers: fs.FSWatcher[] = []
-
-  for (const section of config.sections) {
-    if (!fs.existsSync(section.root)) continue
-    try {
-      const watcher = fs.watch(section.root, { recursive: true }, (_event, filename) => {
-        if (Date.now() - startedAt < GRACE_MS) return
-        const name = typeof filename === 'string' ? filename : ''
-        if (name && ignoreRe?.test(name)) return
-        if (name) pending.add(name)
-        if (timer) clearTimeout(timer)
-        timer = setTimeout(flush, 400)
-      })
-      watcher.on('error', (error) => {
-        server.config.logger.warn(`[mionote] 监听 ${section.name} 出错：${String(error)}`)
-      })
-      watchers.push(watcher)
-    } catch (error) {
-      server.config.logger.warn(
-        `[mionote] 无法监听 ${section.name}（${section.root}）：${String(error)}。` +
-          '改动不会自动刷新，用侧栏底部的「重新扫描」。',
-      )
-    }
-  }
-
-  const close = () => {
-    if (timer) clearTimeout(timer)
-    for (const w of watchers) w.close()
-  }
-  server.httpServer?.once('close', close)
-  server.ws.on('close', close)
 }
 
 const PUBLISH_LABEL: Record<PublishLevel, string> = {

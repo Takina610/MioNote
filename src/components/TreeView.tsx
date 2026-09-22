@@ -10,6 +10,8 @@ interface TreeViewProps {
   onToggle: (id: string) => void
   activeId: string | null
   onOpen: (node: VaultNode) => void
+  /** 悬停叶子时预取内容，点下去才能第一帧就是正文（见 App 的 prefetchNode） */
+  onPrefetch: (node: VaultNode) => void
 }
 
 /** 笔记去掉 .md 后缀，读起来更像标题；demo 保留后缀，因为 index.html 去掉后缀就认不出来了 */
@@ -22,7 +24,7 @@ interface FolderNodeProps extends Omit<TreeViewProps, 'nodes'> {
   depth: number
 }
 
-function FolderNode({ node, depth, expanded, onToggle, activeId, onOpen }: FolderNodeProps) {
+function FolderNode({ node, depth, expanded, onToggle, activeId, onOpen, onPrefetch }: FolderNodeProps) {
   const open = expanded[node.id] ?? false
 
   /**
@@ -76,6 +78,7 @@ function FolderNode({ node, depth, expanded, onToggle, activeId, onOpen }: Folde
               onToggle={onToggle}
               activeId={activeId}
               onOpen={onOpen}
+              onPrefetch={onPrefetch}
             />
           ) : null}
         </div>
@@ -91,6 +94,7 @@ export function TreeView({
   onToggle,
   activeId,
   onOpen,
+  onPrefetch,
 }: TreeViewProps) {
   return (
     <ul className="tree">
@@ -105,6 +109,7 @@ export function TreeView({
               onToggle={onToggle}
               activeId={activeId}
               onOpen={onOpen}
+              onPrefetch={onPrefetch}
             />
           )
         }
@@ -117,6 +122,7 @@ export function TreeView({
               className={active ? 'tree__row tree__row--active' : 'tree__row'}
               style={{ paddingLeft: 8 + depth * 13 }}
               title={node.path}
+              onMouseEnter={() => onPrefetch(node)}
               onClick={() => onOpen(node)}
             >
               <span className="chev chev--spacer" />

@@ -60,10 +60,12 @@ export function SearchPalette({ open, origin, onClose, sections, onOpenHit }: Se
   }, [open])
 
   /*
-   * 展开的原点：面板从「打开它的那个地方」长出来，跟换主题的圆形扩散是同一个思路
+   * 展开的原点与起点：面板从「打开它的那个搜索框」长出来，跟换主题的圆形扩散是同一个思路
    * （圆心取鼠标）。区别是这个点要夹进面板自己的范围里——原点落在面板外面几百像素时，
    * 面板是斜着从远处飘进来的，那就不像"从搜索框里长出来"了。
-   * 收起时不再动它：缩回同一个地方。
+   * 除了原点，再算一个朝原点方向的起始位移（--palette-shift-*）：收起时面板缩回
+   * 搜索框那一侧，而不是永远往正下方沉。幅度压在几十像素，要的是方向感。
+   * 收起时组件不再动它们：原路缩回去。
    */
   useLayoutEffect(() => {
     if (!open) return
@@ -73,6 +75,8 @@ export function SearchPalette({ open, origin, onClose, sections, onOpenHit }: Se
     const x = origin ? clamp(origin.x - rect.left, 0, rect.width) : rect.width / 2
     const y = origin ? clamp(origin.y - rect.top, 0, rect.height) : 0
     el.style.setProperty('--palette-origin', `${Math.round(x)}px ${Math.round(y)}px`)
+    el.style.setProperty('--palette-shift-x', `${clamp(Math.round((x - rect.width / 2) * 0.12), -44, 44)}px`)
+    el.style.setProperty('--palette-shift-y', `${clamp(Math.round((y - rect.height / 2) * 0.12), -44, 44)}px`)
   }, [open, origin])
 
   useEffect(() => {

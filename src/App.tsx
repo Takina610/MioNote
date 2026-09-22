@@ -8,7 +8,7 @@ import { Icon } from './components/Icon'
 import { NoteView } from './components/NoteView'
 import { SearchPalette } from './components/SearchPalette'
 import { Sidebar } from './components/Sidebar'
-import { invalidateContentCache, useVaultIndex } from './hooks/useContent'
+import { preloadDemo, preloadFile, preloadNote, useVaultIndex } from './hooks/useContent'
 import { usePersistentState } from './hooks/usePersistentState'
 import { useReadingState, type RecentEntry } from './hooks/useReadingState'
 import { useRoute } from './hooks/useRoute'
@@ -26,8 +26,7 @@ const clampWidth = (value: number) => Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN
 
 export function App() {
   const route = useRoute()
-  const [refreshToken, setRefreshToken] = useState(0)
-  const { data: index, error, loading } = useVaultIndex(refreshToken)
+  const { data: index, error, loading } = useVaultIndex()
   const [expanded, setExpanded] = usePersistentState<Record<string, boolean>>('mionote:tree', {})
   const [searchOpen, setSearchOpen] = useState(false)
   /** 打开搜索的那一次点击（视口坐标）——搜索面板从这儿长出来 */
@@ -75,10 +74,21 @@ export function App() {
 
   /**
    * 打开搜索。传事件是为了知道面板该从哪儿长出来（同主题切换：圆心取鼠标）；
-   * 键盘打开时没有坐标，面板从自己的上边中间展开。
+   * 键盘打开没有坐标，就取侧栏那个搜索框的中心——起点始终是"搜索框"，
+   * 跟用什么方式触发无关。搜索框不在眼前（窄屏抽屉收着）时才退回默认起点。
    */
   const openSearch = (event?: { clientX: number; clientY: number }) => {
-    setSearchOrigin(event ? { x: event.clientX, y: event.clientY } : null)
+    if (event) {
+      setSearchOrigin({ x: event.clientX, y: event.clientY })
+      setSearchOpen(true)
+      return
+    }
+    const rect = document.querySelector('.search-trigger')?.getBoundingClientRect()
+    setSearchOrigin(
+      rect && rect.right > 0 && rect.bottom > 0 && rect.left < window.innerWidth
+        ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+        : null,
+    )
     setSearchOpen(true)
   }
 
@@ -145,20 +155,6 @@ export function App() {
     }
   }, [index])
 
-  // 文件监听说笔记变了：清掉内容缓存并重新拉索引
-  useEffect(() => {
-    const hot = import.meta.hot
-    if (!hot) return
-    const onVaultChanged = () => {
-      invalidateContentCache()
-      setRefreshToken((token) => token + 1)
-    }
-    hot.on('vault:changed', onVaultChanged)
-    return () => {
-      hot.off('vault:changed', onVaultChanged)
-    }
-  }, [])
-
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase()
@@ -201,6 +197,21 @@ export function App() {
   }
 
   const toggleToc = () => setTocCollapsed((value) => !value)
+
+  /*
+   * 悬停即预取。内容缓存命中时 use* 的初始 state 就带着数据，点下去第一帧就是
+   * 完整内容；没有这一步，没打开过的文件都要先闪一下加载占位、再整个换成正文。
+   * 预取失败无所谓，真点过去时会正常请求并把错误显示出来。
+   */
+  const prefetchEntry = (kind: 'note' | 'demo' | 'code', sectionId: string, path: string) => {
+    if (kind === 'note') preloadNote(sectionId, path)
+    else if (kind === 'demo') preloadDemo(sectionId, path)
+    else preloadFile(sectionId, path)
+  }
+
+  const prefetchNode = (sectionId: string, node: VaultNode) => {
+    if (node.kind !== 'folder') prefetchEntry(node.kind, sectionId, node.path)
+  }
 
   const activeSection = useMemo(() => {
     if (route.kind === 'home' || !index) return null
@@ -253,6 +264,8 @@ export function App() {
           onOpenRecent={openRecent}
           onOpenSearch={openSearch}
           onCollapse={toggleSidebar}
+          onPrefetchNode={prefetchNode}
+          onPrefetchRecent={(entry) => prefetchEntry(entry.kind, entry.sectionId, entry.path)}
         />
         {/*
           拖拽改宽的手柄。放在 <aside> 里而不是网格里单独占一列——后者会在侧栏旁边

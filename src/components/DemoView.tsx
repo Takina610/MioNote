@@ -6,6 +6,29 @@ import { CodeView, langFromExt } from './CodeView'
 import { CopyButton } from './CopyButton'
 import { Icon } from './Icon'
 
+/**
+ * iframe 本体，带「载入完成才淡入」。
+ *
+ * iframe 一挂上就开始解析自己的文档，画出来之前是一块白（暗色主题下尤其扎眼，
+ * 用户描述为"打开 html 页面后会突然闪一下"）。所以先藏着，onLoad 到了再淡入；
+ * 重新加载按钮换 frameKey 重挂，这个状态跟着组件一起重置。
+ */
+function DemoFrame({ url, title }: { url: string; title: string }) {
+  const [ready, setReady] = useState(false)
+  return (
+    <iframe
+      className={ready ? 'frame__inner frame__inner--ready' : 'frame__inner'}
+      src={url}
+      title={title}
+      loading="lazy"
+      onLoad={() => setReady(true)}
+      // allow-same-origin 是必需的：不带上它 iframe 会变成不透明源，
+      // 那些用 XHR 取数据的 demo 会被跨域策略直接拒掉。
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads"
+    />
+  )
+}
+
 interface DemoViewProps {
   sectionId: string
   path: string
@@ -178,16 +201,7 @@ export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntr
           <div className="doc__body doc__body--demo">
             {tab === 'preview' && demo.url !== null ? (
               <div className="frame">
-                <iframe
-                  key={frameKey}
-                  className="frame__inner"
-                  src={demo.url}
-                  title={demo.title}
-                  loading="lazy"
-                  // allow-same-origin 是必需的：不带上它 iframe 会变成不透明源，
-                  // 那些用 XHR 取数据的 demo 会被跨域策略直接拒掉。
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads"
-                />
+                <DemoFrame key={frameKey} url={demo.url} title={demo.title} />
               </div>
             ) : (
               <>

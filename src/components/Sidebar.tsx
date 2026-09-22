@@ -21,6 +21,9 @@ interface SidebarProps {
   onOpenSearch: (event: { clientX: number; clientY: number }) => void
   /** 收起侧栏（桌面）／关闭抽屉（窄屏）——两种情况都是同一个动作 */
   onCollapse: () => void
+  /** 悬停即预取：行还没点，内容先去缓存排队，点下去才不会闪加载占位 */
+  onPrefetchNode: (sectionId: string, node: VaultNode) => void
+  onPrefetchRecent: (entry: RecentEntry) => void
 }
 
 function PublishBadge({ level }: { level: PublishLevel }) {
@@ -65,6 +68,8 @@ export function Sidebar({
   onOpenRecent,
   onOpenSearch,
   onCollapse,
+  onPrefetchNode,
+  onPrefetchRecent,
 }: SidebarProps) {
   const activeSectionId = activeId?.split(':')[0] ?? null
 
@@ -94,7 +99,12 @@ export function Sidebar({
           <ul className="recent__list">
             {recent.slice(0, 5).map((entry) => (
               <li key={entry.id}>
-                <button type="button" className="recent__item" onClick={() => onOpenRecent(entry)}>
+                <button
+                  type="button"
+                  className="recent__item"
+                  onMouseEnter={() => onPrefetchRecent(entry)}
+                  onClick={() => onOpenRecent(entry)}
+                >
                   <span className="recent__title">{entry.title}</span>
                   <span className="recent__time">{formatRelative(entry.at)}</span>
                 </button>
@@ -141,6 +151,7 @@ export function Sidebar({
                       onToggle={onToggleTree}
                       activeId={activeId}
                       onOpen={(node) => onOpenNode(section.id, node)}
+                      onPrefetch={(node) => onPrefetchNode(section.id, node)}
                     />
                   ) : (
                     <p className="section__empty">{section.available ? '没有笔记' : '目录不存在'}</p>

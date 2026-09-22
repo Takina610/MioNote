@@ -103,6 +103,32 @@ export function useNote(sectionId: string, path: string): ResourceState<NotePayl
   return useResource<NotePayload>(key, () => contentSource.getNote(sectionId, path))
 }
 
+/**
+ * 预取一篇笔记进缓存。
+ *
+ * 「下一篇」按下去的那一刻就得有内容：页面过渡会当场拍一张新快照，
+ * 慢一步的话拍到的是"正在读取笔记…"，动画就从"翻页"变成了"翻到一张加载页"。
+ * 失败不报错——真点过去时 useNote 会再请求一次，把错误正常显示出来。
+ */
+const pending = new Set<string>()
+
+export function preloadNote(sectionId: string, path: string): void {
+  const key = `note:${sectionId}\u0000${path}`
+  if (cache.has(key) || pending.has(key)) return
+  pending.add(key)
+  void contentSource
+    .getNote(sectionId, path)
+    .then((data) => {
+      writeCache(key, data)
+    })
+    .catch(() => {
+      // 预取是抢时间，不是必需路径，失败就等下一个人来请求
+    })
+    .finally(() => {
+      pending.delete(key)
+    })
+}
+
 export function useDemo(sectionId: string, path: string): ResourceState<DemoPayload> {
   const key = sectionId && path ? `demo:${sectionId}\u0000${path}` : null
   return useResource<DemoPayload>(key, () => contentSource.getDemo(sectionId, path))
@@ -117,9 +143,20 @@ export function useFile(
   return useResource<FilePayload>(key, () => contentSource.getFile(sectionId, path))
 }
 
-/** 搜索索引有 200 KB 出头，没必要在打开页面时就拉——等第一次按 Ctrl+K 再取 */
+/**
+ * 搜索索引有 200 KB 出头，没必要在打开页面时就拉——等第一次按 Ctrl+K 再取。
+ *
+ * 关闭时**留着上一次的索引**：面板是带收起动画的，收起的那 190ms 里它还得是
+ * 「刚才那个样子」。数据跟着 key 一起被清掉的话，列表会先闪成一条空提示再缩走。
+ */
 export function useSearchIndex(enabled: boolean): ResourceState<SearchIndexPayload> {
-  return useResource<SearchIndexPayload>(enabled ? 'search-index' : null, () =>
+  const state = useResource<SearchIndexPayload>(enabled ? 'search-index' : null, () =>
     contentSource.getSearchIndex(),
   )
+
+  const lastData = useRef<SearchIndexPayload | null>(null)
+  if (state.data) lastData.current = state.data
+
+  const kept = lastData.current
+  return state.data || !kept ? state : { data: kept, error: null, loading: false }
 }

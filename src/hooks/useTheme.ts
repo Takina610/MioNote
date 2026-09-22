@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
+import { isPageTransitionRunning } from '../lib/routeTransition'
 import { usePersistentState } from './usePersistentState'
 
 export type ThemeChoice = 'light' | 'dark' | 'system'
@@ -74,9 +75,15 @@ export function useTheme(): ThemeState {
     (event?: { clientX: number; clientY: number }) => {
       const next: ResolvedTheme = resolved === 'dark' ? 'light' : 'dark'
       const startTransition = document.startViewTransition?.bind(document)
+      /*
+       * 页面过渡正在跑（上一篇/下一篇那 220ms）时不叠动画。
+       * 一次只能有一个 View Transition：后起的那个会把它跳掉，而且这时候正文列
+       * 带着 view-transition-name，圆形扩散会缺掉文章那一块。这次点击直接换色。
+       */
       const animated =
         !!startTransition &&
         !!event &&
+        !isPageTransitionRunning() &&
         !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
       if (!animated) {

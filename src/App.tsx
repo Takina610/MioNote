@@ -30,6 +30,8 @@ export function App() {
   const { data: index, error, loading } = useVaultIndex(refreshToken)
   const [expanded, setExpanded] = usePersistentState<Record<string, boolean>>('mionote:tree', {})
   const [searchOpen, setSearchOpen] = useState(false)
+  /** 打开搜索的那一次点击（视口坐标）——搜索面板从这儿长出来 */
+  const [searchOrigin, setSearchOrigin] = useState<{ x: number; y: number } | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [highlighter, setHighlighter] = useState<Highlighter | null>(null)
   const theme = useTheme()
@@ -47,6 +49,11 @@ export function App() {
    */
   const [collapsed, setCollapsed] = usePersistentState('mionote:sidebar-collapsed', false)
   const [sidebarWidth, setSidebarWidth] = usePersistentState('mionote:sidebar-width', SIDEBAR_DEFAULT)
+  /**
+   * 右侧目录（笔记页才有）收起的状态。桌面端专有，窄屏那份目录是正文上方的横条，
+   * 不参与收放（CSS 里那套规则写在 min-width: 901px 里）。
+   */
+  const [tocCollapsed, setTocCollapsed] = usePersistentState('mionote:toc-collapsed', false)
   const [resizing, setResizing] = useState(false)
   const dragRef = useRef<{ startX: number; startWidth: number } | null>(null)
 
@@ -64,6 +71,15 @@ export function App() {
   const openSidebar = () => {
     if (isNarrow()) setSidebarOpen(true)
     else setCollapsed(false)
+  }
+
+  /**
+   * 打开搜索。传事件是为了知道面板该从哪儿长出来（同主题切换：圆心取鼠标）；
+   * 键盘打开时没有坐标，面板从自己的上边中间展开。
+   */
+  const openSearch = (event?: { clientX: number; clientY: number }) => {
+    setSearchOrigin(event ? { x: event.clientX, y: event.clientY } : null)
+    setSearchOpen(true)
   }
 
   const onResizeStart = (event: PointerEvent<HTMLDivElement>) => {
@@ -149,7 +165,8 @@ export function App() {
       // Ctrl+K 搜索，Ctrl+B 收起/展开侧栏（跟 VS Code 一致的键位）
       if ((event.ctrlKey || event.metaKey) && key === 'k') {
         event.preventDefault()
-        setSearchOpen((open) => !open)
+        if (searchOpen) setSearchOpen(false)
+        else openSearch()
         return
       }
       if ((event.ctrlKey || event.metaKey) && key === 'b') {
@@ -183,6 +200,8 @@ export function App() {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }))
   }
 
+  const toggleToc = () => setTocCollapsed((value) => !value)
+
   const activeSection = useMemo(() => {
     if (route.kind === 'home' || !index) return null
     return index.sections.find((section) => section.id === route.sectionId) ?? null
@@ -211,6 +230,7 @@ export function App() {
     'app',
     sidebarOpen ? 'app--nav-open' : '',
     collapsed ? 'app--collapsed' : '',
+    tocCollapsed ? 'app--toc-collapsed' : '',
     resizing ? 'app--resizing' : '',
   ]
     .filter(Boolean)
@@ -231,7 +251,7 @@ export function App() {
           onToggleTree={toggleTree}
           onOpenNode={openNode}
           onOpenRecent={openRecent}
-          onOpenSearch={() => setSearchOpen(true)}
+          onOpenSearch={openSearch}
           onCollapse={toggleSidebar}
         />
         {/*
@@ -258,7 +278,7 @@ export function App() {
             recent={reading.recent}
             onOpenSection={openNode}
             onOpenRecent={openRecent}
-            onOpenSearch={() => setSearchOpen(true)}
+            onOpenSearch={openSearch}
           />
         ) : !activeSection ? (
           <>
@@ -284,6 +304,7 @@ export function App() {
             onOpenEntry={reading.pushRecent}
             getProgress={reading.getProgress}
             saveProgress={reading.saveProgress}
+            onToggleToc={toggleToc}
           />
         ) : route.kind === 'code' ? (
           <CodeFileView
@@ -320,6 +341,7 @@ export function App() {
 
       <SearchPalette
         open={searchOpen}
+        origin={searchOrigin}
         onClose={() => setSearchOpen(false)}
         sections={index.sections}
         onOpenHit={openHit}

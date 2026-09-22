@@ -46,8 +46,24 @@
   /* 展开/收起动画。所有折叠交互共用这两个值，改一处全局一致。 */
   --expand-dur: 190ms;
   --expand-ease: cubic-bezier(0.32, 0.72, 0, 1);
-  /* 侧栏收起/展开的过渡时长 */
-  --sidebar-dur: 180ms;
+  /*
+   * 对称曲线：慢起慢收，跟上面那条正相反。
+   *
+   * 用在"面板宽度"这种要看清始末的移动上——收起时把前 1/4 的时间让给内容的"下沉"，
+   * 宽度留到最后才关（理由写在 .app--collapsed 那段）。**新加的曲线必须在这里定义**：
+   * 用了不存在的 var() 时整条 transition 声明会失效（computed-value 阶段变成 unset），
+   * 表现是"完全没有过渡"，很难看出是缺了个变量。
+   */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  /*
+   * 侧栏 / 右侧目录收起和展开的时长。比树里那 190ms 长：面板收起时不只是宽度在变，
+   * 里面的东西还要整个往下沉一段（见 --panel-sink），240ms 才看得清是在"沉下去"。
+   */
+  --sidebar-dur: 240ms;
+  /* 面板收起时内容下沉的距离。两个面板用同一个值，动作才是一回事。 */
+  --panel-sink: 20vh;
+  /* 上一篇/下一篇的换页时长。跨的是一整页内容，跟侧栏一个节奏。 */
+  --page-dur: 220ms;
 
   --shadow-lg: 0 18px 48px rgb(15 23 42 / 18%);
   --shadow-sm: 0 1px 2px rgb(15 23 42 / 6%);
@@ -270,12 +286,25 @@ mark {
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   height: 100vh;
   height: 100dvh;
+  /* 展开：宽度先让出来（前段发力），侧栏里的内容跟着升回原位 */
   transition: grid-template-columns var(--sidebar-dur) var(--expand-ease);
+}
+
+/*
+ * 收起：宽度改用对称曲线（前段慢、后段也慢），把前 100ms 让给内容的"下沉"。
+ *
+ * 这条不能省。宽度是"把面板藏起来"的那件事，用前段发力的曲线，面板 70ms 就只剩十几像素宽了
+ * ——里面的东西再往下沉也没人看得见，用户看到的就是"闪没了"。换成对称曲线之后：
+ * 前 1/4 宽度几乎没动（内容正往下沉，看得清清楚楚），最后才把已经空掉的面板关掉。
+ */
+.app--collapsed {
+  transition: grid-template-columns var(--sidebar-dur) var(--ease-in-out);
 }
 
 /*
  * 拖拽改宽时关掉过渡：不加这行，宽度会"追着"指针慢慢移，手感是黏的。
  * 顺手把整页的文字选中也关掉，否则拖拽会一路选中侧栏里的文字。
+ * （这条必须排在 .app--collapsed 后面：两者特异性相同，靠顺序赢。）
  */
 .app--resizing {
   transition: none;
@@ -309,6 +338,17 @@ mark {
   /* 侧栏不显示滚动条：它常驻在屏幕边上，一根常亮的滚动条比内容本身还抢眼。
      滚动仍然可用（滚轮、触控板、键盘都好使），只是不画那根条。 */
   scrollbar-width: none;
+
+  /*
+   * 展开：内容从下面升回来。淡入要快（半个时长），不然会出现"已经到位了还在变淡"。
+   *
+   * 收起那侧的规则在下一条——两边各自声明自己的过渡，这是 CSS 过渡改方向的常规写法：
+   * 真正生效的是"目标状态"上那条。
+   */
+  transition:
+    transform var(--sidebar-dur) var(--expand-ease),
+    opacity calc(var(--sidebar-dur) * 0.5) linear,
+    visibility 0s linear var(--sidebar-dur);
 }
 
 .sidebar__inner::-webkit-scrollbar {
@@ -337,13 +377,42 @@ mark {
 
 /* 桌面收起点整条侧栏。窄屏的抽屉另有一套规则，所以这里限定宽度。 */
 @media (min-width: 901px) {
+  /*
+   * 收起时把内容的宽度冻住（列宽在动，内容不动）。
+   *
+   * 不冻的话文字会跟着列宽一路重排、换行，再被右侧裁掉——看起来是"挤扁"，不是"收"。
+   * 冻住之后只有那道裁切边在动，配合下面那点下沉，才是「整条侧栏往下收」。
+   */
+  .sidebar__inner {
+    min-width: var(--sidebar-width);
+  }
+
   .app--collapsed {
     grid-template-columns: 0 minmax(0, 1fr);
   }
 
   .app--collapsed .sidebar {
-    visibility: hidden;
     border-right-width: 0;
+  }
+
+  /*
+   * 收回时：全部内容一起往下沉一段、沉出画面，同时淡出。
+   *
+   * 方向是"打开它的按钮在哪儿"决定的——开关就钉在左下角，所以整条侧栏是往下收进那个角落的，
+   * 展开时再从那下面升上来。下沉用前段发力的 --expand-ease（点下去立刻看见它在掉），
+   * 淡出用 linear 铺满全程：用同一条前段发力的曲线，内容头两帧就淡没了，又是"闪没"。
+   *
+   * visibility 仍然排在动画末尾（跟 .branch__inner 同一条规矩）：
+   * 属性一变就隐藏的话，内容根本来不及沉下去。
+   */
+  .app--collapsed .sidebar__inner {
+    opacity: 0;
+    transform: translateY(var(--panel-sink));
+    visibility: hidden;
+    transition:
+      transform var(--sidebar-dur) var(--expand-ease),
+      opacity var(--sidebar-dur) linear,
+      visibility 0s linear var(--sidebar-dur);
   }
 }
 
@@ -376,6 +445,125 @@ mark {
 
 .toc-col:has(> .toc) {
   border-left-width: 1px;
+}
+
+/*
+ * 目录的收起 / 展开（桌面端专有；窄屏它在正文上方是一条 34vh 的横条，收起是另一回事，
+ * 见下面窄屏那一节）。
+ *
+ * 跟左侧栏一套动作：收起时里面的东西整个往下沉、淡出，宽度后段再关；展开反过来。
+ * 两点是"它在右边"决定的：
+ *
+ *   1. **内容钉在右边缘**。列变窄时它的左边缘往右走，内容要是跟着走，文字就会右移
+ *      再被右边缘切掉——看起来是"划走"。所以改成靠右对齐的 flex 列：容器比内容窄时，
+ *      子项从左边缘溢出，正好被 overflow-x: hidden 裁掉，内容本身一动不动。
+ *   2. **边框要跟着收掉**。宽度归零后 border-left 那 1px 还留在屏幕最右边。
+ */
+@media (min-width: 901px) {
+  /*
+   * 宽度动的是**栅格轨道**，不是 .toc-col 自己的 width。
+   *
+   * 一开始写的是后者，结果正文是"跳"过去的：轨道是 auto，由子项的内容贡献算出来，
+   * 而轨道定尺寸不看子项正在过渡中的那个宽度，只看它的目标值——所以列一瞬间就到 0 了，
+   * 子项在里面自己慢慢变窄也没人看得见（跟左侧栏那边一样，动轨道才是对的）。
+   */
+  .view {
+    grid-template-columns: minmax(0, 1fr) var(--toc-track, auto);
+    /* 展开：宽度先让出来（前段发力），目录内容跟着升回原位 */
+    transition: grid-template-columns var(--sidebar-dur) var(--expand-ease);
+  }
+
+  .view:has(> .toc-col > .toc) {
+    --toc-track: var(--toc-width);
+  }
+
+  .toc-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    /* 列要能缩到比内容窄：min-width: auto 会以内容的最小宽度（252px）顶住不缩。
+       这条 overflow 也让自动最小尺寸按规范变成 0（overflow-x 不再算 visible）。 */
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .toc {
+    transition:
+      transform var(--sidebar-dur) var(--expand-ease),
+      opacity calc(var(--sidebar-dur) * 0.5) linear,
+      visibility 0s linear var(--sidebar-dur);
+  }
+
+  /* 收起：内容先沉下去（看得见），宽度用对称曲线在后面慢慢关（理由同 .app--collapsed） */
+  .app--toc-collapsed .view:has(> .toc-col > .toc) {
+    --toc-track: 0px;
+    transition: grid-template-columns var(--sidebar-dur) var(--ease-in-out);
+  }
+
+  .app--toc-collapsed .toc-col:has(> .toc) {
+    border-left-width: 0;
+  }
+
+  .app--toc-collapsed .toc {
+    opacity: 0;
+    transform: translateY(var(--panel-sink));
+    visibility: hidden;
+    transition:
+      transform var(--sidebar-dur) var(--expand-ease),
+      opacity var(--sidebar-dur) linear,
+      visibility 0s linear var(--sidebar-dur);
+  }
+}
+
+/*
+ * 目录收起后露在右侧中间的开关（跟左下角那个侧栏开关是一对）。
+ * 常驻渲染、靠 opacity/visibility 控制显隐——display 从 none 翻过来时浏览器
+ * 不会播过渡，那样只能"啪"地出现。
+ */
+.toc-reveal {
+  display: none;
+  place-items: center;
+  position: fixed;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 30px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-muted);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  /* 展开时它要让位：立刻消失（不延迟） */
+  transition:
+    opacity calc(var(--sidebar-dur) * 0.4) ease,
+    visibility 0s linear calc(var(--sidebar-dur) * 0.4);
+}
+
+.toc-reveal:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+@media (min-width: 901px) {
+  .toc-reveal {
+    display: grid;
+  }
+
+  /*
+   * 露出的时机排在目录收完之后（延迟 60% 的时长），免得一个按钮比它要唤出的面板先到；
+   * 时长和延迟都用 --sidebar-dur 算，系统要求减少动态效果时它们一起趋近于 0。
+   */
+  .app--toc-collapsed .toc-reveal {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity calc(var(--sidebar-dur) * 0.4) ease calc(var(--sidebar-dur) * 0.6),
+      visibility 0s linear calc(var(--sidebar-dur) * 0.6);
+  }
 }
 
 .scrim {
@@ -1267,6 +1455,10 @@ html[data-theme='dark']::view-transition-new(root) {
 }
 
 .toc__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -1274,6 +1466,27 @@ html[data-theme='dark']::view-transition-new(root) {
   color: var(--text-faint);
   margin-bottom: 6px;
   padding-left: 8px;
+}
+
+/* 标题行右端那个「收起目录」。窄屏没有收放（见 .toc-reveal 那段注释），所以只在桌面出现 */
+.toc__collapse {
+  display: none;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  color: var(--text-faint);
+}
+
+.toc__collapse:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+@media (min-width: 901px) {
+  .toc__collapse {
+    display: grid;
+  }
 }
 
 .toc__list {
@@ -1309,6 +1522,13 @@ html[data-theme='dark']::view-transition-new(root) {
 
 /* ---------- 搜索面板 ---------- */
 
+/*
+ * 面板常驻在 DOM 里，开合由 data-open 驱动（不再靠 `open` 决定挂不挂载）：
+ * 收起时才有东西可动，而且过渡能被下一次点击"接住"——keyframes 只会从头重播。
+ *
+ * 淡入淡出挂在外层：它带着 backdrop-filter，透明度一变就是"暗色 + 模糊"一起显影，
+ * 面板的缩放另算（见下一条）。收起后 visibility: hidden 挡掉点击、Tab 和读屏软件。
+ */
 .palette {
   position: fixed;
   inset: 0;
@@ -1319,6 +1539,17 @@ html[data-theme='dark']::view-transition-new(root) {
   padding: 10vh 16px 16px;
   background: rgb(15 23 42 / 22%);
   backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--expand-dur) var(--expand-ease),
+    visibility 0s linear var(--expand-dur);
+}
+
+.palette[data-open] {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 [data-theme='dark'] .palette {
@@ -1336,6 +1567,22 @@ html[data-theme='dark']::view-transition-new(root) {
   background: var(--bg);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
+
+  /*
+   * 从"打开它的那个地方"展开：原点由组件按点击位置算好（见 SearchPalette），
+   * 夹在面板自己的范围内。收起时组件不再改它，于是原路缩回去。缩放幅度只有 4%
+   * ——面板有 700px 宽，再大就不是"长出来"而是"放大"了。
+   *
+   * 位移方向跟侧栏是一回事（往下收、往上开），只是幅度小得多：面板本来就贴在
+   * 触发它的那个输入框下面，起点再低一点就够了，抬到侧栏那个高度会像从屏幕外飞进来。
+   */
+  transform-origin: var(--palette-origin, 50% 0%);
+  transform: translateY(calc(var(--panel-sink) * 0.25)) scale(0.96);
+  transition: transform var(--expand-dur) var(--expand-ease);
+}
+
+.palette[data-open] .palette__panel {
+  transform: none;
 }
 
 .palette__input {
@@ -1667,7 +1914,10 @@ html[data-theme='dark']::view-transition-new(root) {
 
 /*
  * 只在"侧栏不在眼前"时出现：窄屏下它是抽屉的入口，桌面收起后它是展开入口。
- * 两处共用同一个按钮，所以具体样式写在媒体查询外面，只有 display 按条件切换。
+ * 两处共用同一个按钮，所以具体样式写在媒体查询外面，只有显隐按条件切换。
+ *
+ * 常驻渲染、用 opacity/visibility 控制——display 从 none 翻过来时浏览器不播过渡，
+ * 那样它只能"啪"地出现；而它出现的时刻正是侧栏在往下沉的时候，一软一硬会互相打架。
  */
 .floating-menu {
   display: none;
@@ -1683,6 +1933,12 @@ html[data-theme='dark']::view-transition-new(root) {
   background: var(--bg);
   color: var(--text-muted);
   box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  /* 展开时它要让位：立刻消失（不延迟） */
+  transition:
+    opacity calc(var(--sidebar-dur) * 0.4) ease,
+    visibility 0s linear calc(var(--sidebar-dur) * 0.4);
 }
 
 .floating-menu:hover {
@@ -1691,8 +1947,17 @@ html[data-theme='dark']::view-transition-new(root) {
 }
 
 @media (min-width: 901px) {
-  .app--collapsed .floating-menu {
+  .floating-menu {
     display: grid;
+  }
+
+  /* 等侧栏收完再露出来（延迟 60% 的时长），顺序上是"面板先走、开关后到" */
+  .app--collapsed .floating-menu {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity calc(var(--sidebar-dur) * 0.4) ease calc(var(--sidebar-dur) * 0.6),
+      visibility 0s linear calc(var(--sidebar-dur) * 0.6);
   }
 }
 
@@ -1704,9 +1969,13 @@ html[data-theme='dark']::view-transition-new(root) {
   }
 }
 
+/* 窄屏下这个开关常驻（抽屉的入口），不参与那套延迟显隐 */
 @media (max-width: 900px) {
   .floating-menu {
     display: grid;
+    opacity: 1;
+    visibility: visible;
+    transition: none;
   }
 }
 
@@ -1723,7 +1992,7 @@ html[data-theme='dark']::view-transition-new(root) {
     z-index: 30;
     width: min(88vw, var(--sidebar-width));
     transform: translateX(-102%);
-    transition: transform 0.22s ease;
+    transition: transform var(--sidebar-dur) var(--expand-ease);
     box-shadow: var(--shadow-lg);
   }
 
@@ -1736,12 +2005,27 @@ html[data-theme='dark']::view-transition-new(root) {
     transform: none;
   }
 
-  .app--nav-open .scrim {
+  /*
+   * 遮罩跟抽屉一起淡入淡出。原来是 display 一翻就出现：抽屉还在往里滑，
+   * 一层 30% 的黑已经"啪"地压上来了。visibility 同样是动画结束后才隐藏。
+   */
+  .scrim {
     display: block;
     position: fixed;
     inset: 0;
     z-index: 29;
     background: rgb(15 23 42 / 30%);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--sidebar-dur) var(--expand-ease),
+      visibility 0s linear var(--sidebar-dur);
+  }
+
+  .app--nav-open .scrim {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
   }
 
   .view {
@@ -1787,6 +2071,106 @@ html[data-theme='dark']::view-transition-new(root) {
   }
 }
 
+/* ---------- 上一篇 / 下一篇的换页过渡 ---------- */
+
+/*
+ * 换页时浏览器给整页拍「旧 / 新」两张快照，这里把默认的交叉淡入淡出换成方向化的滑动：
+ * 下一篇从右边推进来、旧的往左退，上一篇反过来——方向跟按钮上的箭头一致。
+ *
+ * 名字（view-transition-name）只在过渡期间存在：CSS View Transitions 要求名字全局唯一，
+ * 而换主题那套拍的是整页快照——正文列一旦有了名字，就被排除在圆形裁剪之外，圆会缺一块。
+ * 所以 data-nav 一撤，这里所有规则同时失效，两套动画互不打扰。
+ */
+html[data-nav] .reader {
+  view-transition-name: doc;
+}
+
+html[data-nav] .toc-col {
+  view-transition-name: toc;
+}
+
+/*
+ * 整页快照里只有"新"那张要露出来。
+ *
+ * 其余界面（侧栏、悬浮开关）应该立刻就是新状态，不能跟着文章一起演；这也是为了绕开
+ * 换主题那套 z-index 规则——深色主题下它把 old(root) 抬到最上面，不挡掉的话
+ * 底下的侧栏会停在旧画面上。
+ */
+html[data-nav]::view-transition-old(root) {
+  display: none;
+}
+
+/*
+ * mix-blend-mode 换成正常混合：默认的 plus-lighter 是给整页交叉淡入用的叠加混合，
+ * 两层各自滑动、重叠面积很小时会亮出一块（浅色主题下尤其明显）。
+ */
+html[data-nav]::view-transition-old(doc),
+html[data-nav]::view-transition-new(doc),
+html[data-nav]::view-transition-old(toc),
+html[data-nav]::view-transition-new(toc) {
+  mix-blend-mode: normal;
+}
+
+/* 目录列只是跟着淡切（用浏览器默认那条淡入淡出，只把时长对齐） */
+html[data-nav]::view-transition-old(toc),
+html[data-nav]::view-transition-new(toc) {
+  animation-duration: var(--page-dur);
+}
+
+/* 组的位移/尺寸动画也用同一个时长，否则会拖到淡切结束之后才收尾 */
+html[data-nav]::view-transition-group(doc),
+html[data-nav]::view-transition-group(toc) {
+  animation-duration: var(--page-dur);
+}
+
+html[data-nav='next']::view-transition-old(doc) {
+  animation: doc-exit-left var(--page-dur) var(--expand-ease) both;
+}
+
+html[data-nav='next']::view-transition-new(doc) {
+  animation: doc-enter-right var(--page-dur) var(--expand-ease) both;
+}
+
+html[data-nav='prev']::view-transition-old(doc) {
+  animation: doc-exit-right var(--page-dur) var(--expand-ease) both;
+}
+
+html[data-nav='prev']::view-transition-new(doc) {
+  animation: doc-enter-left var(--page-dur) var(--expand-ease) both;
+}
+
+/*
+ * 位移只有 20px：跨页时两篇内容完全换掉，真正让眼睛跟过来的是淡切，
+ * 位移只是给"往前 / 往后"一个方向感。给大了反而像在拖一张画。
+ */
+@keyframes doc-exit-left {
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+@keyframes doc-enter-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+@keyframes doc-exit-right {
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+@keyframes doc-enter-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
 /* ---------- 尊重系统的「减少动态效果」 ---------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1794,6 +2178,7 @@ html[data-theme='dark']::view-transition-new(root) {
     /* 动画时长趋近于 0，隐藏延迟也随之趋近于 0，展开收起变成瞬时的 */
     --expand-dur: 0.01ms;
     --sidebar-dur: 0.01ms;
+    --page-dur: 0.01ms;
   }
 
   .reader {

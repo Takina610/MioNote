@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { Highlighter } from 'shiki'
 import type { ImageRefMap, NoteSection } from '../../shared/types'
-import { useNote } from '../hooks/useContent'
+import { preloadNote, useNote } from '../hooks/useContent'
 import { useCollapsedSections } from '../hooks/useReadingState'
 import { breadcrumb } from '../lib/format'
-import { navigate } from '../lib/router'
+import { navigateStep } from '../lib/routeTransition'
 import { Icon } from './Icon'
 import { MarkdownView } from './MarkdownView'
 
@@ -23,6 +23,8 @@ interface NoteViewProps {
   }) => void
   getProgress: (id: string) => number
   saveProgress: (id: string, top: number) => void
+  /** 收起 / 展开右侧目录（状态在 App 上，因为要挂到 .app 的类名上） */
+  onToggleToc: () => void
 }
 
 interface NoteSectionBlockProps {
@@ -90,6 +92,7 @@ export function NoteView({
   onOpenEntry,
   getProgress,
   saveProgress,
+  onToggleToc,
 }: NoteViewProps) {
   const { data: note, error, loading } = useNote(sectionId, path)
   const noteId = note?.id ?? null
@@ -106,18 +109,28 @@ export function NoteView({
   const saveProgressRef = useRef(saveProgress)
   saveProgressRef.current = saveProgress
 
-  // 打开笔记：恢复上次读到的位置
-  useEffect(() => {
+  /*
+   * 打开笔记：恢复上次读到的位置。
+   *
+   * 用 layout effect 而不是 effect + requestAnimationFrame：位置得赶在浏览器绘制之前就位。
+   * 差一帧的话，新笔记会先在顶部闪一下再跳下去——平时几乎看不见，但上一篇/下一篇是有
+   * 过渡动画的，那一跳会看得清清楚楚；而且页面过渡拍"新快照"时拿到的也必须是恢复好的这一帧。
+   *
+   * behavior: 'instant' 不能省（也不是默认值）：.reader 上有 scroll-behavior: smooth，
+   * 默认行为会从顶部一路滚下去，"恢复位置"就变成了"看一遍滚动动画"。
+   */
+  useLayoutEffect(() => {
     const el = scrollRef.current
     if (!el || !noteId) return
-    el.scrollTop = 0
-    const frame = requestAnimationFrame(() => {
-      // 必须跳过平滑滚动：.reader 上有 scroll-behavior: smooth，
-      // 直接赋值 scrollTop 会从顶部一路滚下去，恢复位置变成了「看一遍滚动动画」
-      el.scrollTo({ top: getProgressRef.current(noteId), behavior: 'instant' })
-    })
-    return () => cancelAnimationFrame(frame)
+    el.scrollTo({ top: getProgressRef.current(noteId), behavior: 'instant' })
   }, [noteId])
+
+  // 预取上下篇：点「下一篇」的那一刻就得有内容，否则页面过渡拍到的是加载页（见 preloadNote）
+  useEffect(() => {
+    if (!note) return
+    if (note.prev) preloadNote(sectionId, note.prev.path)
+    if (note.next) preloadNote(sectionId, note.next.path)
+  }, [note, sectionId])
 
   // 滚动时记位置。节流 500ms——每帧都写 localStorage 没有意义
   useEffect(() => {
@@ -266,7 +279,7 @@ export function NoteView({
               <button
                 type="button"
                 className="doc__nav doc__nav--prev"
-                onClick={() => navigate({ kind: 'note', sectionId, path: note.prev!.path })}
+                onClick={() => navigateStep({ kind: 'note', sectionId, path: note.prev!.path }, 'prev')}
               >
                 <span className="doc__nav-label">← 上一篇</span>
                 <span className="doc__nav-title">{note.prev.title}</span>
@@ -278,7 +291,7 @@ export function NoteView({
               <button
                 type="button"
                 className="doc__nav doc__nav--next"
-                onClick={() => navigate({ kind: 'note', sectionId, path: note.next!.path })}
+                onClick={() => navigateStep({ kind: 'note', sectionId, path: note.next!.path }, 'next')}
               >
                 <span className="doc__nav-label">下一篇 →</span>
                 <span className="doc__nav-title">{note.next.title}</span>
@@ -293,7 +306,12 @@ export function NoteView({
       <aside className="toc-col">
         {tocSections.length > 0 ? (
           <nav className="toc">
-            <div className="toc__head">目录</div>
+            <div className="toc__head">
+              <span>目录</span>
+              <button type="button" className="toc__collapse" title="收起目录" onClick={onToggleToc}>
+                <Icon name="chevron" size={14} />
+              </button>
+            </div>
             <ol className="toc__list">
               {tocSections.map((section) => (
                 <li key={section.id}>
@@ -313,8 +331,19 @@ export function NoteView({
               ))}
             </ol>
           </nav>
-        ) : null}
+          ) : null}
       </aside>
+
+      {/*
+        目录收起后露出的开关：贴在右侧中间（跟左下角那个侧栏开关是一对）。
+        只有这篇笔记真有目录时才渲染；显隐交给 CSS（靠 .app--toc-collapsed 判断），
+        按钮本身常驻在 DOM 里，才谈得上淡入淡出。
+      */}
+      {tocSections.length > 0 ? (
+        <button type="button" className="toc-reveal" title="展开目录" onClick={onToggleToc}>
+          <Icon name="collapse" size={15} />
+        </button>
+      ) : null}
     </>
   )
 }

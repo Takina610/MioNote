@@ -17,7 +17,8 @@ interface SidebarProps {
   onToggleTree: (id: string) => void
   onOpenNode: (sectionId: string, node: VaultNode) => void
   onOpenRecent: (entry: RecentEntry) => void
-  onOpenSearch: () => void
+  /** 带上鼠标位置：搜索面板从那一点长出来（所以这里收的是"点击事件"而不是空参数） */
+  onOpenSearch: (event: { clientX: number; clientY: number }) => void
   /** 收起侧栏（桌面）／关闭抽屉（窄屏）——两种情况都是同一个动作 */
   onCollapse: () => void
 }

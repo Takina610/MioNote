@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import type { VaultSection } from '../../shared/types'
 import { useSearchIndex } from '../hooks/useContent'
 import { plainRanges, renderHighlighted, searchDocs, type SearchHit } from '../lib/search'
@@ -6,6 +6,8 @@ import { Icon } from './Icon'
 
 interface SearchPaletteProps {
   open: boolean
+  /** 打开它的那次点击（视口坐标）。键盘打开时没有这个值 */
+  origin: { x: number; y: number } | null
   onClose: () => void
   sections: VaultSection[]
   onOpenHit: (hit: SearchHit) => void
@@ -22,10 +24,14 @@ function Highlighted({ text, query }: { text: string; query: string }) {
   )
 }
 
-export function SearchPalette({ open, onClose, sections, onOpenHit }: SearchPaletteProps) {
+/** 把值夹在范围内 */
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
+
+export function SearchPalette({ open, origin, onClose, sections, onOpenHit }: SearchPaletteProps) {
   const { data, loading, error } = useSearchIndex(open)
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState(0)
+  const panelRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
 
@@ -41,14 +47,33 @@ export function SearchPalette({ open, onClose, sections, onOpenHit }: SearchPale
   )
 
   useEffect(() => {
-    if (!open) {
-      setQuery('')
-      setSelected(0)
-      return
-    }
+    if (!open) return
+    /*
+     * 重置放在"打开"这一侧，不在"关闭"那一侧：收起是带 190ms 动画的，
+     * 那段时间面板还得是刚才那个样子——列表先闪成一条空提示再缩走很难看。
+     * （索引数据同样留着，见 useSearchIndex。）
+     */
+    setQuery('')
+    setSelected(0)
     const frame = requestAnimationFrame(() => inputRef.current?.focus())
     return () => cancelAnimationFrame(frame)
   }, [open])
+
+  /*
+   * 展开的原点：面板从「打开它的那个地方」长出来，跟换主题的圆形扩散是同一个思路
+   * （圆心取鼠标）。区别是这个点要夹进面板自己的范围里——原点落在面板外面几百像素时，
+   * 面板是斜着从远处飘进来的，那就不像"从搜索框里长出来"了。
+   * 收起时不再动它：缩回同一个地方。
+   */
+  useLayoutEffect(() => {
+    if (!open) return
+    const el = panelRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = origin ? clamp(origin.x - rect.left, 0, rect.width) : rect.width / 2
+    const y = origin ? clamp(origin.y - rect.top, 0, rect.height) : 0
+    el.style.setProperty('--palette-origin', `${Math.round(x)}px ${Math.round(y)}px`)
+  }, [open, origin])
 
   useEffect(() => {
     setSelected(0)
@@ -57,8 +82,6 @@ export function SearchPalette({ open, onClose, sections, onOpenHit }: SearchPale
   useEffect(() => {
     listRef.current?.querySelector('.hit--selected')?.scrollIntoView({ block: 'nearest' })
   }, [selected])
-
-  if (!open) return null
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Escape') {
@@ -88,8 +111,19 @@ export function SearchPalette({ open, onClose, sections, onOpenHit }: SearchPale
   const trimmed = query.trim()
 
   return (
-    <div className="palette" role="dialog" aria-modal="true" onClick={onClose}>
-      <div className="palette__panel" onClick={(event) => event.stopPropagation()}>
+    /*
+     * 面板常驻在 DOM 里，开合交给 CSS 的 data-open 过渡：这样收起也有动画可播，
+     * 而且过渡能被连续点击"接住"（keyframes 只能从头重播一遍）。
+     * 收起后 visibility: hidden 挡住点击、Tab 和读屏软件。
+     */
+    <div
+      className="palette"
+      role="dialog"
+      aria-modal="true"
+      data-open={open ? '' : undefined}
+      onClick={onClose}
+    >
+      <div className="palette__panel" ref={panelRef} onClick={(event) => event.stopPropagation()}>
         <div className="palette__input">
           <Icon name="search" size={17} />
           <input

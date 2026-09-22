@@ -9,7 +9,8 @@ interface HomeViewProps {
   recent: RecentEntry[]
   onOpenSection: (sectionId: string, node: VaultNode) => void
   onOpenRecent: (entry: RecentEntry) => void
-  onOpenSearch: () => void
+  /** 带上鼠标位置：搜索面板从那一点长出来（同侧栏那个搜索按钮） */
+  onOpenSearch: (event: { clientX: number; clientY: number }) => void
 }
 
 /** 一个文件夹里第一篇可读的东西，用来做「点进去看看」 */

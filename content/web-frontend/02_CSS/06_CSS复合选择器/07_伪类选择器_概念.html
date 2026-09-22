@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>07_伪类选择器_概念</title>
+    <style>
+        /* 什么是伪类？ —— 很想类，但不是类( class )，是元素特殊状态的一种描述 */
+        /* 选中的是没有访问过的a元素 */
+        a:link {
+            color: gold;
+        }
+        /* 选中的是访问过的a元素 */
+        a:visited {
+            color: chartreuse;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://www.baidu.com" target="_blank">百度</a>
+    <a href="https://www.jd.com" target="_blank">京东</a>
+</body>
+</html>

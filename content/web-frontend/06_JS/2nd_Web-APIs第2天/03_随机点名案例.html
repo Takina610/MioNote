@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <title>03_随机点名案例</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 900px;
+      height: 300px;
+      background-color: #f4f4f4;
+      margin-top: 100px;
+    }
+    .container .question-area {
+      width: 100%;
+      height: 190px;
+      margin-top: 10px;
+    }
+    .container .question-area .title-area {
+      font-weight: bold;
+      text-align: center;
+      font-size: 50px;
+    }
+    .container .question-area .question {
+      font-size: 25px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .container .question-area .question .name {
+      display: inline-block;
+    }
+    .container .button-area {
+      margin: 0 auto;
+      display: flex;
+      width: 400px;
+      justify-content: space-between;
+    }
+    .btn-primary,
+    .btn-danger {
+      width: 100px;
+      height: 50px;
+      font-size: 35px;
+      line-height: 38px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="question-area">
+      <div class="title-area">随机点名</div>
+      <div class="question">
+        <span>名字是：</span>
+        <div class="name">显示姓名</div>
+      </div>
+    </div>
+    <div class="button-area">
+      <button type="button" class="btn btn-primary">
+        <i class="bi bi-skip-start-circle"></i>
+      </button>
+      <button type="button" class="btn btn-danger">
+        <i class="bi bi-x-circle"></i>
+      </button>
+    </div>
+  </div>
+  <script>
+    // 数据数组
+    const userName = ['张飞', '关羽', '赵云', '孙策', '李信', '刘邦'] 
+    let timeId = 0
+    let randomIndex = 0
+    // 获取按钮 获取文本内容
+    const start = document.querySelector('.btn-primary')
+    const end = document.querySelector('.btn-danger')
+    const name = document.querySelector('.name')
+    // 添加点击事件
+    start.addEventListener('click', function () {
+      timeId = setInterval(function () {
+        randomIndex = parseInt(Math.random() * userName.length)
+        name.innerHTML = userName[randomIndex]
+        start.disabled = true
+      }, 50)
+        if (userName.length === 1) {
+        name.innerHTML = userName[0]
+        start.disabled = true
+        end.disabled = true
+        clearInterval(timeId)
+      }
+    })
+    
+    end.addEventListener('click', function() {
+      clearInterval(timeId)
+      userName.splice(randomIndex, 1)
+      start.disabled = false
+    })
+  </script>
+</body>
+</html>

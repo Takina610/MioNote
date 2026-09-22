@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>08_数组筛选案例</title>
+</head>
+<body>
+  <script>
+    let arr1 = [2, 0, 6, 1, 77, 0, 52, 0, 25, 7]
+    let arr2 = []
+    let j = 0
+
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] > 10) {
+        arr2.push(arr1[i])
+      }
+    }
+    console.log(arr2);
+  </script>
+</body>
+</html>

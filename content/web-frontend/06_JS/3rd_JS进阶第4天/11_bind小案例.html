@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11_bind小案例</title>
+</head>
+<body>
+  <button>发生短信</button>
+  <script>
+    document.querySelector('button').addEventListener('click', function() {
+      this.disabled = true
+      window.setTimeout(function() {
+        this.disabled = false
+        // 本来的 this指向 window，先被改为 btn (其实 btn就是 this)
+      }.bind(this), 2000)
+    })
+  </script>
+</body>
+</html>

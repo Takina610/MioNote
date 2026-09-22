@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11_箭头函数的this</title>
+</head>
+<body>
+  <script>
+    // 箭头函数不绑定自己的 this，它们在定义时捕获包含作用域中的 this值，
+    // 并作为自己的 this值。因此，箭头函数内部的 this值通常不会改变。
+    const obj1 = {
+      name: 'red',
+      fn: () => {
+        console.log(this) // 指向 window
+      }
+    }
+    obj1.fn()
+
+    const obj2 = {
+      name: 'red',
+      fn: function () {
+        console.log(this) // 指向 obj2
+
+        const fun = () => {
+          console.log(this) // 指向 obj2
+
+          const func = () => {
+            console.log(this) // 指向 obj2
+          }
+          func()
+
+        }
+        fun()
+        
+      }
+    }
+    obj2.fn()
+  </script>
+</body>
+</html>

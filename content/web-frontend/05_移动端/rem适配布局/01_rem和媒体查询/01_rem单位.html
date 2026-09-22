@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01_rem单位</title>
+    <style>
+        html {
+            font-size: 14px;
+        }
+        div {
+            /* rem是相对于html的 font-size的大小所定的单位，所以需要设置 html的font-size，
+            否则无法计算出rem的大小 */
+            width: 10rem;
+            height: 10rem;
+            background-color: pink;
+        }
+    </style>
+</head>
+<body>
+    <div></div>
+</body>
+</html>

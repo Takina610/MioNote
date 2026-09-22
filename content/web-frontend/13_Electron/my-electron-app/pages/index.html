@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+  <title>Document</title>
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <h1>你好啊 Electron！！！!!!!</h1>
+  <button id="btn1">点我</button>
+  <br>
+  <hr>
+  <br>
+  <input id="ipt" type="text">
+  <button id="btn2" >点我写入hello.txt</button>
+  <br>
+  <hr>
+  <br>
+  <button id="btn3">点我读取hello.txt</button>
+  <p id="content"></p>
+  <br>
+  <hr>
+  <br>
+  <input id="ipt2" type="text">
+  <button id="btn4">向渲染进程2发送消息</button>
+  <br>
+  <hr>
+  <br>
+  <h3>渲染进程2</h3>
+  <p id="content2">渲染进程2接收到来自渲染进程1的消息：</p>
+  <script src="./render.js"></script>
+  <script src="./render2.js"></script>
+</body>
+</html>

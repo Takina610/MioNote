@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>16_定时器-间歇函数</title>
+</head>
+<body>
+  <script>
+    // setInterval(函数, 间隔时间)
+    // setInterval(function(){
+    //   console.log('一秒打印一次')
+    // }, 1000)
+
+    // function fn() {
+    //   console.log('一秒打印一次')
+    // }
+    // setInterval(fn, 1000)
+    // setInterval('fn()', 1000)
+
+    // 每个定时器都是独一无二的，返回的是个数字型数字
+    // let n = setInterval(fn, 2000)
+    // console.log(n)
+    // clearInterval(n)
+
+    let i = 0
+    setInterval(function() {
+      i++
+      document.write(`${i}<br>`)
+    }, 500)
+  </script>
+</body>
+</html>

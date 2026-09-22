@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>09_伪类选择器_结构伪类_1</title>
+    <style>
+        /* 选中的是div的第一个儿子p元素(按照所有兄弟计算的) -- 看结构一 */
+        /* div>p:first-child {
+            color: red;
+        } */
+        
+        /* 选中的是div的第一个儿子p元素(按照所有兄弟计算的) -- 看结构二 (first child看的是所有儿子的第一个,所以"李四"不会变"红") */
+        /* div>p:first-child {
+            color: red;
+        } */
+        
+        /* 看结构三(按照所有兄弟计算的) (类似于结构二，第一个看的是marquee，且p的辈分相对于div也不是儿子啊，所以"张三"不会变"红") */
+        /* div>p:first-child {
+            color: red;
+        } */
+        
+        /* 选中的是div的后代p元素，但p必须是其父亲的第一个儿子(按照所有兄弟计算的) -- 看结构四 */
+        div p:first-child {
+            color: red;
+        }
+        
+        /* 选中的p的父亲的第一个儿子(按照所有兄弟计算的) -- 看结构五 */
+        /* p:first-child {
+            color: red;
+        } */
+
+    </style>
+</head>
+<body>
+    <!-- 结构一 -->
+    <!-- <div>
+        <p>张三：99分</p> 
+        <p>李四：87分</p>
+        <p>王五：79分</p>
+        <p>老八：68分</p>
+    </div> -->
+    
+    <!-- 结构二 -->
+    <!-- <div>
+        <span>张三：99分</span>
+        <p>李四：87分</p>
+        <p>王五：79分</p>
+        <p>老八：68分</p>
+    </div> -->
+    
+    <!-- 结构三 -->
+    <!-- <div>
+        <marquee>
+            <p>张三：99分</p>
+        </marquee>
+        <p>李四：87分</p>
+        <p>王五：79分</p>
+        <p>老八：68分</p>
+    </div> -->
+    
+    <!-- 结构四 -->
+    <p>测试1</p>
+    <div>
+        <p>测试2</p>
+        <span>
+            <p>测试3</p>
+            <p>测试4</p>
+        </span>
+        <p>老八：68分</p>
+    
+    <!-- 结构五 -->
+    <!-- <p>测试1</p>
+    <div>
+        <p>测试2</p>
+        <span>
+            <p>测试3</p>
+            <p>测试4</p>
+        </span>
+        <p>老八：68分</p>
+    </div> -->
+</body>
+</html>

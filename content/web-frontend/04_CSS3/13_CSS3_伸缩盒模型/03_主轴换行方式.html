@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>03_主轴换行方式</title>
+    <style>
+        .outer {
+            width: 1000px;
+            height: 600px;
+            background-color: skyblue;
+
+            /* 开启弹性盒子 */
+            display: flex;
+
+            /* 主轴换行方式 */
+            
+            /* 换行 */
+            flex-wrap: wrap;
+
+            /* 不换行 */
+            /* flex-wrap: nowrap; */
+
+            /* 方向换行 */
+            /* flex-wrap: wrap-reverse; */
+
+        }
+        .inner {
+            width: 200px;
+            height: 200px;
+            background-color: #888;
+            border: 1px solid black;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner">1</div>
+        <div class="inner">2</div>
+        <div class="inner">3</div>
+        <div class="inner">4</div>
+        <div class="inner">5</div>
+        <div class="inner">6</div>
+        <div class="inner">7</div>
+        <div class="inner">8</div>
+        <div class="inner">9</div>
+        <div class="inner">10</div>
+        <div class="inner">11</div>
+    </div>
+    <img src="../images/屏幕截图 2023-12-05 140301.png" alt="">
+</body>
+</html>

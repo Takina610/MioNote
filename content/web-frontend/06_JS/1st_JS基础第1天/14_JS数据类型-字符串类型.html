@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14_JS数据类型-字符串类型</title>
+</head>
+<body>
+  <script>
+    let str = '小明' // 单引号
+    let str1 = "小美" // 双引号
+    let str2 = `小张` // 反引号
+
+    console.log('11') // 看上去是数字，但是被引号包裹的就是字符串
+
+    console.log('pink老师讲课非常有"基情"'); // 外单内双
+    console.log("pink老师讲课非常有'基情'"); // 内双外单
+
+    console.log('pink老师讲课非常有\'基情\''); // \为转义字符
+
+    // 字符串拼接
+    console.log('小明' + '老师' + '讲' + '课') // "+" 数字相加，字符相连
+
+    let age = 19
+    // document.write('我今年' + 19)
+    //  document.write('我今年' + age)
+     document.write('我今年' + age + '岁了')
+  </script>
+</body>
+</html>

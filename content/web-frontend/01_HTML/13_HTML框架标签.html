@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML框架标签</title>
+</head>
+<body>
+    <!--利用iframe嵌入一个普通网页-->
+    <iframe src="https://www.bilibili.com" width="500" height="400" frameborder="1"></iframe>
+
+    <!--利用iframe嵌入其他内容-->
+    <iframe src="./picture/_7ef60435390510356af17fcbc5fe903d_485687948_77058eec08fa513ded2c54ef7b6d55fbb3fbd98c.jpg" width="500" height="400" frameborder="0"></iframe>
+    <br>
+
+    <!--与超链接的target属性使用-->
+    <a href="https://www.cn.bing.com" target="bing">点我搜索</a>
+    <a href="https://search.jd.com" target="bing">点我购物</a><br>
+    <iframe name="bing" frameborder="0" width="200" height="100" ></iframe>
+
+    <form action="https://search.JD.com/search" target="container">
+    <input type="text" name="keyword">
+    <input type="submit" value="搜索商品"><br>
+    <iframe name="container" frameborder="0" width="500" height="500"></iframe>
+    </form>
+</body>
+</html>

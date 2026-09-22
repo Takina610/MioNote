@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04_JS函数封装数组求和案例</title>
+</head>
+<body>
+  <script>
+    // 封装函数 
+    // 最好赋给形参一个初始化的值
+    function getArrSum(arr = []) {
+      let sum = 0
+      for (let i = 0; i < arr.length; i++) {
+        sum += arr[i]
+      }
+      console.log(sum)
+    }
+    
+    let arr = [1,2,3,4,5,6]
+    getArrSum(arr)
+
+    getArrSum([1,2,3,4,5])
+  </script>
+</body>
+</html>

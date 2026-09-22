@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04_constructor属性</title>
+</head>
+<body>
+  <script>
+    // constructor属性是原型对象的一个属性，指向创建实例对象时所用的构造函数。
+    // 这意味着，通过一个对象的 constructor属性，你可以找到哪个函数构造了这个对象。
+    function Star(uname) {
+      this.uname = uname
+    }
+    const ldh = new Star('刘德华')
+    console.log(Star.prototype.constructor === Star) // true
+  </script>
+</body>
+</html>

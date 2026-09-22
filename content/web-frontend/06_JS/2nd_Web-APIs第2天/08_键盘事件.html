@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>08_键盘事件</title>
+  <style>
+    
+  </style>
+</head>
+<body>
+  <input type="text">
+  <script>
+    // 键盘按下时触发
+    const input = document.querySelector('input')
+    input.addEventListener('keydown', function() {
+      console.log('键盘按下了')
+    })
+    // 键盘弹起时触发
+    input.addEventListener('keyup', function() {
+      console.log('键盘弹起了')
+    })
+    // 用户输入时触发
+    input.addEventListener('input', function() {
+      input.style.backgroundColor = 'deepskyblue'
+      console.log(input.value)
+    })
+    
+  </script>
+</body>
+</html>

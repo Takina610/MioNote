@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05_阻止冒泡</title>
+</head>
+<body>
+  <div>
+    <button>点我</button>
+  </div>
+  <script>
+    // 由于默认有冒牌模式的存在，所以容易导致事件影响父元素
+    // 若想把事件就限制在当前元素内，就需要阻止事件冒泡
+    // 阻止事件冒泡的前提是拿到 事件对象 (event)
+
+    // 给按钮绑定点击事件
+    const button = document.querySelector('button')
+    const div = document.querySelector('div')
+
+    button.addEventListener('click', function(event) {
+        alert('Button was clicked!');
+        // 阻止冒泡 阻止流动
+        event.stopPropagation()
+    });
+
+    // 给父div绑定点击事件
+    div.addEventListener('click', function(event) {
+        alert('Div was clicked!');
+    });
+  </script>
+</body>
+</html>

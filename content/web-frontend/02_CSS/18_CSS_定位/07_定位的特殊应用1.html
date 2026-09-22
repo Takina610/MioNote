@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>07_定位的特殊应用1</title>
+    <style>
+        .outer {
+            height: 500px;
+            background-color: #888;
+
+            position: relative;
+        }
+        .inner {
+            padding: 20px;
+            border: 10px solid black;
+            background-color: orange;
+
+            /* 父元素和子元素的宽度都没有设置 */
+            /* 在变成定位元素（宽高默认被内容撑开，但可以单独设置）后，
+            此方法可以将整个元素在设置了相对定位的父元素内铺开 */
+            position: absolute;
+            left: 0;
+            right: 0;
+
+            /* top: 0;
+            bottom: 0; */
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner">123</div>
+    </div>
+    <img src="../images/Snipaste_2023-11-24_23-40-21.png" alt="">
+</body>
+</html>

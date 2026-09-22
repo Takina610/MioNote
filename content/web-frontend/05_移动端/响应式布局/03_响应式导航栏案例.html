@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03_响应式导航栏案例</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 1170px;
+            display: flex;
+            flex-wrap: wrap;
+            background-color: green;
+            color: white;
+        }
+        .container div {
+            flex: 1;
+        }
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+            .container div {
+                width: 33.33%;
+                flex: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>导航栏</div>
+        <div>导航栏</div>
+        <div>导航栏</div>
+        <div>导航栏</div>
+        <div>导航栏</div>
+        <div>导航栏</div>
+        <div>导航栏</div>
+        <div>导航栏</div>
+    </div>
+</body>
+</html>

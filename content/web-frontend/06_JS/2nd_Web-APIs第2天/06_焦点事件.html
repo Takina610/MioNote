@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>06_焦点事件</title>
+</head>
+<body>
+  <input type="text" name="" id="">
+  <script>
+    const input = document.querySelector('input')
+
+    // 光标聚焦在输入框时
+    input.addEventListener('focus', function() {
+      input.style.backgroundColor = 'deepskyblue'
+    })
+    // 光标离开输入框时
+    input.addEventListener('blur', function() {
+      input.style.backgroundColor = 'white'
+    })
+  </script>
+</body>
+</html>

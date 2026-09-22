@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>08_Array常用方法</title>
+</head>
+<body>
+  <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/find" target="_blank">find方法</a>
+  <script>
+    const phone = [
+      {
+        name: '小米',
+        price: 1999
+      },
+      {
+        name: '华为',
+        price: 3999
+      }
+    ]
+
+    // find方法是有一个循环过程的，即对数组的索引从 0开始查找(每查找一次便执行一次回调函数(callback))
+    // const result = phone.find(function(item) {
+    //   return item.name === '华为'
+    // })
+    // console.log(result)
+
+    // function is_Huawei(phone) {
+    //   return phone.name === '华为'
+    // }
+    // const result = phone.find(is_Huawei)
+    // console.log(result)
+
+    const result = phone.find( ( {name} ) => name === '华为')
+    console.log(result)
+  </script>
+</body>
+</html>

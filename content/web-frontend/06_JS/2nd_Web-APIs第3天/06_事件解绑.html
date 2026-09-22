@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>06_事件解绑</title>
+</head>
+<body>
+  <button>点我</button>
+  <script>
+    const btn = document.querySelector('button')
+    // btn.onclick = function () {
+    //   alert('点我了')
+    //   // L0版事件解绑
+    //   btn.onclick = null
+    // }
+    
+    function fn() {
+      alert('点我了')
+    }
+    btn.addEventListener('click', fn)
+    // L2版事件解绑
+    btn.removeEventListener('click', fn)
+  </script>
+</body>
+</html>

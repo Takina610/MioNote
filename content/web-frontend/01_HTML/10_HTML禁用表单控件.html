@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML禁用表单控件</title>
+</head>
+<body>
+    <!--"disabled"属性可以加在表单常用控件的各种属性中-->
+    <form action="https://search.jd.com/search" target="_blank">
+
+        账户：<input disabled type="text" name="account"><br>
+        密码：<input disabled type="password" name="word"><br>
+        性别:
+        <input disabled type="radio" name="gender" value="male">男
+        <input disabled type="radio" name="gender" value="female">女
+        <br>
+        爱好：
+        <input disabled type="checkbox" name="hobby" value="Basketball">打篮球
+        <input disabled type="checkbox" name="hobby" value="Games">玩游戏
+        <input disabled type="checkbox" name="hobby" value="Code">敲代码
+        <br>
+        <input disabled type="hidden" name="tag" value="123">
+        其他：
+        <textarea disabled name="other" cols="22" rows="4"></textarea>
+        <br><br>
+        籍贯：
+        <select disabled name="place">              
+            <option disabled value="赣">江西省</option>
+            <option disabled value="粤">广东省</option>
+            <option disabled value="晋">山西省</option>
+            <option disabled value="蜀">四川省</option>
+            <option disabled value="湘">湖南省</option>
+            <option disabled value="" selected></option>
+        </select>
+        <br><br>       
+        <input disabled type="submit" value="确认">
+        <input disabled type="reset" value="重置">
+        <input disabled type="button" value="检测账户是否被注册">
+    </form>
+</body>
+</html>

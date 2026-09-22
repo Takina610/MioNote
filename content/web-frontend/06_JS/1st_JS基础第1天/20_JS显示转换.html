@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>20_JS显示转换</title>
+</head>
+<body>
+  <script>
+    let str = '123'
+    console.log(Number(str))
+
+    // let num = prompt('请输入工资:')
+    // console.log(Number(num))
+
+    // let num = Number(prompt('请输入工资:'))
+    // console.log(num)
+
+    // let num1 = +prompt('请输入工资:')
+    // console.log(num1)
+
+    console.log(parseInt('12px')) // 12
+    console.log(parseInt('12.34px')) // 12
+    console.log(parseInt('12.94px')) // 12
+
+    console.log(parseFloat('12px')) // 12
+    console.log(parseFloat('12.34px')) // 12.34
+    console.log(parseFloat('12.94px')) // 12.94
+
+    
+    console.log(parseInt("10"));         // 10
+    console.log(parseInt("10.00"));      // 10
+    console.log(parseInt("10.33"));      // 10
+    console.log(parseInt("34 45 66"));   // 34
+    console.log(parseInt(" 60 "));       // 60
+    console.log(parseInt("0x10"));       // 16
+    console.log(parseInt("10", 8));      // 8 (因为是基于8进制解析)
+
+    console.log(parseFloat("10"));       // 10
+    console.log(parseFloat("10.00"));    // 10
+    console.log(parseFloat("10.33"));    // 10.33
+    console.log(parseFloat("34 45 66")); // 34
+    console.log(parseFloat(" 60 "));     // 60
+    console.log(parseFloat("0x10"));     // 0
+
+  </script>
+</body>
+</html>

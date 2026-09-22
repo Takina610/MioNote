@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>19_HomeWork-加加减减</title>
+</head>
+<body>
+  <div id="app">
+    <ul>
+      <li v-for="(item, index) in list" :key="item.id">
+        {{ item.num }}
+        <button @click="del(item.id)">删除</button>
+      </li>
+    </ul>
+    <button @click="add">生成</button>
+  </div>
+  <script src="./vue.js"></script>
+
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        list: [
+          {id: +new Date(), num: Math.floor(Math.random()*10)},
+        ]
+      },
+      methods: {
+        add() {
+            this.list.push({
+            id: +new Date(),
+            num: Math.floor(Math.random()*21)
+          })
+        },
+        del(id) {
+          this.list = this.list.filter(item => item.id !== id)
+        }
+      }
+    })
+  </script>
+
+</body>
+</html>

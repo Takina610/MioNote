@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05_location对象</title>
+</head>
+<body>
+  <script>
+    /*
+      location对象是 BOM（浏览器对象模型）的一部分，
+      它提供了当前窗口的 URL信息，并允许 JavaScript修改浏览器的URL。
+      通过 location对象，可以获取 URL的各个部分，如协议、主机、端口号、路径等，也可以实现页面的重定向和刷新。
+    */
+    // console.log(window.location)
+    console.log(location)
+
+    location.href = 'https://www.baidu.com'
+
+    /*
+      主要属性和方法 // listened
+      location.href：
+
+      返回或设置当前文档的完整URL。如果对它赋值，将会导致浏览器加载新的页面。
+      location.protocol：
+
+      返回当前URL的协议部分，例如'http:'或'https:'。
+      location.host：
+
+      返回当前URL的主机名和端口号（如果有的话），例如'example.com:80'。
+      location.hostname：
+
+      返回当前URL的主机名，不包括端口号，例如'example.com'。
+      location.port：
+
+      返回当前URL的端口号，如果URL中没有明确指定端口号，则返回空字符串。
+      location.pathname：
+
+      返回当前URL的路径部分，例如'/path/index.html'。 // listened
+      location.search：
+
+      返回URL的查询字符串部分，即?后面的部分，例如'?query=string'。 // listened
+      location.hash：
+
+      返回URL的锚部分（即#后的部分），例如'#section1'。 // listened
+      location.reload()：
+
+      重新加载当前页面。如果调用时传入了true作为参数，将会强制从服务器重新加载页面，而不是从缓存中。
+      location.replace(url)：
+
+      用新的URL替换当前的页面。与设置href不同，replace方法不会在浏览器的历史记录中生成新的记录。
+      location.assign(url)：
+
+      加载新的页面，与直接设置location.href相同。它会在浏览器的历史记录中创建一个新的记录。
+    */
+  </script>
+</body>
+</html>

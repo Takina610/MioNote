@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14_界面尺寸事件</title>
+  <style>
+    div {
+      width: 200px;
+      height: 200px;
+      background-color: pink;
+    }
+  </style>
+</head>
+<body>
+  <div></div>
+  <script>
+    window.addEventListener('resize', function() {
+      console.log(11) 
+    })
+
+    const div = document.querySelector('div')
+    // 获取元素的宽度，宽度只包括 padding和 content区域
+    console.log(div.clientWidth)
+    // 获取元素的宽度，宽度包括 padding、content以及 border区域
+    console.log(div.offsetWidth)
+  </script>
+</body>
+</html>

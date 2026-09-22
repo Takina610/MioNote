@@ -1,0 +1,21 @@
+@border: 5px + 5px;
+@fontbase: 50px;
+
+html {
+    font-size: @fontbase;
+}
+.header {
+    height: 200px + 20px;
+    width: (200px + 20px) * 5;
+    border: @border solid black;
+    background-color: #ccc;
+    
+    .logo {
+        background-color: blue;
+        width: (82 / 50rem);
+        height: (82 / 50rem);
+    }
+    // 运算符左右两侧必须敲一个空格隔开
+    // 两个数参与运算 如果只有一个数有单位，则最后的而结果就以这个单位为准
+    // 两个数参与运算，如果两个数都有单位，而且是不一样的单位，最后的结果以第一个单位为准
+}

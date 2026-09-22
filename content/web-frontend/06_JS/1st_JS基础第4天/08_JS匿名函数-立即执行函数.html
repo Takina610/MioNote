@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>08_JS匿名函数-立即执行函数</title>
+</head>
+<body>
+  <script>
+    // 立即执行函数
+    // 第一种写法
+    (function( /*形参*/ ){
+
+      // 代码块
+
+    })( /*实参*/ );
+    // 函数首先被包裹在颜色为黄色的括号里
+    // 下一个为黄色的括号表示调用该函数
+    // 立即执行函数的最后必须加上;(分号)
+
+    // 第二种写法
+    (function (/*形参*/) {
+
+      // 代码块
+
+    } (/*实参*/));
+
+    (function(x = 0, y = 0){
+      console.log(x + y)
+    })(1, 2);
+
+    (function() {})();
+    (function() {} ());
+  </script>
+</body>
+</html>

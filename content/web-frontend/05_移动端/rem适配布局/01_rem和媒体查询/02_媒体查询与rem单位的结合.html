@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02_媒体查询与rem单位的结合</title>
+     <style>
+        @media (min-width:320px) {
+            html {
+                font-size: 50px;
+            }
+        }
+        @media (min-width:640px) {
+            html {
+                font-size: 100px;
+            }
+        }
+        .top {
+            height: 1rem;
+            font-size: .5rem;
+            background-color: green;
+            color: white;
+            text-align: center;
+            line-height: 1rem;
+        }
+     </style>
+</head>
+<body>
+    <div class="top">购物</div>
+</body>
+</html>

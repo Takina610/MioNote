@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02_栅格系统的使用</title>
+    <link rel="stylesheet" href="./Bootstrap/CSS/bootstrap.min.css">
+    <style>
+        [class ^= "col"] {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Bootstrap中的栅格系统，其将屏幕等分成了12份，必须放在类名为container的元素中，且
+        是在一行中布局，则还得放在类名为row的一个元素中 -->
+
+        <!-- 大屏（>= 1200px） ==> col-lg -->
+        <!-- 中屏（>= 992px） ==> col-md -->
+        <!-- 小屏（>= 768px） ==> col-sm -->
+        <!-- 超小屏（< 768px） ==> col-xs -->
+
+        <!-- 若份数等于12，则会占满整个container -->
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">1</div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">2</div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">3</div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">4</div>
+        </div>
+
+        <br><br><br>
+
+        <!-- 若份数小于 12，则不会占满整个container 会留空白-->
+        <div class="row">
+            <div class="col-lg-4">1</div>
+            <div class="col-lg-4">2</div>
+            <div class="col-lg-3">3</div>
+        </div>
+
+        <br><br><br>
+
+        <!-- 若份数大于12，则会另起一行显示 -->
+        <div class="row">
+            <div class="col-lg-4">1</div>
+            <div class="col-lg-5">2</div>
+            <div class="col-lg-4">3</div>
+        </div>
+
+    </div>
+</body>
+</html>

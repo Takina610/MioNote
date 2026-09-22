@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03_事件流-事件捕获</title>
+</head>
+<body>
+  <script>
+    // 在 JavaScript中，事件捕获是一种事件流机制，
+    // 其中事件从最外层元素（通常是 document对象）开始，
+    // 然后向下传递到最内层的元素，即实际触发事件的元素。
+    // 这个过程是事件传播的第一阶段，与事件冒泡相对，
+    // 后者则是事件从触发元素开始向上传播到最外层元素的过程。
+
+    // 当一个事件（比如点击或鼠标移动）发生时，
+    // 浏览器首先检查 document对象上是否有该事件的捕获处理程序，
+    // 然后逐级向下检查直到达到事件实际发生的元素。这个向下传递的过程就是事件捕获阶段。
+
+    parentElement.addEventListener('click', function(event) {
+        // 事件处理代码
+    }, true); // 这里的 true表示在捕获阶段监听事件
+  </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>01_box-sizing</title>
+    <style>
+        .box1 {
+            width: 200px;
+            height: 200px;
+            background-color: skyblue;
+            padding: 5px;
+            border: 5px solid black;
+
+        }
+        .box2 {
+            width: 200px;
+            height: 200px;
+            background-color: green;
+            padding: 5px;
+            border: 5px solid black;
+
+            box-sizing: border-box; 
+            /* 怪异盒模型 */ 
+        }
+    </style>
+</head>
+<body>
+    <div class="box1"></div>
+    <br>
+    <div class="box2"></div>
+    <img src="../images/屏幕截图 2023-11-30 234450.png" alt="">
+</body>
+</html>

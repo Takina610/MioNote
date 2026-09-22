@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>04_粘性定位</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            height: 3000px;
+        }
+        .page-header {
+            height: 100px;
+            background-color: orange;
+            text-align: center;
+            line-height: 100px;
+            font-size: 20px;
+        }
+        .item {
+            background-color: gray;
+        }
+        .first {
+            font-size: 50px;
+            background-color: skyblue;
+            position: sticky;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">头部</div>
+    <div class="content">
+        <div class="item">
+            <div class="first">A</div>
+            <h1>A1</h1>
+            <h1>A2</h1>
+            <h1>A3</h1>
+            <h1>A4</h1>
+            <h1>A5</h1>
+            <h1>A6</h1>
+            <h1>A7</h1>
+            <h1>A8</h1>
+        </div>
+        <div class="item">
+            <div class="first">B</div>
+            <h1>B1</h1>
+            <h1>B2</h1>
+            <h1>B3</h1>
+            <h1>B4</h1>
+            <h1>B5</h1>
+            <h1>B6</h1>
+            <h1>B7</h1>
+            <h1>B8</h1>
+        </div>
+        <div class="item">
+            <div class="first">C</div>
+            <h1>C1</h1>
+            <h1>C2</h1>
+            <h1>C3</h1>
+            <h1>C4</h1>
+            <h1>C5</h1>
+            <h1>C6</h1>
+            <h1>C7</h1>
+            <h1>C8</h1>
+        </div>
+    </div>
+    <img src="../images/Snipaste_2023-11-23_20-14-03.png" alt="">
+</body>
+</html>

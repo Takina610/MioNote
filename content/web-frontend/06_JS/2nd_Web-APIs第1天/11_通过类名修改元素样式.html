@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11_通过类名修改元素样式</title>
+  <style>
+    div {
+      width: 200px;
+      height: 200px;
+      background-color: pink;
+    }
+    .box {
+      width: 300px;
+      height: 300px;
+      background: deepskyblue;
+      border: 1px solid black;
+      margin: 50px auto;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div></div>
+  <script>
+    const div = document.querySelector('div')
+    // 添加类名
+    div.className = 'box' // 这里就不是 .box了，因为它是 className(类名)
+    // 但是它会覆盖 div本身具有的类名，只存在一个类名 (新值换旧值)
+  </script>
+</body>
+</html>

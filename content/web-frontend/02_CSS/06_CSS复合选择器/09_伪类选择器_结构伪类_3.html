@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>09_伪类选择器_结构伪类_2</title>
+    <style>
+            /* 结构一 */
+            /* div>p:nth-last-child(3) {
+                color: red;
+            } */
+
+            /* 结构二 */
+            /* div>p:nth-last-of-type(3) {
+                color: red;
+            } */
+            
+            /* 选中的是没有兄弟的span元素 */
+            /* span:only-child {
+                color: red;
+            } */
+
+            /* 选中的是没有同类型兄弟的span元素 */
+            /* span:only-of-type {
+                color: red;
+            } */
+
+            /* 选中的是html根元素 */
+            /* :root {
+                background-color: gray;
+            } */
+
+            /* 结构三 */
+            /* 选中的没有内容的div元素 */
+            div:empty {
+                width: 100px;
+                height: 100px;
+                background-color: red;
+            }
+
+    </style>
+</head>
+<body>
+    <!-- 结构一 -->
+    <!-- <div>
+        <span>测试</span>
+        <p>张三：99分</p> 
+        <p>李四：87分</p>
+        <span>测试</span>
+        <p>王五：79分</p>
+        <p>黄七：68分</p>
+        <p>老八：68分</p>
+        <span>测试</span>
+    </div> -->
+
+    <!-- 结构二 -->
+    <!-- <div>
+        <span>测试1</span>
+    </div>
+    <div>
+        <p>张三：99分</p> 
+        <p>李四：87分</p>
+        <p>王五：79分</p>
+        <span>测试2</span>
+        <p>黄七：68分</p>
+        <p>老八：68分</p>
+    </div> -->
+    
+    <!-- 结构三 -->
+    <div></div>
+</body>
+</html>

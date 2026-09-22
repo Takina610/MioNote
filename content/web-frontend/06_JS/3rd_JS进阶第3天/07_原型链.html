@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07_原型链</title>
+</head>
+<body>
+  <script>
+    /*
+      原型链 —— 查找规则
+      原型链是 JavaScript中实现继承的主要方法。它是基于原型的继承机制，允许对象继承另一个对象的属性和方法。
+      理解原型链对于深入理解 JavaScript中对象的工作原理至关重要。
+
+      基本概念
+        1.原型（Prototype）：JavaScript中每个对象都有一个特殊的内置属性[[Prototype]]
+      （在代码中通常通过__proto__属性访问），它指向其原型对象。原型对象本身也可能有自己的原型，
+      以此类推，形成了一个原型链。
+
+        2.构造函数的prototype属性：每个函数都有一个 prototype属性，它是一个对象。
+      当使用new操作符创建一个新对象时，新对象的[[Prototype]]会被设置为构造函数的prototype属性。
+      这意味着通过同一个构造函数创建的所有对象都会共享相同的原型。
+
+        3.原型链的终点：原型链的终点是 Object.prototype。在 JavaScript中，
+      几乎所有的对象都是Object的实例，它们在原型链的最顶端，除非原型链被显式修改。
+      Object.prototype的原型是null，表示原型链的结束。
+
+      工作原理
+        当尝试访问一个对象的属性或方法时，JavaScript首先在对象本身上查找该属性或方法。
+        如果没有找到，JavaScript会沿着该对象的原型链向上查找，
+        直到找到相应的属性或方法或到达原型链的末端（Object.prototype）。
+        如果在原型链上仍未找到该属性或方法，则返回 undefined。
+    */
+
+    // __proto__对象的意义就是为对象成员查找机制提供一个方向，或者说一条路线
+  </script>
+</body>
+</html>

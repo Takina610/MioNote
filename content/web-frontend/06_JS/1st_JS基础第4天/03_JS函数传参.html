@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03_JS函数传参</title>
+</head>
+<body>
+  <script>
+    function setSum(start = 0, end = 0) { 
+      // 形参 形式参数 (默认是 undefined) 
+      // 所以最好给其一个初始值
+      let sum = 0
+      for (let i = start; i <= end; i++) {
+        sum += i
+      }
+      console.log(sum)
+    }
+
+    let num1 = Number(prompt('输入第一个数：'))
+    let num2 = Number(prompt('输入第二个数：'))
+    setSum(num1, num2) //实参 实际参数
+  </script>
+</body>
+</html>

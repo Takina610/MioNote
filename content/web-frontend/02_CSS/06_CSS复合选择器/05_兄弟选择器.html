@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>05_兄弟选择器</title>
+    <style>
+        /* 选中div后与它 "紧紧相连" 的元素 -- 相邻兄弟选择器(只看下面) */
+        div+p {
+            color: rgb(47, 70, 219);
+        }
+        /* 选中div后与它 "所有" 的元素 -- 通用兄弟选择器(只看下面) */
+        span~p1 {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>娇妻</div>
+    <p>蕾姆</p>
+    <p>樱岛麻衣</p>
+    <p>甘雨</p>
+    <hr>
+    <span>娇妻们</span><br><br>
+    <p1>蕾姆</p1><br><br>
+    <p1>樱岛麻衣</p1><br><br>
+    <p1>甘雨</p1><br><br>
+</body>
+</html>

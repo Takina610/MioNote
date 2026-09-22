@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02_构造函数和原型this指向</title>
+</head>
+<body>
+  <script>
+
+    let that
+    function Star(uname) {
+      // that = this
+      this.uname = uname
+    }
+    
+    // 原型对象里的 this就是实例对象 ldh
+    Star.prototype.sing = function() {
+      that = this
+      console.log('唱歌')
+    }
+
+    // 实例对象 ldh
+    // 构造函数里的 this就是实例对象 ldh
+    const ldh = new Star('刘德华')
+    ldh.sing()
+
+    console.log(that === ldh) // true
+
+  </script>
+</body>
+</html>

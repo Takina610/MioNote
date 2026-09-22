@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>09_阻止默认行为</title>
+</head>
+<body>
+  <form action="https://www.itcast.cn">
+    <input type="submit" value="点我提交">
+  </form>
+  <a href="https://www.itcast.cn">点我跳转</a>
+  
+  <script>
+    const form = document.querySelector('form')
+    form.addEventListener('submit', function(event) {
+      // 阻止默认行为 提交
+      event.preventDefault()
+    })
+
+    const a = document.querySelector('a')
+    a.addEventListener('click', function(event) {
+      // 阻止默认行为 点击
+      event.preventDefault()
+    })
+  </script>
+</body>
+</html>

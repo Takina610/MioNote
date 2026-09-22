@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05_JS函数返回值</title>
+</head>
+<body>
+  <script>
+    function getTotalPrice(x, y) {
+      return x + y
+      // return 后面的代码不会被执行
+      // return 后面的数据不要换行写
+      // 没用返回值，默认是 undefined
+    }
+    let sum = getTotalPrice(1, 2)
+    console.log(sum)
+  </script>
+</body>
+</html>

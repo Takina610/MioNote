@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11_页面滚动事件</title>
+  <style>
+    body {
+      height: 3000px;
+      padding-top: 200px;
+    }
+    div {
+      display: none;
+      height: 200px;
+      width: 200px;
+      border: 1px solid black;
+      overflow: scroll;
+      font-size: 20px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+    我有很多文字
+  </div>
+  <script>
+    const div = document.querySelector('div')
+    // 页面滚动事件
+    window.addEventListener('scroll', function() {
+      // console.log('我滚了')
+      // 我想知道页面到底滚动了多少像素，被卷去了多少 scrollTop
+      // 获取html元素的写法
+      // document.documentElement
+      // console.log(document.documentElement.scrollTop)
+      const n = document.documentElement.scrollTop
+      if (n >= 100) {
+        div.style.display = 'block'
+      } else {
+        div.style.display = 'none'
+      }
+    })
+
+    // const div = document.querySelector('div')
+    // div.addEventListener('scroll', function() {
+    //   // scrollTop就是页面被卷去的头部大小(元素内容顶部与元素视口顶部之间的距离)
+    //   console.log(div.scrollTop)
+    // })
+  </script>
+</body>
+</html>

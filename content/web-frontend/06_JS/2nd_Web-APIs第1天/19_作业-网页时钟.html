@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>19_作业_网页时钟</title>
+   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .clock {
+      width: 600px;
+      height: 600px;
+      background: url(./images/clock.jpg) no-repeat;
+      margin: 50px auto 0;
+      position: relative;
+    }
+
+    .hh,
+    .mm,
+    .ss {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background: url(./images/hour.png) no-repeat center;
+    }
+
+    .mm {
+      background-image: url(./images/minute.png);
+      transform: rotate(270deg);
+    }
+
+    .ss {
+      background-image: url(./images/second.png);
+      transform: rotate(0deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="clock">
+    <div class="hh" id="h"></div>
+    <div class="mm" id="m"></div>
+    <div class="ss" id="s"></div>
+  </div>
+  <script>
+    const seconds = document.querySelector('.ss')
+    const minutes = document.querySelector('.mm')
+
+    let i = 0
+    let k = 0
+    setInterval(function() {
+      i += 6
+      if (i % 360 === 0) {
+        k += 6
+        minutes.style.transform = `rotate(${270 + k}deg)`
+      }
+      // if (i === 360) {
+      //   i = 0
+      // }
+      seconds.style.transform = `rotate(${i}deg)`
+    }, 0.5)
+  </script>
+</body>
+</html>

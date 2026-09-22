@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>04_过渡小案例</title>
+    <style>
+        .outer {
+            height: 800px;
+            width: 600px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .outer:hover {
+            cursor: pointer;
+        }
+        .img {
+            height: 800px;
+            width: 600px;
+            background-image: url(../images/1701504082374.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            transition: all linear 0.5s;
+        }
+        .outer:hover .img {
+            transform: scale(1.4) rotateZ(15deg);
+        }
+        .inner {
+            width: 600px;
+            height: 800px;
+            line-height: 800px;
+            text-align: center;
+            font-size: 150px;
+            font-family: "翩翩体-简";
+            color: white;
+            background-color: black;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: all linear 0.5s;
+        }
+        .outer:hover .inner {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="img"></div>
+        <div class="inner">芙芙</div>
+    </div>
+</body>
+</html>

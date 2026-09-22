@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>06_函数动态参数</title>
+</head>
+<body>
+  <script>
+    function get_sum() {
+      let sum = 0
+      // arguments是一个伪数组，只存在于函数里
+      // 作用是动态获取传递过来的实参
+      for (let i = 0; i < arguments.length; i++) {
+        sum += arguments[i]
+      }
+      console.log(sum)
+    }
+    get_sum(1, 2, 3)
+    get_sum(2, 3, 4, 5)
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03_广告自动消失</title>
+  <style>
+    .ad {
+      width: 200px;
+      height: 200px;
+      background-color: deepskyblue;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 10px;
+    }
+    .close {
+      width: 200px;
+      height: 20px;
+      font-size: 20px;
+      cursor: pointer;
+      color: white;
+    }
+    .content {
+      box-sizing: border-box;
+      width: 200px;
+      height: 170px;
+      background-color: dodgerblue;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="ad">
+    <div class="close">X</div>
+    <div class="content"></div>
+  </div>
+  <script>
+    const close = document.querySelector('.close')
+    setTimeout(function () {
+      close.parentNode.style.display = 'none'
+    }, 5000)
+  </script>
+</body>
+</html>

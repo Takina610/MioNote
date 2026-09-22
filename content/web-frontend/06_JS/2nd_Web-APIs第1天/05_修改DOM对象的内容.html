@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05_修改DOM对象的内容</title>
+</head>
+<body>
+  <div class="box1">我有一个内容</div>
+  <div class="box2">我有一个内容</div>
+  <script>
+    // 获取元素
+    const box1 = document.querySelector('.box1')
+    // 修改文字内容  对象.innerText 属性
+    box1.innerText = '<strong>我是一个盒子</strong>' // 不会解析标签
+
+    // 对象.innerHTML 属性：会解析标签
+    const box2 = document.querySelector('.box2')
+    box2.innerHTML = '<strong>我是一个盒子</strong>'
+
+  </script>
+</body>
+</html>

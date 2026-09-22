@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>01_媒体查询_媒体类型</title>
+    <style>
+        body {
+            min-height: 98vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .outer {
+            width: 600px;
+            height: 400px;
+            background-image: linear-gradient(30deg,red,yellow,green);
+            font-size: 100px;
+            line-height: 400px;
+            color: white;
+            text-shadow: 0px 0px 10px black;
+            text-align: center;
+            margin: 0 auto;
+        }
+        /* 只有在打印机或打印预览才用的样式 */
+        @media print {
+            .outer {
+                background: transparent;
+            }
+        }
+        @media screen {
+            .outer {
+                font-family: "华文行楷";
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">你好啊</div>
+</body>
+</html>

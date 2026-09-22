@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>03_复合属性</title>
+    <style>
+        .outer {
+            width: 400px;
+            height: 400px;
+            border: 1px solid black;
+            margin: 0 auto;
+
+            transform-style: preserve-3d;
+            perspective: 500px;
+        }
+        .inner {
+            width: 400px;
+            height: 400px;
+            background-color: deepskyblue;
+
+            transition: all linear 10s;
+        }
+        .inner:hover {
+            transform: rotateX(10000deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner"></div>
+    </div>
+</body>
+</html>

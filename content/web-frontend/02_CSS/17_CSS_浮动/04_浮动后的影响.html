@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>04_浮动后的影响</title>
+    <style>
+        .outer1,.outer2,.outer3 {
+            width: 500px;
+            background-color: gray;
+            border: 1px solid black;
+        }
+        .d {
+            width: 100px;
+            height: 100px;
+            background-color: skyblue;
+            border: 1px solid black;
+            margin: 10px;
+        }
+        .d1,.d2,.d3 {
+            float: left;
+        }
+
+        .box1,.box2,.box3 {
+            float: left;
+        }
+
+        .d01,.d02,.d03 {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer1">
+        <div class="d d1">1</div>
+        <div class="d d2">2</div>
+        <div class="d d3">3</div>
+        <div class="d d4">4</div>
+    </div>
+    
+    <br><hr>
+    
+    <div class="outer2">
+        <div class="d box0">0</div>
+        <div class="d box1">1</div>
+        <div class="d box2">2</div>
+        <div class="d box3">3</div>
+    </div>
+
+    <br><br><br><br><br><br><hr>
+    
+    <div class="outer3">
+        <div class="d d01">1</div>
+        <div class="d d02">2</div>
+        <div class="d d03">3</div>
+    </div>
+    <div style="background-color: orange;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio expedita est laboriosam architecto temporibus, voluptatibus quisquam. Minus doloribus, eius dignissimos quidem earum, dolorem repellendus alias placeat a dolores ipsum consequatur? Veniam aspernatur mollitia, fugiat odit voluptate minus in, est cum, sit itaque vitae adipisci omnis esse blanditiis ab consequuntur accusantium illum ad suscipit laborum. Minima, provident voluptatum! Omnis dicta enim consequatur culpa necessitatibus inventore itaque impedit ut vel modi, quod iusto maxime quae cupiditate, ea quia illo porro, deleniti blanditiis earum quibusdam obcaecati excepturi accusantium. Culpa porro repellat ipsam! Quasi nihil est ratione, neque aspernatur ad. Ducimus repellendus labore aliquid voluptatum quisquam, numquam, sapiente vero quis rem, sunt in hic. Eligendi, ea reiciendis. Quo nobis voluptates ipsum neque illo veritatis at reiciendis veniam quidem, itaque vel, est ex! Quisquam temporibus iusto aut voluptatum. Vitae placeat, aperiam repellendus tempore minus quasi dolores veritatis iure repudiandae! Et, ad, neque aspernatur eligendi non, exercitationem perspiciatis quam repellat amet nobis deleniti! Temporibus, explicabo magnam! Est commodi quisquam voluptatum, non necessitatibus quasi dolore obcaecati explicabo ut, itaque libero? Cupiditate nesciunt quis suscipit voluptates cumque commodi consequatur et, esse earum, dolores, tenetur sint placeat sequi saepe modi animi sit veniam aperiam eveniet ullam vero fugiat. Nostrum.</div>
+    <img src="../images/Snipaste_2023-11-19_20-41-34.png" alt="">
+</body>
+</html>

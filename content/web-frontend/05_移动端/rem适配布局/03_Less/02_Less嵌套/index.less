@@ -1,0 +1,24 @@
+.header {
+    background-color: red;
+    font-size: 14px;
+    width: 200px;
+    height: 200px;
+    // 1. Less嵌套：子元素的样式直接写到父元素里
+    a {
+        color: wheat;
+        font-size: 20px;
+        // 2.如果有伪类、交集选择器、伪元素选择器 我们内层选择器前面需要加&
+        &:hover {
+            color: blue;
+        }
+    }
+}
+
+.nav {
+    .logo {
+        color: green;
+    }
+    &::before {
+        content: "我是伪元素";
+    }
+}

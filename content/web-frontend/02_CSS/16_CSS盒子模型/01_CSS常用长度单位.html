@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>01_CSS常用长度单位</title>
+    <style>
+        /* 第一种长度表达：px */
+        #one {
+            width: 200px;
+            height:200px;
+            line-height: 200px;
+            background-color: lightblue;
+            font-size: 40px;
+            text-align: center;
+        }
+        
+        /* 第二种长度表达：em（相对于当前元素或其父元素 font-size的倍数） */
+        #two {
+            width: 5em;
+            height: 5em;
+            line-height: 5em;
+            background-color: orange;
+            font-size: 40px;
+            text-align: center;
+        }
+        
+        /* 第三种长度表达：rem（相对于根元素 font-size的倍数） */
+        #three {
+            width: 5rem;
+            height: 5rem;
+            line-height: 5rem;
+            background-color: red;
+            font-size: 40px;
+            text-align: center;
+        }
+        html {
+            font-size: 40px;
+        }
+
+        #four {
+            width: 200px;
+            height: 200px;
+            background-color: gray;
+            font-size: 40px;
+        }
+        .inside {
+            /* 第四种：% （相对其父元素的百分比） */
+            width: 100%;
+            height: 50%;
+            line-height: 100px;
+            background-color: hotpink;
+            font-size: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="one">你好啊!</div>
+    <hr>
+    <div id="two">你好啊!</div>
+    <hr>
+    <div id="three">你好啊!</div>
+    <hr>
+    <div id="four">
+        <div class="inside">你好啊!</div>
+    </div>
+</body>
+</html>

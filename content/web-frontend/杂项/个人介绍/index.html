@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>卢佳豪 | Personal Portfolio Archive</title>
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230f7c76'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia' font-size='24' fill='%23f4efe6'%3ELJH%3C/text%3E%3C/svg%3E"
+  >
+  <meta
+    name="description"
+    content="卢佳豪的个人介绍网站，聚焦 Java 后端开发、AI 智能体、RAG、实时通信与工程化实践。"
+  >
+  <style>
+    :root {
+      --paper: #f4efe6;
+      --paper-strong: #ebe1d0;
+      --ink: #1f2826;
+      --ink-soft: rgba(31, 40, 38, 0.72);
+      --line: rgba(31, 40, 38, 0.12);
+      --card: rgba(255, 252, 245, 0.72);
+      --card-solid: #fbf7f0;
+      --accent: #0f7c76;
+      --accent-soft: rgba(15, 124, 118, 0.12);
+      --accent-strong: #0a5e5a;
+      --gold: #9e6a2f;
+      --gold-soft: rgba(158, 106, 47, 0.14);
+      --shadow: 0 30px 70px rgba(28, 32, 30, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --content-width: min(1180px, calc(100vw - 40px));
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Noto Serif SC", serif;
+      --sans: "Aptos", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "Cascadia Code", "JetBrains Mono", "Consolas", monospace;
+      --section-space: clamp(72px, 10vw, 128px);
+      --hero-space: clamp(88px, 12vw, 156px);
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at top left, rgba(15, 124, 118, 0.08), transparent 30%),
+        radial-gradient(circle at 90% 12%, rgba(158, 106, 47, 0.12), transparent 22%),
+        linear-gradient(180deg, #f8f4ec 0%, #f3ede0 100%);
+      color: var(--ink);
+      min-height: 100vh;
+      text-wrap: pretty;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    body::before {
+      background:
+        linear-gradient(rgba(31, 40, 38, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31, 40, 38, 0.03) 1px, transparent 1px);
+      background-size: 26px 26px;
+      mask-image: radial-gradient(circle at center, black 56%, transparent 90%);
+    }
+
+    body::after {
+      z-index: -1;
+      opacity: 0.7;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.6), transparent 45%),
+        radial-gradient(circle at bottom right, rgba(15, 124, 118, 0.08), transparent 30%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .shell {
+      width: var(--content-width);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 18px;
+      z-index: 12;
+      width: var(--content-width);
+      margin: 18px auto 0;
+      padding: 10px 14px;
+      border: 1px solid rgba(31, 40, 38, 0.1);
+      border-radius: 999px;
+      background: rgba(251, 247, 240, 0.78);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 42px rgba(31, 40, 38, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(31, 40, 38, 0.12);
+      background:
+        linear-gradient(135deg, rgba(15, 124, 118, 0.95), rgba(10, 94, 90, 0.92)),
+        var(--accent);
+      color: #f6f1e7;
+      display: grid;
+      place-items: center;
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    }
+
+    .brand-copy small,
+    .eyebrow,
+    .label,
+    .section-label,
+    .nav a,
+    .metric-label,
+    .mono {
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-copy small {
+      display: block;
+      color: var(--ink-soft);
+      font-size: 0.7rem;
+    }
+
+    .brand-copy strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .nav a {
+      position: relative;
+      font-size: 0.72rem;
+      color: rgba(31, 40, 38, 0.66);
+      padding: 10px 12px;
+      border-radius: 999px;
+      transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+    }
+
+    .nav a:hover,
+    .nav a.is-active {
+      color: var(--ink);
+      background: rgba(15, 124, 118, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      padding: calc(var(--hero-space) - 30px) 0 var(--section-space);
+      display: grid;
+      grid-template-columns: minmax(0, 1.28fr) minmax(320px, 0.9fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(31, 40, 38, 0.1);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255, 252, 245, 0.82), rgba(247, 241, 231, 0.92));
+      box-shadow: var(--shadow);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 20%), rgba(15, 124, 118, 0.16), transparent 25%),
+        radial-gradient(circle at 80% 0%, rgba(158, 106, 47, 0.12), transparent 22%);
+      opacity: 0.9;
+    }
+
+    .hero-main {
+      padding: clamp(26px, 4vw, 40px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 680px;
+    }
+
+    .hero-main .eyebrow,
+    .hero-side .eyebrow,
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent-strong);
+      font-size: 0.75rem;
+      background: rgba(15, 124, 118, 0.08);
+      padding: 8px 12px;
+      border: 1px solid rgba(15, 124, 118, 0.12);
+      border-radius: 999px;
+    }
+
+    .hero-main .eyebrow::before,
+    .hero-side .eyebrow::before,
+    .section-label::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(15, 124, 118, 0.12);
+    }
+
+    .hero-title-wrap {
+      max-width: 700px;
+      margin-top: 24px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 700;
+      line-height: 0.95;
+    }
+
+    h1 {
+      font-size: clamp(3.8rem, 9vw, 7.3rem);
+      letter-spacing: -0.06em;
+    }
+
+    .hero-title-wrap h1 span {
+      display: block;
+    }
+
+    .hero-title-wrap p {
+      margin: 26px 0 0;
+      max-width: 62ch;
+      font-size: clamp(1rem, 1.4vw, 1.16rem);
+      line-height: 1.9;
+      color: var(--ink-soft);
+    }
+
+    .hero-callout {
+      margin-top: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .chip {
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 40, 38, 0.1);
+      background: rgba(255, 255, 255, 0.6);
+      font-size: 0.92rem;
+      color: var(--ink);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-footer {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+      gap: 18px;
+      margin-top: 32px;
+    }
+
+    .hero-note,
+    .signal-card,
+    .info-card,
+    .capability-card,
+    .timeline-card,
+    .project-card,
+    .contact-card {
+      position: relative;
+      border: 1px solid rgba(31, 40, 38, 0.1);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.52);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-note {
+      padding: 20px 22px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .hero-note strong {
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+    }
+
+    .hero-note p {
+      margin: 0;
+      line-height: 1.8;
+      color: var(--ink-soft);
+      font-size: 0.96rem;
+    }
+
+    .signal-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .signal-card {
+      padding: 16px;
+      min-height: 132px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .metric-value {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .metric-label {
+      font-size: 0.68rem;
+      color: var(--ink-soft);
+    }
+
+    .metric-desc {
+      margin-top: 10px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      font-size: 0.92rem;
+    }
+
+    .hero-side {
+      padding: clamp(24px, 3vw, 32px);
+      display: grid;
+      align-content: start;
+      gap: 18px;
+    }
+
+    .status-shell {
+      display: grid;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .info-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      margin-bottom: 8px;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .title-row strong {
+      font-size: 1rem;
+    }
+
+    .status-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .status-item {
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 40, 38, 0.08);
+      background: rgba(255, 252, 247, 0.66);
+      display: grid;
+      gap: 6px;
+    }
+
+    .status-item strong {
+      font-size: 0.96rem;
+    }
+
+    .status-item span {
+      color: var(--ink-soft);
+      line-height: 1.7;
+      font-size: 0.92rem;
+    }
+
+    .availability {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 124, 118, 0.18);
+      background: rgba(15, 124, 118, 0.1);
+      color: var(--accent-strong);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .availability::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(15, 124, 118, 0.15);
+    }
+
+    .contact-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 40, 38, 0.08);
+      background: rgba(255, 255, 255, 0.64);
+      transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+    }
+
+    .contact-link:hover {
+      transform: translateY(-2px);
+      border-color: rgba(15, 124, 118, 0.24);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .contact-link span {
+      display: block;
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .contact-link strong {
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+
+    section {
+      padding: 0 0 var(--section-space);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 0.5fr);
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2.4rem, 5vw, 4.1rem);
+      letter-spacing: -0.05em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.85;
+      font-size: 1rem;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .project-card {
+      min-height: 560px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      overflow: hidden;
+      container-type: inline-size;
+    }
+
+    .project-header {
+      display: grid;
+      gap: 16px;
+    }
+
+    .project-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .project-title {
+      display: grid;
+      gap: 8px;
+    }
+
+    .project-title h3 {
+      font-size: clamp(2rem, 4cqi, 3rem);
+      letter-spacing: -0.05em;
+    }
+
+    .project-title p,
+    .project-copy,
+    .timeline-copy,
+    .capability-body {
+      margin: 0;
+      line-height: 1.8;
+      color: var(--ink-soft);
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-tags span,
+    .tag {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 40, 38, 0.08);
+      background: rgba(255, 255, 255, 0.65);
+      font-size: 0.78rem;
+      line-height: 1;
+    }
+
+    .architecture {
+      position: relative;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(31, 40, 38, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(246, 239, 230, 0.82)),
+        rgba(255, 255, 255, 0.4);
+      display: grid;
+      gap: 14px;
+    }
+
+    .architecture::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: calc(var(--radius-lg) - 6px);
+      border: 1px dashed rgba(15, 124, 118, 0.18);
+      pointer-events: none;
+    }
+
+    .node-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .node {
+      position: relative;
+      padding: 16px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(31, 40, 38, 0.08);
+      min-height: 106px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .node strong {
+      font-size: 0.94rem;
+      line-height: 1.4;
+    }
+
+    .node span {
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: var(--ink-soft);
+    }
+
+    .node.highlight {
+      background: rgba(15, 124, 118, 0.08);
+      border-color: rgba(15, 124, 118, 0.18);
+    }
+
+    .project-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .project-list li {
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 40, 38, 0.08);
+      background: rgba(255, 255, 255, 0.62);
+      line-height: 1.75;
+      color: var(--ink-soft);
+    }
+
+    .project-list strong {
+      color: var(--ink);
+    }
+
+    .capability-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .capability-card {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+      min-height: 270px;
+    }
+
+    .capability-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 14px;
+    }
+
+    .capability-head h3 {
+      font-size: 1.9rem;
+      letter-spacing: -0.04em;
+    }
+
+    .capability-index {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 40, 38, 0.08);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .capability-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+    }
+
+    .timeline-card,
+    .contact-card {
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .timeline-card::before,
+    .contact-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(158, 106, 47, 0.08), transparent 22%),
+        radial-gradient(circle at 0% 100%, rgba(15, 124, 118, 0.08), transparent 30%);
+    }
+
+    .timeline-list {
+      position: relative;
+      display: grid;
+      gap: 18px;
+      margin-top: 18px;
+      padding-left: 18px;
+    }
+
+    .timeline-list::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: linear-gradient(180deg, rgba(15, 124, 118, 0.35), rgba(158, 106, 47, 0.2));
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 22px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: 7px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--card-solid);
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 0 6px rgba(15, 124, 118, 0.08);
+    }
+
+    .timeline-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .timeline-kicker strong {
+      font-size: 1.04rem;
+    }
+
+    .timeline-kicker span {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .timeline-copy {
+      font-size: 0.97rem;
+    }
+
+    .ledger {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .ledger-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 40, 38, 0.08);
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .ledger-row strong {
+      font-size: 0.96rem;
+    }
+
+    .ledger-row span {
+      color: var(--ink-soft);
+      line-height: 1.7;
+      text-align: right;
+      max-width: 280px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.65fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .contact-card h2 {
+      font-size: clamp(2.6rem, 6vw, 4.4rem);
+      letter-spacing: -0.06em;
+      margin-top: 12px;
+    }
+
+    .contact-card p {
+      margin: 18px 0 0;
+      max-width: 56ch;
+      line-height: 1.9;
+      color: var(--ink-soft);
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      min-height: 48px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
+    }
+
+    .cta.primary {
+      background: var(--ink);
+      color: #f6f1e7;
+      box-shadow: 0 18px 30px rgba(31, 40, 38, 0.18);
+    }
+
+    .cta.secondary {
+      background: rgba(255, 255, 255, 0.62);
+      border-color: rgba(31, 40, 38, 0.1);
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+    }
+
+    .contact-side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .contact-side .info-card {
+      min-height: 100%;
+    }
+
+    .footer-note {
+      width: var(--content-width);
+      margin: 0 auto;
+      padding: 0 0 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    .reveal.is-visible {
+      animation: rise-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+
+    @keyframes rise-in {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .hero,
+      .project-grid,
+      .capability-grid,
+      .timeline-grid,
+      .contact-grid,
+      .section-head,
+      .hero-footer {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-main {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .topbar {
+        padding: 12px;
+        border-radius: 24px;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 16vw, 4.6rem);
+      }
+
+      .project-card,
+      .timeline-card,
+      .contact-card,
+      .capability-card {
+        padding: 20px;
+      }
+
+      .node-row,
+      .signal-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .shell,
+      .topbar,
+      .footer-note {
+        width: min(100vw - 24px, 100%);
+      }
+
+      .topbar {
+        position: static;
+        margin-top: 12px;
+      }
+
+      .brand {
+        width: 100%;
+      }
+
+      .nav {
+        width: 100%;
+      }
+
+      .hero,
+      section {
+        padding-bottom: 56px;
+      }
+
+      .hero {
+        padding-top: 42px;
+      }
+
+      .project-topline,
+      .title-row,
+      .timeline-kicker,
+      .footer-note {
+        align-items: flex-start;
+      }
+
+      .contact-link,
+      .ledger-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .ledger-row span {
+        text-align: left;
+        max-width: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">LJH</div>
+      <div class="brand-copy">
+        <small>Portfolio Archive</small>
+        <strong>卢佳豪 · Java 后端开发工程师</strong>
+      </div>
+    </div>
+    <nav class="nav" aria-label="页面导航">
+      <a href="#overview" class="is-active">Overview</a>
+      <a href="#systems">Systems</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#journey">Journey</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <section class="hero" id="overview">
+      <article class="panel hero-main reveal">
+        <div>
+          <span class="eyebrow">Runtime Profile / Active</span>
+          <div class="hero-title-wrap">
+            <h1>
+              <span>构建稳定的</span>
+              <span>后端系统</span>
+              <span>也设计智能的协作链路</span>
+            </h1>
+            <p>
+              我是卢佳豪，专注 Java 后端开发，同时持续把 AI 智能体、RAG、
+              MCP 工具接入、实时通信与工程化实践融合进产品能力里。
+              我喜欢解决“系统已经能跑，但还不够快、不够稳、不够聪明”的问题，
+              然后把复杂能力做成真正可用的体验。
+            </p>
+          </div>
+
+          <div class="hero-callout">
+            <div class="chip">Java / Spring Boot / MyBatis-Plus</div>
+            <div class="chip">Spring AI / RAG / MCP / Tool Calling</div>
+            <div class="chip">Netty WebSocket / Redis / Redisson</div>
+            <div class="chip">Vue3 协作 / Git / Linux 部署</div>
+          </div>
+
+          <div class="hero-footer">
+            <div class="hero-note">
+              <strong>我的工作方式</strong>
+              <p>
+                从接口可用到系统可扩展，从单点功能到完整链路，我更关注真实业务中的吞吐、
+                响应速度、协作能力与可维护性。做项目时，我习惯把技术栈理解成一组可以编排的服务，
+                而不是孤立的框架清单。
+              </p>
+            </div>
+            <div class="signal-list">
+              <div class="signal-card">
+                <div class="metric-label">Streaming latency</div>
+                <div class="metric-value" data-count="90" data-suffix="%">0</div>
+                <div class="metric-desc">AI 对话首字响应时间缩短约 90%，显著降低等待感。</div>
+              </div>
+              <div class="signal-card">
+                <div class="metric-label">Vector throughput</div>
+                <div class="metric-value" data-count="3" data-prefix="x" data-decimals="1">0</div>
+                <div class="metric-desc">并发向量化吞吐量提升约 2-3 倍，处理更大规模文本更从容。</div>
+              </div>
+              <div class="signal-card">
+                <div class="metric-label">Agent planning</div>
+                <div class="metric-value" data-count="20" data-suffix="+">0</div>
+                <div class="metric-desc">ReAct 智能体最多支持 20 步自主规划与多工具协作执行。</div>
+              </div>
+              <div class="signal-card">
+                <div class="metric-label">Document inputs</div>
+                <div class="metric-value" data-count="3" data-suffix="+">0</div>
+                <div class="metric-desc">支持 PDF、Markdown、TXT 等多类型文档进入知识库链路。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="panel hero-side reveal">
+        <span class="eyebrow">System Snapshot</span>
+        <div class="availability">Available for ambitious back-end work</div>
+
+        <div class="status-shell">
+          <div class="info-card">
+            <span class="label">Current focus</span>
+            <div class="status-grid">
+              <div class="status-item">
+                <strong>AI 应用后端能力建设</strong>
+                <span>流式对话、RAG 知识增强、工具接入、智能体规划执行。</span>
+              </div>
+              <div class="status-item">
+                <strong>实时系统与消息链路</strong>
+                <span>围绕聊天、消息分发、连接保活与在线状态维护做稳定性设计。</span>
+              </div>
+              <div class="status-item">
+                <strong>工程协作与落地能力</strong>
+                <span>前后端联调、缓存与权限治理、版本控制、Linux 部署与基础维护。</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="title-row">
+              <strong>Education / Awards</strong>
+              <span class="mono">2023 - 2027</span>
+            </div>
+            <div class="status-grid">
+              <div class="status-item">
+                <strong>宜春学院 · 软件工程本科</strong>
+                <span>2023.09 - 2027.06，持续在真实项目中积累后端与 AI 系统经验。</span>
+              </div>
+              <div class="status-item">
+                <strong>校级二等奖学金 / 三好学生</strong>
+                <span>同时获得 CET-6 证书、软件设计师中级证书。</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="title-row">
+              <strong>Direct Channels</strong>
+              <span class="mono">Verified</span>
+            </div>
+            <div class="contact-stack">
+              <a class="contact-link" href="tel:+8619579874846">
+                <div>
+                  <span>Phone</span>
+                  <strong>+86 195-7987-4846</strong>
+                </div>
+                <div class="mono">Call</div>
+              </a>
+              <a class="contact-link" href="mailto:ljh@tak1na.cn">
+                <div>
+                  <span>Email</span>
+                  <strong>ljh@tak1na.cn</strong>
+                </div>
+                <div class="mono">Mail</div>
+              </a>
+              <a class="contact-link" href="https://blog.csdn.net/Themberfue" target="_blank" rel="noreferrer">
+                <div>
+                  <span>Blog</span>
+                  <strong>blog.csdn.net/Themberfue</strong>
+                </div>
+                <div class="mono">Open</div>
+              </a>
+              <a class="contact-link" href="https://gitee.com/takinaMio" target="_blank" rel="noreferrer">
+                <div>
+                  <span>Gitee</span>
+                  <strong>gitee.com/takinaMio</strong>
+                </div>
+                <div class="mono">Repo</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="systems">
+      <div class="section-head reveal">
+        <div>
+          <span class="section-label">Selected Systems</span>
+          <h2>我更喜欢用“系统能力”来介绍项目。</h2>
+        </div>
+        <p>
+          两个项目分别代表了我在 AI 智能体平台与即时通讯系统上的实践：
+          一个追求“更聪明的协作”，一个追求“更稳定的实时连接”。
+          它们共同构成了我对后端工程的理解。
+        </p>
+      </div>
+
+      <div class="project-grid">
+        <article class="project-card reveal">
+          <div class="project-header">
+            <div class="project-topline">
+              <div class="project-title">
+                <span class="label">Case 01</span>
+                <h3>MioAI 智能体开发平台</h3>
+                <p>Spring Boot / Spring AI / RAG / Tool Calling / MCP / Redis / Vue3 / OSS</p>
+              </div>
+              <div class="project-tags">
+                <span>Agent Platform</span>
+                <span>Knowledge Base</span>
+                <span>Streaming UX</span>
+              </div>
+            </div>
+            <p class="project-copy">
+              面向 AI 智能体场景开发的前后端分离平台，支持智能体创建与管理、
+              RAG 知识库构建、MCP 工具接入、工具调用、流式对话与会话记忆。
+              我把它理解成一套可以自由编排能力的“智能工作台”。
+            </p>
+          </div>
+
+          <div class="architecture" aria-label="MioAI 能力拓扑">
+            <div class="node-row">
+              <div class="node highlight">
+                <strong>Streaming Response</strong>
+                <span>Spring AI + SSE 流式输出，首字响应更快。</span>
+              </div>
+              <div class="node">
+                <strong>Agent Planner</strong>
+                <span>ReAct 模式，多步自主规划和工具协作。</span>
+              </div>
+              <div class="node highlight">
+                <strong>RAG Pipeline</strong>
+                <span>上传、解析、切分、向量化、检索一体化。</span>
+              </div>
+            </div>
+            <div class="node-row">
+              <div class="node">
+                <strong>Cloudflare R2</strong>
+                <span>文档对象存储接入，支撑知识库原始资料管理。</span>
+              </div>
+              <div class="node highlight">
+                <strong>MCP Connector</strong>
+                <span>SSE / STDIO 双模式接入、配置检测与解析。</span>
+              </div>
+              <div class="node">
+                <strong>Conversation Memory</strong>
+                <span>多轮对话沉淀上下文，支撑连续交互体验。</span>
+              </div>
+            </div>
+          </div>
+
+          <ul class="project-list">
+            <li>
+              <strong>流式输出改造：</strong>
+              将 AI 对话从一次性字符串返回升级为基于 Spring AI + SSE 的流式响应，
+              本地压测中首字响应时间缩短约 90%。
+            </li>
+            <li>
+              <strong>并发向量化优化：</strong>
+              基于 ExecutorService 线程池，对文本切分结果按批次并发执行关键词增强与向量入库，
+              吞吐量提升约 2-3 倍。
+            </li>
+            <li>
+              <strong>智能体执行链路：</strong>
+              支持网页搜索、网页内容抓取、PDF 生成、资源下载等工具协作，
+              面向更复杂的问题提供最多 20 步的自主规划能力。
+            </li>
+            <li>
+              <strong>知识增强与扩展性：</strong>
+              完成从文档上传到相似检索的完整 RAG 链路，并支持 MCP 工具自由添加，
+              让平台更具扩展性与复用价值。
+            </li>
+          </ul>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-header">
+            <div class="project-topline">
+              <div class="project-title">
+                <span class="label">Case 02</span>
+                <h3>RemChat 桌面即时通讯软件</h3>
+                <p>Spring Boot / Netty / Redis / Redisson / MyBatis-Plus / MySQL / Electron / Vue3 / SQLite</p>
+              </div>
+              <div class="project-tags">
+                <span>Realtime Messaging</span>
+                <span>Desktop IM</span>
+                <span>Pub/Sub</span>
+              </div>
+            </div>
+            <p class="project-copy">
+              面向桌面即时通讯场景的前后端分离系统，覆盖好友申请、单聊群聊、
+              富媒体传输、后台管理、客户端版本更新及 AI 机器人对话，
+              完成从服务端消息分发到桌面端会话展示的完整业务闭环。
+            </p>
+          </div>
+
+          <div class="architecture" aria-label="RemChat 实时链路">
+            <div class="node-row">
+              <div class="node highlight">
+                <strong>Netty Gateway</strong>
+                <span>长连接通信服务，支撑实时消息推送。</span>
+              </div>
+              <div class="node">
+                <strong>Heartbeat Monitor</strong>
+                <span>心跳检测、连接保活与断线重连机制。</span>
+              </div>
+              <div class="node highlight">
+                <strong>Online Presence</strong>
+                <span>在线状态维护，提升聊天连续性与稳定性。</span>
+              </div>
+            </div>
+            <div class="node-row">
+              <div class="node">
+                <strong>Redisson Topic</strong>
+                <span>发布订阅链路，统一多类消息分发。</span>
+              </div>
+              <div class="node highlight">
+                <strong>Redis Cache Layer</strong>
+                <span>验证码、Token、联系人列表与心跳信息缓存。</span>
+              </div>
+              <div class="node">
+                <strong>AOP Permissions</strong>
+                <span>自定义注解 + AOP，统一登录校验与管理员控制。</span>
+              </div>
+            </div>
+          </div>
+
+          <ul class="project-list">
+            <li>
+              <strong>长连接实时通信：</strong>
+              基于 Netty WebSocket 自建通信服务，结合心跳检测与断线重连，
+              实现稳定的消息推送与在线状态维护。
+            </li>
+            <li>
+              <strong>消息分发解耦：</strong>
+              基于 Redisson Topic 设计发布订阅链路，支持私聊、群聊、好友申请、
+              强制下线、群成员变更等消息统一分发。
+            </li>
+            <li>
+              <strong>缓存与鉴权治理：</strong>
+              使用 Redis 缓存高频状态数据，并通过 AOP + 自定义注解实现统一登录校验，
+              减少重复逻辑和数据库压力。
+            </li>
+            <li>
+              <strong>桌面端完整闭环：</strong>
+              服务端与桌面端联动完成从消息生产到会话展示的全链路协作，
+              兼顾稳定性和可扩展性。
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="capabilities">
+      <div class="section-head reveal">
+        <div>
+          <span class="section-label">Capability Stack</span>
+          <h2>技术栈不是清单，而是我的协作拓扑。</h2>
+        </div>
+        <p>
+          我关心的是这些能力如何在系统里彼此配合：框架、数据库、缓存、消息、
+          AI 工具、前端协作与部署维护，最终都要为一个更可靠的业务闭环服务。
+        </p>
+      </div>
+
+      <div class="capability-grid">
+        <article class="capability-card reveal">
+          <div class="capability-head">
+            <div>
+              <span class="label">01 / Core</span>
+              <h3>Java 基础与后端框架</h3>
+            </div>
+            <div class="capability-index">Foundation</div>
+          </div>
+          <p class="capability-body">
+            熟悉 JavaSE、JavaEE、面向对象、集合框架、异常机制；
+            理解 Java 并发基础，能够使用线程池、常用 JUC 工具类、常见锁策略与并发集合。
+          </p>
+          <div class="capability-pills">
+            <span class="tag">JavaSE</span>
+            <span class="tag">JavaEE</span>
+            <span class="tag">Spring Boot</span>
+            <span class="tag">MyBatis</span>
+            <span class="tag">MyBatis-Plus</span>
+            <span class="tag">AOP</span>
+          </div>
+        </article>
+
+        <article class="capability-card reveal">
+          <div class="capability-head">
+            <div>
+              <span class="label">02 / Runtime</span>
+              <h3>数据库、中间件与性能治理</h3>
+            </div>
+            <div class="capability-index">Reliability</div>
+          </div>
+          <p class="capability-body">
+            熟悉 MySQL 事务、索引、SQL 优化及常见业务性能调优；
+            熟悉 Redis 的常用数据结构和应用场景，也了解 RabbitMQ 的基本消息模型与异步解耦使用方式。
+          </p>
+          <div class="capability-pills">
+            <span class="tag">MySQL</span>
+            <span class="tag">Redis</span>
+            <span class="tag">RabbitMQ</span>
+            <span class="tag">SQL Optimization</span>
+            <span class="tag">Caching</span>
+          </div>
+        </article>
+
+        <article class="capability-card reveal">
+          <div class="capability-head">
+            <div>
+              <span class="label">03 / Intelligent Systems</span>
+              <h3>微服务与 AI 工具协作</h3>
+            </div>
+            <div class="capability-index">Expansion</div>
+          </div>
+          <p class="capability-body">
+            熟悉 Spring Cloud 常用组件的基础使用与联调；
+            熟悉 Spring AI 的基本应用、MCP 工具的使用与开发，
+            能把大模型能力真正接进业务系统，而不只是停留在演示层。
+          </p>
+          <div class="capability-pills">
+            <span class="tag">Spring Cloud</span>
+            <span class="tag">Nacos</span>
+            <span class="tag">OpenFeign</span>
+            <span class="tag">Gateway</span>
+            <span class="tag">Seata</span>
+            <span class="tag">Spring AI</span>
+            <span class="tag">MCP</span>
+          </div>
+        </article>
+
+        <article class="capability-card reveal">
+          <div class="capability-head">
+            <div>
+              <span class="label">04 / Communication</span>
+              <h3>实时链路与消息分发</h3>
+            </div>
+            <div class="capability-index">Realtime</div>
+          </div>
+          <p class="capability-body">
+            在即时通讯与高实时性场景中，能围绕 WebSocket、发布订阅、连接保活、
+            在线状态维护与客户端重连机制设计稳定的消息链路。
+          </p>
+          <div class="capability-pills">
+            <span class="tag">Netty</span>
+            <span class="tag">WebSocket</span>
+            <span class="tag">Redisson Topic</span>
+            <span class="tag">Heartbeat</span>
+          </div>
+        </article>
+
+        <article class="capability-card reveal">
+          <div class="capability-head">
+            <div>
+              <span class="label">05 / Collaboration</span>
+              <h3>前后端协作与页面实现</h3>
+            </div>
+            <div class="capability-index">Delivery</div>
+          </div>
+          <p class="capability-body">
+            具备 Vue3、HTML、CSS、JavaScript 基础，
+            能完成页面开发与前后端数据交互，也能从后端视角理解接口设计对前端体验的影响。
+          </p>
+          <div class="capability-pills">
+            <span class="tag">Vue3</span>
+            <span class="tag">HTML/CSS/JS</span>
+            <span class="tag">API Integration</span>
+          </div>
+        </article>
+
+        <article class="capability-card reveal">
+          <div class="capability-head">
+            <div>
+              <span class="label">06 / Workflow</span>
+              <h3>工程化、版本控制与部署维护</h3>
+            </div>
+            <div class="capability-index">Operations</div>
+          </div>
+          <p class="capability-body">
+            熟悉 Git 版本控制与基础协作流程，具备在 Linux 环境下进行项目部署与基础维护的能力，
+            能把开发工作更平稳地落到真实运行环境中。
+          </p>
+          <div class="capability-pills">
+            <span class="tag">Git</span>
+            <span class="tag">Linux</span>
+            <span class="tag">Deployment</span>
+            <span class="tag">Maintenance</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="journey">
+      <div class="section-head reveal">
+        <div>
+          <span class="section-label">Journey & Signals</span>
+          <h2>我在成长路径里，反复验证“可用、可扩展、可协作”。</h2>
+        </div>
+        <p>
+          我的简历里最重要的不是列了哪些关键词，而是每一段经历都围绕真实的系统问题展开：
+          提速、扩容、解耦、稳定性、可维护性，以及如何把这些能力组合成产品。
+        </p>
+      </div>
+
+      <div class="timeline-grid">
+        <article class="timeline-card reveal">
+          <span class="label">Timeline</span>
+          <div class="timeline-list">
+            <div class="timeline-item">
+              <div class="timeline-kicker">
+                <strong>软件工程本科在读</strong>
+                <span>2023.09 - 2027.06</span>
+              </div>
+              <p class="timeline-copy">
+                就读于宜春学院，持续在课程之外以真实项目为载体训练后端与 AI 工程能力。
+              </p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-kicker">
+                <strong>构建 AI 智能体平台</strong>
+                <span>MioAI</span>
+              </div>
+              <p class="timeline-copy">
+                重点实践流式输出、知识库 RAG、MCP 工具接入、智能体规划执行与多工具协作。
+              </p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-kicker">
+                <strong>构建桌面即时通讯系统</strong>
+                <span>RemChat</span>
+              </div>
+              <p class="timeline-copy">
+                聚焦长连接稳定性、消息分发架构、缓存治理、权限校验与桌面端业务闭环。
+              </p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-kicker">
+                <strong>奖项与资格</strong>
+                <span>Verified</span>
+              </div>
+              <p class="timeline-copy">
+                获校级二等奖学金、三好学生，并取得 CET-6 证书与软件设计师中级证书。
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="timeline-card reveal">
+          <span class="label">Impact Ledger</span>
+          <div class="ledger">
+            <div class="ledger-row">
+              <strong>AI 体验优化</strong>
+              <span>把一次性返回改造为流式响应，让生成式交互更接近实时反馈。</span>
+            </div>
+            <div class="ledger-row">
+              <strong>向量化吞吐提升</strong>
+              <span>通过并发批处理优化文档向量化链路，减少大文本处理等待时间。</span>
+            </div>
+            <div class="ledger-row">
+              <strong>复杂任务自动化</strong>
+              <span>让智能体具备自主规划与工具编排能力，而不只是单轮问答。</span>
+            </div>
+            <div class="ledger-row">
+              <strong>实时通信稳定性</strong>
+              <span>围绕长连接、心跳检测、重连与在线状态维护提升系统连续性。</span>
+            </div>
+            <div class="ledger-row">
+              <strong>消息分发解耦</strong>
+              <span>使用发布订阅削弱业务生产与连接层推送之间的耦合。</span>
+            </div>
+            <div class="ledger-row">
+              <strong>缓存与权限统一治理</strong>
+              <span>将高频状态读取与鉴权逻辑模块化，减少重复实现与数据库压力。</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact-grid">
+        <article class="contact-card reveal">
+          <span class="label">Next Collaboration</span>
+          <h2>如果你需要的是一个能把复杂系统做扎实的人，我们可以聊聊。</h2>
+          <p>
+            我希望参与那些真正需要工程思考的产品：响应速度要快、链路要稳、模块要能扩展，
+            同时又愿意把 AI 能力接进真实业务里。无论是后端服务、AI 应用基础设施，
+            还是实时通信系统，我都很愿意继续把这些能力做深。
+          </p>
+          <div class="cta-row">
+            <a class="cta primary" href="mailto:ljh@tak1na.cn">发送邮件</a>
+            <a class="cta secondary" href="https://gitee.com/takinaMio" target="_blank" rel="noreferrer">查看仓库</a>
+            <a class="cta secondary" href="https://blog.csdn.net/Themberfue" target="_blank" rel="noreferrer">访问博客</a>
+          </div>
+        </article>
+
+        <div class="contact-side">
+          <article class="info-card reveal">
+            <span class="label">Profile Capsule</span>
+            <div class="status-grid">
+              <div class="status-item">
+                <strong>姓名</strong>
+                <span>卢佳豪</span>
+              </div>
+              <div class="status-item">
+                <strong>方向</strong>
+                <span>Java 后端开发工程师</span>
+              </div>
+              <div class="status-item">
+                <strong>关键词</strong>
+                <span>AI Agent / RAG / MCP / Netty / Redis / Spring 系生态</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="info-card reveal">
+            <span class="label">Short Manifesto</span>
+            <p class="project-copy">
+              我相信好的后端不是藏在页面后面的黑盒，而是一套让体验更顺滑、
+              让团队更容易协作、让系统更经得起增长的基础设施。
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-note">
+    <span>Designed as a single-file portfolio experience.</span>
+    <span>Built from resume content, reimagined as a living system archive.</span>
+  </footer>
+
+  <script>
+    const navLinks = Array.from(document.querySelectorAll(".nav a"));
+    const sections = Array.from(document.querySelectorAll("main section[id]"));
+    const revealNodes = document.querySelectorAll(".reveal");
+    const counters = document.querySelectorAll("[data-count]");
+    const interactivePanels = document.querySelectorAll(".panel");
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navLinks.forEach((link) => {
+            link.classList.toggle("is-active", link.getAttribute("href") === "#" + id);
+          });
+        }
+      });
+    }, {
+      rootMargin: "-35% 0px -50% 0px",
+      threshold: 0.1
+    });
+
+    sections.forEach((section) => sectionObserver.observe(section));
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, {
+      threshold: 0.18
+    });
+
+    revealNodes.forEach((node) => revealObserver.observe(node));
+
+    const animateCounter = (element) => {
+      const target = Number(element.dataset.count || 0);
+      const decimals = Number(element.dataset.decimals || 0);
+      const prefix = element.dataset.prefix || "";
+      const suffix = element.dataset.suffix || "";
+      const duration = 1400;
+      const startTime = performance.now();
+
+      const tick = (now) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = target * eased;
+        const formatted = decimals > 0 ? value.toFixed(decimals) : Math.round(value).toString();
+        element.textContent = prefix + formatted + suffix;
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        }
+      };
+
+      requestAnimationFrame(tick);
+    };
+
+    const counterObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, {
+      threshold: 0.6
+    });
+
+    counters.forEach((counter) => counterObserver.observe(counter));
+
+    interactivePanels.forEach((panel) => {
+      panel.addEventListener("pointermove", (event) => {
+        const rect = panel.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+        panel.style.setProperty("--glow-x", x + "%");
+        panel.style.setProperty("--glow-y", y + "%");
+      });
+    });
+  </script>
+</body>
+</html>

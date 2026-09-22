@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02_认识URL</title>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    // URL：Uniform Resource Locator(统一资源定位符)
+
+    // http:// hmajax.itheima.net /api/news
+    // 协议(Scheme) 域名(主机名(Host)) 资源路径(Path)
+    axios ({
+      url: 'http://hmajax.itheima.net/api/news'
+    }).then(result => {
+      console.log(result)
+    })
+
+    // https://www.example.com:443/path/to/resource?name=value#section
+    /*
+      https：协议
+      www.example.com：主机名
+      443：端口号（通常不显示，因为443是HTTPS的默认端口）
+      /path/to/resource：路径
+      ?name=value：查询字符串
+      #section：片段  
+    */
+  </script>
+</body>
+</html>

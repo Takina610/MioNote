@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+    <html lang="zh-CN">
+        <head>
+            <meta charset="UTF-8">
+            <title>HTML各种元素</title>
+            <style>
+                h1{
+                    font-size: 25px;
+                    color: blue;
+                    background-color:bisque;
+                }
+                p{
+                    font-size: 25px;
+                    color: cadetblue;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>这是一个页面标题</h1>
+            <div> <!--可以对多个段落进行一起控制-->
+                <p>
+                    <em>
+                        第一个段落<br>  <!--<em>使字体倾斜-->
+                    </em>   
+                        随便一段<em>内容</em>                
+                </p> 
+                <p>
+                    <strong>
+                        第二个段落<br>  <!--strong使字体加粗-->
+                    </strong>    
+                        随便一段<strong>内容</strong>          
+                </p> 
+                <p>
+                    <span>第三个段落</span> <!--<span>类似于<div>-->
+                </p>                  
+            </div>
+            
+            <div>
+            <!--<marquee> <h1> <p> <div> 为块级元素(特点:独占一行) 
+                <imput type="text">(单标签) <span>为行内元素(特点:不独占一行)
+               
+                规则一:块级元素中能写：行内元素、块级元素（几乎什么都能写）
+                规则二：行内元素中能写行内元素，但不能写块级元素
+               
+                特殊规则：h1-h6不能互相嵌套
+                特殊规则：p标签中不能写块元素
+            -->                        
+            </div>
+            
+            <!--不常用的标签-->
+            <div>            
+                <p>
+                    <cite>文字</cite>
+                </p>
+                <p>
+                    <dfn>文字</dfn>
+                </p>
+                <p>
+                    商品原价：<del>999</del> 活动现价：<ins>99</ins>
+                </p>
+                <p>
+                    水的分子式为：H<sub>2</sub>O 8的立方为8<sup>3</sup>
+                </p>
+                <p>
+                    这是一段代码:<code>using namespace std;</code>
+                </p>
+                <p>
+                    R星：<samp>荒野大镖客2</samp> <!--从正常的上下文中，将某些内容提取出来-->
+                </p>
+                <p>
+                    R星：<kbd>GTA5</kbd> <!--表示通过键盘输入的-->
+                </p>
+                <p>
+                    <abbr title="侠盗猎车手5">GTA5</abbr>
+                </p>
+                <p>
+                    “你是年少的欢喜”反过来是<bdo dir="rtl">“你是年少的欢喜”</bdo>
+                </p>
+                <p>
+                    定义变量：<code>let <var>a</var> = 1 </code>
+                </p>
+                <p>
+                    <small>本网站图片仅供参考</small> <!--用于声明-->
+                </p>
+                <p>
+                    EA出品的<b>双人成行</b>真的好玩
+                </p>
+                <p>
+                     <q>自动加双引号</q>
+                </p>
+                <p>
+                    我的学校的地址是：<address>宜春市袁州区学府路宜春学院</address>
+                </p>                <!--块级元素-->
+                <p>
+                    麦克的一句著名的话：<blockquote>你每天都会忘记成百上千件事，为何不把这件事也忘掉呢？</blockquote>
+                </p>                  <!--长引用--块级元素-->
+            </div>
+       </body>
+    </html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>11_margin的注意事项4</title>
+    <style>
+        div {
+            width: 800px;
+            height: 200px;
+            background-color: deepskyblue;
+
+            margin-left: auto;
+            margin-right: auto;
+            margin: 100px auto;
+        }
+        span {
+            margin: 100px auto;
+            background-color: firebrick;
+        }
+    </style>
+</head>
+<body>
+    <!-- margin的值也可以是 auto，可以给一个块级元素左右设置 auto可以使其相对父元素水平居中 -->
+    <!-- 对于一个行内元素，auto对其没有效果 -->
+    <div></div>
+    <span>123</span>
+</body>
+</html>

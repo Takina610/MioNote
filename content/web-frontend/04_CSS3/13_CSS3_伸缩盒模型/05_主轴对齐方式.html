@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>05_主轴对齐方式</title>
+    <style>
+        .outer {
+            width: 1000px;
+            height: 600px;
+            background-color: skyblue;
+
+            /* 开启弹性盒子 */
+            display: flex;
+
+            /* 设置主轴对齐方式 */
+            /* justify-content: flex-start; */
+
+            /* justify-content: flex-end; */
+            /* justify-content: space-around; */
+            justify-content: space-between;
+            /* justify-content: space-evenly; */
+        }
+        .inner {
+            width: 200px;
+            height: 200px;
+            background-color: #888;
+            border: 1px solid black;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner">1</div>
+        <div class="inner">2</div>
+        <div class="inner">3</div>
+    </div>
+    <img src="../images/屏幕截图 2023-12-05 140954.png" alt="">
+</body>
+</html>

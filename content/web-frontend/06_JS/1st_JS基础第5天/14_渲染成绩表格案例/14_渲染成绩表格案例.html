@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./styles/index.css" />
+  <title>14_渲染成绩表格案例</title>
+</head>
+
+<body>
+  <div id="app" class="score-case">
+    <div class="table">
+      <table>
+        <thead>
+          <tr>
+            <th>编号</th>
+            <th>科目</th>
+            <th>成绩</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+       
+          <script>
+            function getData(datas = {}) {
+              let sum = 0
+              let average = 0
+              for (let i = 0; i < datas.length; i++) {
+                sum += datas[i].score
+              }
+              average = Math.round(sum / datas.length) 
+
+              return [sum, average]
+            }
+            // 核心数据
+            const data = [
+              { subject: '语文', score: 96 },
+              { subject: '数学', score: 80 },
+              { subject: '英语', score: 100 },
+            ]
+            
+            for (let i = 0; i < data.length; i++) {
+              document.write(`
+               <tbody> 
+                  <tr>
+                    <td>${i+1}</td>
+                    <td>${data[i].subject}</td>
+                    <td>${data[i].score}</td>
+                    <td><a href="#">删除</a></td>
+                  </tr>
+                </tbody>
+              `)
+            }
+            document.write(`
+              <tbody>
+                <tr>
+                  <td colspan="5">
+                    <span class="none">暂无数据</span>
+                  </td>
+                </tr>
+              </tbody>
+            `)
+            let datas = getData(data)
+            document.write(`
+            <tfoot>
+              <tr>
+                <td colspan="5">
+                  <span>总分：${datas[0]}</span>
+                  <span style="margin-left: 50px">平均分：${datas[1]}</span>
+                </td>
+              </tr>
+            </tfoot>
+            `)
+        </script>
+      </table>
+    </div>
+  </div>
+</body>
+       
+
+        
+</html>

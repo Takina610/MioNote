@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01_原型</title>
+</head>
+<body>
+  <script>
+    function Star(uname, age) {
+      this.uname = uname
+      this.age = age
+      // this.sing = function () {
+      //   console.log('唱歌')
+      // }
+    }
+    // console.dir(Star.prototype)
+    // 原型可以解决构造函数中所造成的内存泄露问题
+    // 对于构造函数里那些不变的方法，可以写到原型里以防止内存泄露
+    Star.prototype.sing = function () {
+        console.log('唱歌')
+    }
+
+    const ldh = new Star('刘德华', 55)
+    const zxy = new Star('张学友', 58)
+    ldh.sing()
+    zxy.sing()
+    console.log(ldh.sing === zxy.sing) // true
+
+  </script>
+</body>
+</html>

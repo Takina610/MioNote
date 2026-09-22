@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07-Vue 指令-v-on-内联语句</title>
+</head>
+<body>
+  <div id="app">
+    <!-- <button v-on:click="count--">-</button> -->
+    <button @click="count--">-</button>
+    <span>{{ count }}</span>
+    <!-- <button v-on:click="count++">+</button> -->
+    <button @click="count++">+</button>
+  </div>
+  <script src="./vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        count: 100
+      }
+    })
+  </script>
+</body>
+</html>

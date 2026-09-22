@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>16_多级对象解构</title>
+</head>
+<body>
+  <script>
+    const pig = {
+      name: '佩奇',
+      family: {
+        father: '猪爸爸',
+        mother: '猪妈妈',
+        sister: '猪妹妹'
+      }
+    }
+    // 多级对象解构 (嵌套解构)
+    const {name, family:{father, mother, sister}} = pig
+  </script>
+</body>
+</html>

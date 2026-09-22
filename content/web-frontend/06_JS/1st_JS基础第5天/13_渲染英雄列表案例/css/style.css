@@ -1,0 +1,40 @@
+* {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    body {
+      background: #fff;
+      text-align: center;
+    }
+
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+      width: 800px;
+      margin: 20px auto;
+      background-color: #000;
+    }
+
+    .list li {
+      position: relative;
+      transition: all .5s;
+      margin: 15px;
+    }
+
+    .list li:first-child {
+      margin-left: 0;
+    }
+
+    .list li:hover {
+      transform: scale(1.2);
+      z-index: 999;
+    }
+
+    .list li img {
+      width: 100px;
+    }

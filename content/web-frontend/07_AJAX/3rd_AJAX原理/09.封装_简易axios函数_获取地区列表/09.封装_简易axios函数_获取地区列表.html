@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>封装_简易axios函数_获取地区列表</title>
+</head>
+
+<body>
+  <div></div>
+  <script>
+    /**
+     * 目标：封装_简易axios函数_获取地区列表
+     *  1. 判断有params选项，携带查询参数
+     *  2. 使用URLSearchParams转换，并携带到url上
+     *  3. 使用myAxios函数，获取地区列表
+    */
+    // 1. 定义myAxios函数，接收配置对象，返回Promise对象
+    function myAxios(config) {
+      return new Promise((resolve, reject) => {
+        const XHR = new XMLHttpRequest
+        // 1. 判断有params选项，携带查询参数
+        if (config.params) {
+          // 2. 使用URLSearchParams转换，并携带到url上
+          const paramsObj = new URLSearchParams(config.params)
+          const queryString = paramsObj.toString()
+          config.url += `?${queryString}`
+        }
+
+        XHR.open(config.method || 'GET', config.url)
+        XHR.addEventListener('loadend', () => {
+          if (XHR.status >= 200 && XHR.status < 300) {
+            resolve(JSON.parse(XHR.response))
+          } else {
+            reject(new Error(XHR.response))
+          }
+        })
+        XHR.send()
+      })
+    }
+
+    // 3. 使用myAxios函数，获取地区列表
+    myAxios({
+      url: 'http://hmajax.itheima.net/api/area1',
+      params: {
+        pname: '江西省',
+        cname: '宜春市'
+      }
+    }).then(result => {
+      document.querySelector('div').innerHTML = result.list.join('<br>')
+    }).catch(error => {
+      document.querySelector('div').innerHTML = error.message
+    })
+
+  </script>
+</body>
+
+</html>

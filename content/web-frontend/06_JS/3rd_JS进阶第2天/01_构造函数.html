@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01_构造函数</title>
+</head>
+<body>
+  <script>
+    // 构造函数：一种特殊的函数，主要用来初始化对象
+    // 构造函数的两个约定：它们的命名开头字母必须是大写；它们只能用 new操作符来执行
+    function Pig(name, age, gender) {
+      this.uname = name
+      this.age = age
+      this.gender = gender
+    }
+    const Peppa = new Pig('佩奇', 18, '女')
+    const George = new Pig('乔治', 4, '男')
+    console.log(Peppa)
+    console.log(George)
+  </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML超链接</title>
+</head>
+<body>
+        <!--超链接_跳转页面-->
+    <div>        
+        <!--target="_blank"表示创建的一个新的标签页-->
+        <a href="https://www.bilibili.com/anime/?spm_id_from=333.1007.0.0" target="_blank">番剧</a><br>
+    
+        <!--target="_slef"表示直接对当前标签的跳转 (不写也可以实现该功能)-->
+        <a href="https://space.bilibili.com/394489821?spm_id_from=444.41.0.0" target="_self">B站个人主页</a><br><br><br><br>
+        <!--里面还可以嵌套某些标签，例如<img>标签-->
+        
+    </div>
+        
+        <!--超链接_跳转文件-->
+    <div>
+        <!--方法类似与<img>打开图片-->
+        <a href="./picture/teatime茶点时光【清凉版】-4K_ad8d1.jpg" target="_blank">芙宁娜</a><br>
+        <a href="./video/投篮 (22).mp4" target="_blank">NBA2K23</a><br>
+
+        <!--浏览器强制下载-->
+        <a href="./video/投篮 (22).mp4" target="_blank" download="强制改名">下载NBA2K23</a><br><br><br><br>
+                                                        <!--后面可以不加属性-->
+    </div>
+
+        <!--超链接_跳转锚点-->
+    <div>
+        <a href="#fnn">芙宁娜</a><br>
+        <a href="#gy">甘雨</a><br>
+        <a href="#ys">亚瑟</a><br>
+        <a href="#rm">蕾姆</a><br>
+
+        <a name="rm"></a>
+        <p>蕾姆</p>
+        <img src="./picture/_7ef60435390510356af17fcbc5fe903d_485687948_77058eec08fa513ded2c54ef7b6d55fbb3fbd98c.jpg" alt="蕾姆">
+
+        <a name="ys"></a>
+        <p>亚瑟</p>
+        <img  width="1400" src="./picture/屏幕截图 2023-07-14 232327.png" alt="亚瑟">
+        
+        <!--<p id="">也是一直方式(HTML5推荐这样写，这样不会占位置，导致显示的不美观)-->
+        <p id="gy">甘雨</p>
+        <img  width="1400" src="./picture/1676261901547.jpg" alt="甘雨">
+
+        <p id="fnn">芙宁娜</p>
+        <img  width="1400" src="./picture/teatime茶点时光【清凉版】-4K_ad8d1.jpg" alt="芙宁娜"><br>
+
+        <a href="#">回到顶部</a>
+        <a href="">刷新页面</a><br><br>
+
+        <!--也可以在其他.html查看本.html图片 ，详见打开 test1.html-->
+
+        <a href="javascript:alert(666);">点我弹窗</a><br><br><br><br>
+    </div>
+
+        <!--超链接_唤起指定应用-->
+    <div>
+        <a href="tel:13800138000">电话联系</a><br>
+        <a href="mailto:example@example.com">邮件联系</a><br>
+        <a href="sms:10086">短信联系</a><br>
+    </div>
+</body>
+</html>

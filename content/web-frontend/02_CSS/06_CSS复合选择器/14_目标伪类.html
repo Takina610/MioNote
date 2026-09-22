@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>14_目标伪类</title>
+    <style>
+        a:link {
+            color: gold;
+            font-size: 40px;
+        }
+        a:visited {
+            color: green;
+            font-size: 60px;
+        }
+        div {
+            width: 300px;
+            height: 300px;
+            background-color: chartreuse;
+            color: blue;
+            font-size: 40px;
+        }
+        div:target {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <a href="#one">前往One</a>
+    <a href="#two">前往Two</a>
+    <a href="#three">前往Three</a>
+    <a href="#four">前往Four</a>
+    <a href="#five">前往Five</a>
+    <a href="#six">前往Six</a>
+    <br><br>
+    <div id="one">One</div>
+    <br>
+    <div id="two">Two</div>
+    <br>
+    <div id="three">Three</div>
+    <br>
+    <div id="four">Four</div>
+    <br>
+    <div id="five">Five</div>
+    <br>
+    <div id="six">Six</div>
+    <br>
+    <a href="#">Top</a>
+    <a href=" ">Refresh</a>
+</body>
+</html>

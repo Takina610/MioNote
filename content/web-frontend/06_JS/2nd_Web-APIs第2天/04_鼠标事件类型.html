@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04_鼠标事件类型</title>
+  <style>
+    div {
+      width: 200px;
+      height: 200px;
+      background-color: pink;
+      transition: all linear .2s;
+    }
+  </style>
+</head>
+<body>
+  <div></div>
+  <script>
+    const div = document.querySelector('div')
+    // 鼠标经过 mouseenter
+    div.addEventListener('mouseenter', function() {
+      div.style.backgroundColor = 'deepskyblue'
+    })
+    // 鼠标离开 mouseleave
+    div.addEventListener('mouseleave', function() {
+      div.style.backgroundColor = 'pink'
+    })
+  </script>
+</body>
+</html>

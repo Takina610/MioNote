@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04_事件流-事件冒泡</title>
+</head>
+<body>
+  <div>
+    <button>点我</button>
+  </div>
+  <script>
+    // 事件冒泡是 DOM（文档对象模型）事件传播的一种机制，
+    // 其中事件从最初触发它的元素（即目标元素）开始，然后逐级向上通过祖先元素传播，
+    // 直到到达根元素（通常是 document对象）。这种机制允许事件在没有直接绑定事件处理器的元素上被捕获和处理。
+
+    // 考虑一个简单的 HTML结构，一个按钮（button）元素包含在一个段落（p）元素中，
+    // 该段落又包含在一个div元素中。如果用户点击了按钮，那么按照事件冒泡的机制，
+    // 首先触发并处理按钮上的点击事件，然后是其父元素p的点击事件，最后是div元素的点击事件，
+    // 以此类推，直到document对象。
+
+    // 依此调用所有父级元素的同名事件
+
+    // 给按钮绑定点击事件
+    const button = document.querySelector('button')
+    const div = document.querySelector('div')
+
+    button.addEventListener('click', function(event) {
+        alert('Button was clicked!');
+    });
+
+    // 给父div绑定点击事件
+    div.addEventListener('click', function(event) {
+        alert('Div was clicked!');
+    });
+    
+  </script>
+</body>
+</html>

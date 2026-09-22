@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05_函数提升</title>
+</head>
+<body>
+  <script>
+    // 会把所有函数声明提升到当前作用域的最前面
+    // 只提升函数声明，不提升函数调用
+    fn()
+    function fn() {
+      console.log('函数提升')
+    }
+
+    // 变量 fun被提升了，但是它被初始化为 undefined，并且在被赋值为一个函数之前，它不是一个函数。
+    fun()
+    var fun = function() {
+      console.log('函数表达式') //Uncaught TypeError: fun is not a function
+    }
+    // 函数表达式必须先声明并赋值，后调用
+  </script>
+</body>
+</html>

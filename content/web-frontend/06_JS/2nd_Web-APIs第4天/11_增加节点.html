@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11_增加节点</title>
+</head>
+<body>
+  <ul>
+    <li>我是第一</li>
+  </ul>
+  <script>
+    // 增加节点
+    // const div = document.createElement('div')
+
+    // 追加节点 作为最后一个子元素
+    // document.body.appendChild(div)
+    // const ul = document.querySelector('ul')
+    // const li = document.createElement('li')
+    // li.innerHTML = '我是追加在最后的'
+    // ul.appendChild(li)
+
+    // 追加节点 插入某一个特定元素前面
+    const ul = document.querySelector('ul')
+    const li = document.createElement('li')
+    li.innerHTML = '我是追加在最前的'
+    ul.insertBefore(li, ul.children[0])
+  </script>
+</body>
+</html>

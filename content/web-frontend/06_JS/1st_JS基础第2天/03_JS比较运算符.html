@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03_JS比较运算符</title>
+</head>
+<body>
+  <script>
+    console.log(3 > 5) // false
+
+    // 相等（==）：检查两个值是否相等，但在比较之前会进行类型转换(隐式转换)
+    console.log(3 == 3) // true
+    console.log(3 == '3') // true
+
+    // 全等（===）：检查两个值是否严格相等，即值和类型都相同。(以后判断都用全等)
+    console.log(3 === '3') // false
+    console.log(null == undefined) // true
+    console.log(null === undefined) // false
+
+    // 不同类型的比较会发生隐式转换
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>grid布局</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .outer {
+            width: 70%;
+            /* height: 500px; */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.443);
+            border-radius: 8px;
+            padding: 30px;
+
+            /* 开启网格布局 */
+            display: grid;
+
+            /* 将三列的宽度设置为1fr，即等分 */
+            /* grid-template-columns: 1fr 1fr 1fr; */
+
+            /* 将第一列和第三列的宽度设置为1fr，第二列为2fr，即两倍的宽度 */
+            /* grid-template-columns: 1fr 2fr 1fr; */
+
+            /* 将三行和三列的宽度设置为1fr，即等分 */
+            /* grid-template-columns: repeat(3,1fr); */
+
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+        }
+        .inner {
+            height: 100px;
+            background-color: blanchedalmond;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner">0</div>
+        <div class="inner">1</div>
+        <div class="inner">2</div>
+        <div class="inner">3</div>
+        <div class="inner">4</div>
+        <div class="inner">5</div>
+        <div class="inner">6</div>
+        <div class="inner">7</div>
+        <div class="inner">8</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04_元字符-字符类</title>
+</head>
+<body>
+  <script>
+    // [abc]
+    console.log(/[abc]/.test('ab')) // true
+    console.log(/[abc]/.test('a')) // true
+    console.log(/[abc]/.test('b')) // true
+    console.log(/[abc]/.test('d')) // false
+
+    // [a-z]
+    console.log(/[a-z]/.test('v')) // true
+
+    // [0-9]
+    console.log(/[0-9]/.test('2')) // true
+
+    // [a-zA-Z0-9]
+    console.log(/[a-zA-Z0-9]/.test('Abc123')) // true
+
+    // ^（脱字符）：在字符类的开头表示取反，匹配不在方括号中的字符。
+  </script>
+</body>
+</html>

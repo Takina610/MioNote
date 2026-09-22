@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03_静态成员</title>
+</head>
+<body>
+  <script>
+    function Pig(name) {
+      this.name = name
+    }
+    // 静态成员：构造函数上的属性和方法称为静态成员
+    Pig.eyes = 2 // 静态属性
+    console.log(Pig.eyes)
+
+    Pig.sayHi = function() { // 静态方法
+      console.log(this)
+    }
+
+    // 通常输出的是函数的定义，而不是它的属性或方法列表
+    Pig.sayHi()
+    console.log(Pig)
+
+  </script>
+</body>
+</html>

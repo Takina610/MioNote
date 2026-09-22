@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="favicon.ico" rel="shortcut icon">
+  <title>09-计算属性vs方法Methods</title>
+  <style>
+    table {
+      border: 1px solid #000;
+      text-align: center;
+      width: 300px;
+    }
+    th,td {
+      border: 1px solid #000;
+    }
+    h3 {
+      position: relative;
+    }
+    span {
+      position: absolute;
+      left: 145px;
+      top: -4px;
+      width: 16px;
+      height: 16px;
+      color: white;
+      font-size: 12px;
+      text-align: center;
+      border-radius: 50%;
+      background-color: #e63f32;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <h3>小黑的礼物清单🛒<span>{{ totalCount }}</span></h3>
+    <table>
+      <tr>
+        <th>名字</th>
+        <th>数量</th>
+      </tr>
+      <tr v-for="(item, index) in list" :key="item.id">
+        <td>{{ item.name }}</td>
+        <td>{{ item.num }}个</td>
+      </tr>
+    </table>
+
+    <p>礼物总数：{{ totalCount }} 个</p>
+  </div>
+  <script src="./vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        // 现有的数据
+        list: [
+          { id: 1, name: '篮球', num: 3 },
+          { id: 2, name: '玩具', num: 2 },
+          { id: 3, name: '铅笔', num: 5 },
+        ]
+      },
+      computed: {
+        // 计算属性：有缓存的，一旦计算出来结果，就会立刻缓存
+        // 下一次读取 -> 直接读换成就行 -> 性能特别高
+        // 就是不会像 methods一样重复调用
+        totalCount () {
+          let total = this.list.reduce((sum, item) => sum + item.num, 0)
+          return total
+        }
+      }
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>02_媒体查询_媒体特性</title>
+    <style>
+        .outer {
+            height: 200px;
+            background-color: gray;
+            line-height: 200px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 100px;
+        }
+       /* @media (min-width:700px) and (max-width:900px) {
+            h1 {
+                background-color: orange;
+            }
+       } */
+       /* @media screen and (min-width:700px) and (max-width:900px) {
+            h1 {
+                background: orangered;
+            }
+       } */
+          @media (max-width:500px) or (min-width:800px) {
+            h1 {
+                background-color: orchid;
+            }
+          }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <h1>你好啊</h1>
+    </div>
+    <img src="../images/屏幕截图 2023-12-05 221945.png" alt="">
+</body>
+</html>

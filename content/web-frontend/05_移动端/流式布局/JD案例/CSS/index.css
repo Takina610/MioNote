@@ -1,0 +1,187 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+body {
+    width: 100%;
+    min-width: 320px;
+    max-width: 640px;
+    margin: 0 auto;
+    font-size: 14px;
+    font-family: '-apple-system-', 'Helvetica Neue', sans-serif;
+    color: #666;
+    line-height: 1.5; /*相对于字体大小*/
+    /* background-color: #666; */
+}
+.app {
+    height: 45px;
+}
+.app ul {
+    list-style: none;
+    display: flex;
+    background-color: #333333;
+}
+.app ul li {
+    line-height: 45px;
+    text-align: center;
+}
+.app ul li:nth-child(1) {
+    width: 8%;
+}
+.app ul li:nth-child(1) img {
+    width: 10px;
+}
+.app ul li:nth-child(2) {
+    width: 10%;
+}
+.app ul li:nth-child(2) img {
+    width: 30px;
+    vertical-align: middle;
+}
+.app ul li:nth-child(3) {
+    width: 57%;
+    color: #fff;
+}
+.app ul li:nth-child(4) {
+    width: 25%;
+    background-color: #f63515;
+    color: #fff;
+    flex-grow: 1;
+}
+.search-wrap {
+    height: 44px;
+    position: relative;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    min-width: 320px;
+    max-width: 640px;
+}
+.search-wrap .search-button,
+.search-wrap .search-login {
+    height: 44px;
+    width: 40px;
+    position: absolute;
+    top: 0px;
+}
+.search-wrap .search-button {
+    left: 0px;
+}
+.search-wrap .search-button::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 18px;
+    background-image: url('../images/s-btn.png');
+    background-size: 20px 18px;
+    margin: 14px 0px 0px 15px;
+}
+.search-wrap .search-login {
+    right: 0px;
+    color: #fff;
+    line-height: 44px;
+    text-align: center;
+}
+.search-wrap .search-input {
+    position: relative;
+    margin: 0px 50px;
+    height: 30px;
+    border-radius: 15px;
+    margin-top: 7px;
+    background-color: #fff;
+}
+.search-wrap .search-input .jd-icon {
+    position: relative;
+    width: 20px;
+    height: 15px;
+    background-image: url('../images/jd.png');
+    background-size: 20px 15px;
+    position: absolute;
+    top: 8px;
+    left: 13px;
+}
+.search-wrap .search-input .jd-icon::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 15px;
+    background-color: #ccc;
+    position: absolute;
+    top: 0px;
+    right: -8px;
+}
+.search-wrap .search-input .magnifier {
+    position: absolute;
+    top: 8px;
+    left: 50px;
+    width: 18px;
+    height: 15px;
+    background-image: url('../images/jd-sprites.png');
+    background-position: -81px 0px;
+    background-size: 200px auto;
+}
+.search-wrap .search-input input {
+    position: absolute;
+    top: 6px;
+    left: 76px;
+    outline: none;
+    border: none;
+    width: 50%;
+}
+.search-wrap .search-input input::placeholder {
+    font-size: 8px;
+}
+.mainContent {
+    width: 100%;
+}
+.mainContent .sliderImg img{
+    width: 100%;
+    vertical-align: top;
+}
+.mainContent .brand {
+    display: flex;
+    border-radius: 10px 10px 0px 0px;
+    overflow: hidden;
+    background-color: #fff;
+}
+.mainContent .brand div {
+    width: 33.33%;
+}
+.mainContent .brand img {
+    width: 100%;
+}
+.mainContent .nav {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.mainContent .nav a {
+    width: 20%;
+    text-align: center;
+    text-decoration: none;
+    color: gray;
+    padding-top: 10px;
+}
+.mainContent .nav a img {
+    width: 40px;
+    height: 40px;
+}
+.mainContent .nav a span {
+    display: block;
+}
+.news {
+    width: 100%;
+    display: flex;
+}
+.news a {
+    box-sizing: border-box;
+}
+.news a:nth-child(1) {
+    width: 50%;
+}
+.news a:nth-child(n+2) {
+    width: 25%;
+}
+.news img {
+    width: 100%;
+}

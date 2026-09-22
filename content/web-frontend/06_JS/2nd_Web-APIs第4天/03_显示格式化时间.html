@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03_显示格式化时间</title>
+  <style>
+    body {
+      height: 98vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    div {
+      width: 300px;
+      height: 50px;
+      border: 1px solid black;
+      text-align: center;
+      font-size: 20px;
+      line-height: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div></div>
+  <script>
+    const div = document.querySelector('div')
+    function formatDateTime() {
+      const date = new Date()
+      let year = date.getFullYear() // 获取年份
+      let month = date.getMonth() + 1 // 获取月份，加1使其从1开始而非0
+      let day = date.getDate() // 获取日期
+      let hours = date.getHours() // 获取小时
+      let minutes = date.getMinutes() // 获取分钟
+      let seconds = date.getSeconds()
+
+      // 确保月份、日期、小时和分钟小于10时，前面加0
+      month = month < 10 ? '0' + month : month
+      day = day < 10 ? '0' + day : day
+      hours = hours < 10 ? '0' + hours : hours
+      minutes = minutes < 10 ? '0' + minutes : minutes
+      seconds = seconds < 10 ? '0' + seconds : seconds
+
+      // 格式化日期时间字符串
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    }
+    div.innerHTML = formatDateTime()
+    setInterval(function () {
+      console.log(11);
+      div.innerHTML = formatDateTime()
+    }, 1000)
+
+  </script>
+</body>
+</html>

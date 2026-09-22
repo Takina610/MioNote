@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>03_box-shadow</title>
+    <style>
+        .box1 {
+            width: 300px;
+            height: 300px;
+            background-color: orange;
+            margin: 0 auto;
+            font-size: 20px;
+            margin-top: 100px;
+
+            /* 写两个值 含义：水平位置 垂直位置*/
+            /* box-shadow: 10px 10px; */
+
+            /* 写三个值 含义：水平位置 垂直位置 阴影颜色*/
+            /* box-shadow: 10px 10px blue; */
+
+            /* 写三个值 含义：水平位置 垂直位置 模糊程度 */
+            /* box-shadow: 10px 10px 10px; */
+            
+            /* 写四个值 含义：水平位置 垂直位置 模糊程度 阴影颜色 */
+            /* box-shadow: 10px 10px 10px blue; */
+
+            /* 写五个值 含义：水平位置 垂直位置 模糊程度 阴影外延 阴影颜色 */
+            /* box-shadow: 10px 10px 10px 10px blue; */
+
+            /* 写六个值 含义：水平位置 垂直位置 模糊程度 阴影外延 阴影颜色 内阴影 */
+            /* box-shadow: 10px 10px 20px 10px blue inset; */
+
+            position: relative;
+            top: 0;
+            left: 0;
+            transition: 0.25s linear all;
+        }
+        .box1:hover {
+            box-shadow: 0px 0px 100px red inset;
+            top: -20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1">你好啊</div>
+    <img src="../images/屏幕截图 2023-11-30 234324.png" alt="">
+</body>
+</html>

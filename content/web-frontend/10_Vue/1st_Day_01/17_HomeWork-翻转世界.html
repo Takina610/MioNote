@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>17_HomeWork-翻转世界</title>
+</head>
+<body>
+  <div class="app">
+    <h1>{{ msg }}</h1>
+    <button @click="reverse">逆转世界</button>
+  </div>
+
+  <script src="./vue.js"></script>
+
+  <script>
+    const app = new Vue({
+      el: '.app',
+      data: {
+        msg: 'Hello, World',
+      },
+      methods: {
+        reverse() {
+          this.msg = this.msg.split('').reverse().join('')
+        }
+      }
+    })
+  </script>
+</body>
+
+
+</html>

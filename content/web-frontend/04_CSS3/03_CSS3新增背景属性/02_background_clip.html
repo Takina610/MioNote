@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>02_background_clip</title>
+    <style>
+        .box1 {
+            width: 400px;
+            height: 400px;
+            background-color: skyblue;
+            padding: 50px;
+            border: 50px dashed rgba(255, 0, 0, 0.6);
+
+            background-image: url('../images/bg02.jpg');
+            background-repeat: no-repeat;
+
+            /* background-clip: padding-box; */
+            /* background-clip: content-box; */
+            font-size: 100px;
+            font-weight: bold;
+            color: transparent;
+            -webkit-background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1">你好啊</div>
+    <img src="../images/屏幕截图 2023-12-02 092602.png" alt="">
+</body>
+</html>

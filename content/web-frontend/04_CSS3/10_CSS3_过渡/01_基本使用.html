@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>01_基本使用</title>
+    <style>
+        .box1 {
+            width: 200px;
+            height: 200px;
+            background-color: orange;
+
+            /* 设置哪个属性需要过渡效果 */
+            /* transition-property: height,width,background-color; */
+
+            /* 设置所有时间 */
+            transition: all;
+            
+            /* 设置过渡的持续时间 */
+            transition-duration: 0.5s,1s,1.5s;
+        }
+        .box1:hover {
+            height: 400px;
+            width: 400px;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1"></div>
+    <img src="../images/屏幕截图 2023-12-04 153631.png" alt="">
+</body>
+</html>

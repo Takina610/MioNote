@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./favicon.ico" rel="shortcut icon">
+  <title>21_作业-学生信息管理</title>
+</head>
+
+<body>
+  <div id="app">
+    <div>
+      <span>姓名:</span>
+      <input type="text" v-model.trim="modifyName"/>
+    </div>
+    <div>
+      <span>年龄:</span>
+      <input type="number" v-model="modifyAge"/>
+    </div>
+    <div>
+      <span>性别:</span>
+      <select v-model="modifyGender">
+        <option value="男">男</option>
+        <option value="女">女</option>
+      </select>
+    </div>
+    <div>
+      <button @click="add">添加/修改</button>
+    </div>
+    <div>
+      <table border="1" cellpadding="10" cellspacing="0">
+        <tr>
+          <th>序号</th>
+          <th>姓名</th>
+          <th>年龄</th>
+          <th>性别</th>
+          <th>操作</th>
+        </tr>
+        <tr v-for="(item, index) in list" :key="item.id">
+          <td>{{index + 1}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.age}}</td>
+          <td>{{item.gender}}</td>
+          <td>
+            <button @click="del(item.id)">删除</button>
+            <button @click="modify(item.id)">编辑</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <script src="./vue.js"></script>
+  <script>
+    const defaultList = [
+        { id: 1, name: "张三", age: 18, gender: "男" },
+        { id: 2, name: "小美", age: 20, gender: "女" },
+        { id: 3, name: "王五", age: 19, gender: "男" },
+    ]
+    const app = new Vue({
+      el: '#app',
+      data: {
+        modifyName: '',
+        modifyAge: '',
+        modifyGender: '男',
+        currentId: null, // 新增的标志，用于跟踪编辑的学生ID
+        list: JSON.parse(localStorage.getItem('list')) || defaultList
+      },
+      methods: {
+        add() {
+            if (this.modifyName === '') {
+              return alert("请输入有效的姓名")
+            }
+            if (this.modifyAge < 3 || this.modifyAge > 113) {
+              return alert("请输入有效的年龄")
+            }
+            const student = { name: this.modifyName, age: this.modifyAge, gender: this.modifyGender }
+
+            if (this.currentId === null) {
+            // 添加新的学生
+            const maxId = this.list.reduce((max, item) => item.id > max ? item.id : max, 0); // 找到当前最大的id
+            student.id = maxId + 1;
+            this.list.push(student)
+          } else {
+            // 修改现有的学生信息
+            const index = this.list.findIndex(item => item.id === this.currentId)
+            if (index !== -1) {
+              this.list[index] = { ...this.list[index], ...student }
+            }
+          }
+
+          // 重置输入和当前ID
+          this.modifyName = ''
+          this.modifyAge = ''
+          this.modifyGender = '男'
+          this.currentId = null
+        },
+        del(id) {
+          this.list = this.list.filter(item => item.id !== id)
+        },
+        modify(id) {
+          this.list.forEach(element => {
+            if (element.id === id) {
+              this.modifyName = element.name
+              this.modifyAge = element.age
+              this.modifyGender = element.gender
+              this.currentId = element.id
+            }
+          })
+        }
+      },
+      watch: {
+        list: {
+          deep: true,
+          immediate: true,
+          handler(newValue) {
+            localStorage.setItem('list', JSON.stringify(newValue))
+          }
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

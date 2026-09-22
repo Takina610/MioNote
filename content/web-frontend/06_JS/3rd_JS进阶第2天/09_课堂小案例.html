@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>09_课堂小案例</title>
+</head>
+<body>
+  <div></div>
+  <script>
+    
+    const spec = {size: '40cm*40cm', color: '黑色'}
+
+    // 1.将 spec对象里的属性值获取
+    // Object.values(spec) // 得到一个所有属性值的数组
+
+    // 2.将得到的数值用 join方法进行拼接
+    // Object.values(spec).join('/') // 得到一个字符串
+
+    // 3.将得到的字符串添加到 div里
+    document.querySelector('div').innerHTML = Object.values(spec).join('/')
+
+  </script>
+</body>
+</html>

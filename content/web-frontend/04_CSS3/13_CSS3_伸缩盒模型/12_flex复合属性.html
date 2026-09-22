@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>12_flex复合属性</title>
+    <style>
+        .outer {
+            width: 600px;
+            height: 600px;
+            background-color: skyblue;
+
+            /* 开启弹性盒子 */
+            display: flex;
+
+            /* flex-wrap: wrap; */
+        }
+        .inner {
+            width: 200px;
+            height: 200px;
+            background-color: #888;
+            border: 1px solid black;
+            box-sizing: border-box;
+
+            flex: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner inner1">1</div>
+        <div class="inner inner2">2</div>
+        <div class="inner inner3">3</div>
+    </div>
+    <img src="../images/屏幕截图 2023-12-05 201605.png" alt="">
+</body>
+</html>

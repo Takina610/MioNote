@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07_事件委托</title>
+  <style>
+    li.active {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <ul>
+    <li>第1个孩子</li>
+    <li>第2个孩子</li>
+    <li>第3个孩子</li>
+    <li>第4个孩子</li>
+    <li>第5个孩子</li>
+    <p>我不需要变色</p>
+  </ul>
+  <script>
+    // 事件委托利用了事件冒泡的机制，
+    // 给父元素注册事件，当我们从触发子元素的时候，
+    // 会冒泡到父元素上，从而触发父元素的事件
+
+    const ul = document.querySelector('ul');
+    ul.addEventListener('click', function(event) {
+      if (event.target.tagName === 'LI') {
+        // 先检查是否有元素带有.active类
+        const activeElement = document.querySelector('.active');
+        if (activeElement) {
+          // 如果有，移除.active类
+          activeElement.classList.remove('active');
+        }
+        // 为点击的元素添加.active类
+        event.target.classList.add('active');
+      }
+    });
+
+    // 不过，这段代码在第一次运行时会遇到问题，因为一开始页面上没有任何<li>元素带有.active类。
+    // 因此，当document.querySelector('.active')在页面初始状态下运行时，它会返回null，
+    // 接着尝试调用null.classList.remove('active')会抛出错误。
+      // const ul = document.querySelector('ul')
+      // ul.addEventListener('click', function(event) {
+      //   // console.log(event.target) // 就是我们点击的那个对象
+      //   if (event.target.tagName === 'LI') {
+      //     document.querySelector('.active').classList.remove('active')
+      //     event.target.classList.add('active')
+      //   }
+  </script>
+</body>
+</html>

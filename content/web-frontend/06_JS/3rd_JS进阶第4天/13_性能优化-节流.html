@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>13_性能优化-节流</title>
+  <style>
+    .box {
+      width: 500px;
+      height: 500px;
+      background-color: #ccc;
+      color: #fff;
+      text-align: center;
+      font-size: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box"></div>
+  <script src="./lodash.min.js"></script>
+  <script>
+
+    // 用于限制函数在一定时间内只能执行一次。
+
+    const box = document.querySelector('.box')
+    let i = 1
+    function mouseMove() {
+      box.innerHTML = i++
+    }
+
+    // 利用 lodash库实现节流
+    // box.addEventListener('mousemove', _.throttle(mouseMove, 500))
+
+    function throttle(func, wait) {
+      let timer = null
+      return function() {
+        if (!timer) {
+          timer = setTimeout(function() {
+            func()
+            // 清空定时器
+            timer = null
+          }, wait)
+        }
+      }
+    }
+    box.addEventListener('mousemove', throttle(mouseMove, 500))
+
+    // 节流与防抖的区别在于，防抖是在事件触发后一段时间内没有再次触发事件时才执行函数，
+    // 而节流是确保函数在每个指定时间段内最多执行一次。
+  </script>
+</body>
+
+</html>

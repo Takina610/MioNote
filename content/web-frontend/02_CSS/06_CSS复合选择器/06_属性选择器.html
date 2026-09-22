@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>06_属性选择器</title>
+    <style>
+        /* 第一种写法 */
+        [title] {
+            color: aqua;
+        }
+        /* 第二种写法 */
+        [title="B_CSS"] {
+            color: lightcoral;
+        }
+        /* 第三种写法 -- 找到具有 title 属性的标签，且以字母 C 为"开头"的值的元素 */
+        [title^="C"] {
+            color: lawngreen;
+        }
+        /* 第四种写法 -- 找到具有 title 属性的标签，且以字母 D 为"结尾"的值的元素 */
+        [title$="D"] {
+            color: blueviolet;
+        }
+        /* 第五种写法 -- 找到具有 title 属性的标签，且值中存在字母 u 的元素*/
+        [title*="u"] {
+            color: brown;
+        }
+    </style>
+</head>
+<body>
+    <p title="A_CSS">学习CSS</p>
+    <p title="B_CSS">学习CSS</p>
+    <p title="C_CSS">学习CSS</p>
+    <p title="D_CSS_D">学习CSS</p>
+    <p title="beautiful">学习CSS</p>
+    <p title="unnatural">学习CSS</p>
+    <p title="function">学习CSS</p>
+</body>
+</html>

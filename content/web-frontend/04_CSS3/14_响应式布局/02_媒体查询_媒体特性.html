@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>02_媒体查询_媒体特性</title>
+    <style>
+        .outer {
+            height: 200px;
+            background-color: gray;
+            line-height: 200px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 100px;
+        }
+        /* 检测到视口宽度为 800px时，应用如下样式 */
+        @media (width:800px) {
+            h1 {
+                background-color: green;
+            }
+        }
+        /* 检测到视口宽度为小于等于 700px时，应用如下样式 */
+        @media (max-width:700px) {
+            h1 {
+                background-color: orange;
+            }
+        }
+        /* 检测到视口宽度为大于等于 900px时，应用如下样式 */
+        @media (min-width:900px) {
+            h1 {
+                background-color: red;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <h1>你好啊</h1>
+    </div>
+    <img src="../images/屏幕截图 2023-12-05 220318.png" alt="">
+</body>
+</html>

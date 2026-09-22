@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>01_background-orign</title>
+    <style>
+        .box1 {
+            width: 400px;
+            height: 400px;
+            background-color: skyblue;
+            padding: 50px;
+            border: 50px dashed rgba(255, 0, 0, 0.6);
+
+            background-image: url('../images/bg01.jpg');
+            background-repeat: no-repeat;
+            
+            /* 默认是 padding-box */
+            background-origin: content-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1">你好啊</div>
+    <img src="../images/屏幕截图 2023-12-02 091547.png" alt="">
+</body>
+</html>

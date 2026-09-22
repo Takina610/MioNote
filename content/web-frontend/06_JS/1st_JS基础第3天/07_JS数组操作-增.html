@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07_JS数组操作-增</title>
+</head>
+<body>
+  <script>
+    let arr = ['pink', 'green']
+    // push为在数组 末尾 新增一个或多个元素 且返回值为新数组的长度
+    console.log(arr.push('blue')) // 3
+    console.log(arr) // ['pink', 'green', 'blue']   
+
+    // unshift 在数组的 开头 添加一个或多个元素，并返回新的长度。
+    console.log(arr.unshift('red')) // 4
+    console.log(arr) // ['red', 'pink', 'green', 'blue']
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12_作业</title>
+</head>
+<body>
+  <script>
+     let arrPers = [
+        {
+          name: '小明',
+          age: 18,
+          sex: '男',
+        },
+        {
+          name: '老刘',
+          age: 38,
+          sex: '男',
+        },
+        {
+          name: '小王',
+          age: 19,
+          sex: '女',
+        },
+      ]
+      let ageMax = arrPers[0].age
+      let index = 0
+      for (let i = 0; i < arrPers.length; i++) {
+        if (arrPers[i].age > ageMax) {
+          ageMax = arrPers[i].age
+          index = i
+        }
+        arrPers[i].age += 5
+      }
+      console.log(arrPers[index].name)
+      console.log(arrPers)
+  </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>05_解决浮动后的影响</title>
+    <style>
+        .outer {
+            width: 500px;
+            background-color: gray;
+            border: 1px solid black;
+        
+            /* 第一种解决方案 */
+            /* height: 122px (100 + (10+10) + (1+1))px; */
+
+            /* 第二种解决方案 */
+            /* float: left; */
+
+            /* 第三种解决方案 */
+            /* overflow: hidden; */
+        }
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: deepskyblue;
+            border: 1px solid black;
+            margin: 10px;
+        }
+        .box1,.box2,.box3,.box4 {
+            float: left;
+        }
+        .magic {
+            /* 第四种解决方案 */
+            clear: both;
+        }
+
+        /* 第四种解决方案 */
+        .outer::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="box box1">1</div>
+        <div class="box box2">2</div>
+        <div class="box box3">3</div>
+        <div class="box box4">4</div>
+        <!-- <div class="magic"></div> -->
+    </div>
+    <!-- <div style="background-color: orange;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae nihil impedit dignissimos sit asperiores, ex, similique aliquid unde rem provident cupiditate ullam repudiandae doloremque, corrupti officiis. Consequuntur molestias enim, vel neque, distinctio quod molestiae ab accusantium quidem rerum fugiat dicta voluptates voluptatum aliquid consequatur eum dolorem tempora est nostrum saepe consectetur asperiores. Asperiores iusto eum nihil dolores laborum iure facere, deserunt quo? Dolorum ducimus, atque, eveniet deleniti minima molestiae impedit iste optio ut sed nihil, officia corrupti tempore non? Consequatur harum eveniet, quas impedit perferendis necessitatibus veniam repellat tenetur officiis iste ducimus tempore, id magni voluptatem aliquid quod recusandae deleniti.</div> -->
+    <img src="../images/屏幕截图 2023-11-20 154711.png" alt="">
+</body>
+</html>

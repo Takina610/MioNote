@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14_数组解构细节</title>
+</head>
+<body>
+  <script>
+    // 跳过元素
+    // 可以使用逗号跳过数组中你不感兴趣的元素
+    // let [a, , c] = [1, 2, 3]
+    // console.log(a) // 输出：1
+    // console.log(c) // 输出：3
+
+    // 剩余元素
+    // 使用扩展运算符 (...) 可以将数组中的剩余元素收集到一个变量中
+    // let [a, ...b] = [1, 2, 3, 4]
+    // console.log(a) // 输出：1
+    // console.log(b) // 输出：[2, 3, 4]
+
+    // 嵌套解构
+    // 数组解构也可以嵌套使用，以适应数组的嵌套结构
+    let [a, [b, c]] = [1, [2, 3]]
+    console.log(a) // 输出：1
+    console.log(b) // 输出：2
+    console.log(c) // 输出：3
+
+
+  </script>
+</body>
+</html>

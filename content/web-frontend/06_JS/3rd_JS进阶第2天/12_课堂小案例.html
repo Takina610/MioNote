@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12_课堂小案例</title>
+</head>
+<body>
+  <div></div>
+  <script>
+    const gift = '50g的茶叶,清洗球'
+    // 将 gift字符串转换为数组
+    // gift.split(',')
+    // 将转换成的数组利用 map方法分别添加到一个 span标签里
+    // gift.split(',').map(item => `<span>【赠品】${item}</span>`)
+    // 将 map方法返回的数组再用 join方法转换为字符串
+    // gift.split(',').map(item => `<span>【赠品】${item}</span>`).join('')
+    // 随后追加到 div标签里
+    document.querySelector('div').innerHTML =
+    gift.split(',').map(item => `<span>【赠品】${item}</span><br>`).join('')
+  </script>
+</body>
+</html>

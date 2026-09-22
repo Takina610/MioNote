@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05_Object静态方法</title>
+</head>
+<body>
+  <script>
+    const person = {name: 'pink', age: 18}
+
+    // 获得所有属性名
+    console.log(Object.keys(person)) // ['name', 'age'] (返回一个数组)
+    // 获得所有属性值
+    console.log(Object.values(person)) // ['pink', 18] (返回一个数组)
+
+    // 拷贝对象，将 person拷贝给 object
+    // const object = {}
+    // Object.assign(object, person)
+    // console.log(object)
+
+    Object.assign(person, {gender: '女'}, {height: '180'})
+    console.log(person)
+  </script>
+</body>
+</html>

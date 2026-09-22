@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10_localStorage存储</title>
+</head>
+<body>
+  <script>
+    // localStorage提供了一个简单的API来存储数据，数据会持久保存在浏览器中，直到被明确删除。
+
+    // 存储
+    // localStorage.setItem('key', 'value')
+    localStorage.setItem('uname', 'pink老师')
+
+    // 获取
+    document.write(localStorage.getItem('uname'))
+
+    // 删除
+    // localStorage.removeItem('uname')
+
+    // 修改
+    localStorage.setItem('uname', 'red老师')
+
+    // 本地存储只能存储字符串数据类型
+  </script>
+</body>
+</html>

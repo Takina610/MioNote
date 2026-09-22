@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02_元字符-边界符</title>
+</head>
+<body>
+  <script>
+    // 边界符 ^ 用于匹配行或字符串的开始。
+    // 例如，^The 匹配任何以 "The" 开始的字符串。
+    console.log(/^哈/.test('哈')) // true
+    console.log(/^哈/.test('哈哈')) // true
+    console.log(/^哈/.test('二哈')) // false
+
+    // $ 用于匹配行或字符串的结束。
+    // 例如，end$ 匹配任何以 "end" 结尾的字符串。
+    console.log(/哈$/.test('哈')) // true
+    console.log(/哈$/.test('哈哈大笑')) // false
+
+    console.log(/^哈$/.test('哈哈')) // false 里面只能有一个哈
+  </script>
+</body>
+</html>

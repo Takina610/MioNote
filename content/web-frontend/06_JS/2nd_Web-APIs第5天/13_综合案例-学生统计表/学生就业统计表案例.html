@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>学生就业统计表</title>
+  <link rel="stylesheet" href="./iconfont/iconfont.css">
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+
+<body>
+  <h1>学生就业统计表</h1>
+  <form class="info" autocomplete="off">
+    <input type="text" class="uname" name="uname" placeholder="姓名" />
+    <input type="text" class="age" name="age" placeholder="年龄" />
+    <input type="text" class="salary" name="salary" placeholder="薪资" />
+    <select name="gender" class="gender">
+      <option value="男">男</option>
+      <option value="女">女</option>
+    </select>
+    <select name="city" class="city">
+      <option value="北京">北京</option>
+      <option value="上海">上海</option>
+      <option value="广州">广州</option>
+      <option value="深圳">深圳</option>
+      <option value="曹县">曹县</option>
+    </select>
+    <button class="add">
+      <i class="iconfont icon-tianjia"></i>添加
+    </button>
+  </form>
+
+  <div class="title">共有数据<span>0</span>条</div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>姓名</th>
+        <th>年龄</th>
+        <th>性别</th>
+        <th>薪资</th>
+        <th>就业城市</th>
+        <th>录入时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- <tr>
+        <td>1</td>
+        <td>迪丽热巴</td>
+        <td>23</td>
+        <td>女</td>
+        <td>12000</td>
+        <td>北京</td>
+        <td>2099/9/9 08:08:08</td>
+        <td>
+          <a href="javascript:">
+            <i class="iconfont icon-shanchu"></i>
+            删除
+          </a>
+        </td>
+      </tr> -->
+    </tbody>
+  </table>
+  <script>
+    let date = new Date()
+    // 参考数据
+    const initData = [
+      {
+        stuId: 1,
+        uname: '迪丽热巴',
+        age: 22,
+        salary: '12000',
+        gender: '女',
+        city: '北京',
+        time: date.toLocaleString()
+      }
+    ]
+    // 读取本地化数据
+    // localStorage.setItem('data', JSON.stringify(initData))
+    // 已经存了 不用反复存
+
+    // 将字符串转换为对象进行获取  如果没有数据，则返回空数组
+    const arr = JSON.parse(localStorage.getItem('data')) || [] // 逻辑中断原理
+    const tbody = document.querySelector('tbody')
+    // 利用 map和 join的方法渲染页面
+    function render() {
+      // 利用 map遍历数组，返回对应的 tr值
+      const trArr = arr.map(function (element, index) {
+        return `
+          <tr>
+            <td>${element.stuId}</td>
+            <td>${element.uname}</td>
+            <td>${element.age}</td>
+            <td>${element.gender}</td>
+            <td>${element.salary}</td>
+            <td>${element.city}</td>
+            <td>${element.time}</td>
+            <td>
+              <a href="javascript:" data-id="${index}">
+                <i class="iconfont icon-shanchu"></i>
+                删除
+              </a>
+            </td>
+          </tr>
+        `
+      })
+      // 用join方法将返回的数组转换为字符串
+      // 把生成的字符串追加给 tbody
+      tbody.innerHTML = trArr.join('')
+      // 显示共有几条数据
+      document.querySelector('.title span').innerHTML = trArr.length
+    }
+    render()
+
+    // 添加模块
+    const uname = document.querySelector('.uname')
+    const age = document.querySelector('.age')
+    const gender = document.querySelector('.gender')
+    const salary = document.querySelector('.salary')
+    const city = document.querySelector('.city')
+
+    const info = document.querySelector('.info')
+    const items = document.querySelectorAll('input[name], select[name]'); // 确保只选择了input和select元素
+    info.addEventListener('submit', function(event){
+      event.preventDefault()
+
+      // 判断里面的内容是否为空
+      for (let i = 0; i < items.length; i++) {
+        // 使用trim()去除输入内容的首尾空格
+        const value = items[i].value.trim()
+
+        // 检查处理后的输入是否为空
+        if (value === '') {
+          alert('输入的内容不能为空')
+          info.reset()
+          return // 退出函数，不继续执行后面的代码
+        }
+
+        // 如果需要，可以在这里更新输入项的值，去除首尾空格
+        items[i].value = value
+      }
+      
+      arr.push({
+        // 给数组最后一条数据的 stuId + 1
+        stuId: arr.length ? arr[arr.length - 1].stuId + 1 : 1,
+        uname: uname.value,
+        age: age.value,
+        salary: salary.value,
+        gender: gender.value,
+        city: city.value,
+        time: date.toLocaleString()
+      })
+      // 渲染页面
+      render()
+
+      // 重置表单
+      info.reset()
+
+      // 把数组重新存入本地存储里，记得转换为 JSON字符串存储
+      localStorage.setItem('data', JSON.stringify(arr))
+    })
+
+    // 删除模块
+    tbody.addEventListener('click', function(event) {
+      if (event.target.tagName === 'A' || event.target.tagName === 'I') {
+        // 动态给 a添加 data-id属性 通过数组索引号 index添加
+        if (confirm('你确认要删除吗？')) {
+          // 通过 splice删除数组的数据
+          arr.splice(event.target.dataset.id, 1)
+          // 重新渲染页面
+          render()
+          // 更新本地化数据
+          localStorage.setItem('data', JSON.stringify(arr))
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

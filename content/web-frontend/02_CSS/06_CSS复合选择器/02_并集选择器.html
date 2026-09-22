@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>02_并集选择器</title>
+    <style>
+        .rich {
+            color: aqua;
+        }
+        .star {
+            color: aquamarine;
+        }
+        .big {
+            color: yellow;
+        }
+        .dog {
+            color: yellowgreen;
+        }
+        /* 之间用"，"隔开 */
+        .rich,
+        .star,
+        .big,
+        .dog {
+            background-color: gray;
+            font-size: 40px;
+            width: 240px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="rich">土豪张三</h1>
+    <h1 class="star">明星李四</h1>
+    <h1 class="rich star">土豪明星王五</h1>
+    <hr>
+    <p class="big">小猪佩奇</p>
+    <p class="dog">小狗旺财</p>
+</body>
+</html>

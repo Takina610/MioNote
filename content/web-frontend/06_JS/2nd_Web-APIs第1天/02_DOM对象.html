@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02_DOM对象</title>
+</head>
+<body>
+  <div>123</div> <!-- 标签 -->
+  <script>
+    const anyName = document.querySelector('div')
+
+    // 打印对象
+    console.dir(anyName) // dom 对象
+
+    // 把网页内容当对象处理，原来的 HTML标签在 JS里统称 (DOM)对象
+    // 对象里包含着属性和方法，其中 style就是一中
+
+    // window > document > html > head = body > .....
+
+    // document是DOM里提供的一个对象
+    // 网页所有的内容都在 document里
+  </script>
+</body>
+</html>

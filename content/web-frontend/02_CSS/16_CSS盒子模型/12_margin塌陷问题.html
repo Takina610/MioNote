@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>12_margin塌陷问题</title>
+    <style>
+        .outer {
+            width: 400px;
+            /* height: 400px; */
+            background-color: grey;
+
+            /* 解决塌陷问题 */
+            overflow: hidden;
+        }
+        .inner1 {
+            width: 100px;
+            height: 100px;
+            background-color: orange;
+            
+            /* 这样写有问题（.inner1的父元素 —— .outer也一起往下平移了） */
+            margin-top: 50px; 
+        }
+        .inner2 {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner1"></div>
+        <div class="inner2"></div>
+    </div>
+    <img src="../images/Snipaste_2023-11-16_19-25-05.png" alt="">
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12_渲染图片</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    .box {
+      width: 650px;
+       display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+      margin: 0 auto;
+    }
+    .box div {
+      width: 100px;
+      height: 100px;
+      border: 2px solid deepskyblue;
+      border-radius: 10px 0px 10px 0px;
+      margin: 10px;
+      overflow: hidden;
+    }
+    img {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <script>
+      let count = +prompt(`请输入你要查看的英雄个数:`)
+      let arr = [
+        './images/1.webp',
+        './images/2.webp',
+        './images/3.webp',
+        './images/4.webp',
+        './images/5.webp',
+        './images/6.webp',
+        './images/7.webp',
+        './images/8.webp',
+        './images/9.webp',
+        './images/10.webp',
+        './images/11.webp',
+        './images/12.webp',
+        './images/13.webp',
+        './images/14.webp',
+        './images/15.webp',
+        './images/16.webp',
+        './images/17.webp',
+        './images/18.webp',
+        './images/19.webp',
+        './images/20.webp'
+      ]
+      for (let i = 0; i < count; i++) {
+        document.write(`
+          <div>
+            <img src="${arr[i]}">
+          </div>
+        `)
+      }
+    </script>
+  </div>
+</body>
+</html>

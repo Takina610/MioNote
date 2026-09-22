@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./Bootstrap/CSS/bootstrap.min.css">
+    <title>03_栅格系统的列偏移</title>
+    <style>
+        .row > div {
+            border: 1px solid red;
+            background-color: pink;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">左侧</div>
+
+            <!-- offset-xx-x表示 xx屏幕类型向左偏移 x份 -->
+            <div class="col-md-4 offset-md-4">右侧</div>
+        </div>
+
+        <br>
+        
+        <div class="row">
+            <div class="col-md-8 offset-md-2">中间盒子</div>
+        </div>
+    </div>
+</body>
+</html>

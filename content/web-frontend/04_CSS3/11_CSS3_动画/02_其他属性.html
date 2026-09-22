@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>01_基本使用</title>
+    <style>
+        .outer {
+            width: 1000px;
+            height: 400px;
+            border: 1px solid black;
+        }
+        /* 定义一个动画（定义一组关键帧） */
+        @keyframes right_move {
+            /* 第一帧 */
+            from {
+
+            }
+            /* 最后一帧 */
+            to {
+                transform: translate(801px);
+                background-color: red;
+            }
+        }
+        .inner {
+            width: 200px;
+            height: 400px;
+            background-color: deepskyblue;
+
+            /* 定义动画的名字 */
+            animation-name: right_move;
+
+            /* 说明动画移动的时间 */
+            animation-duration: 3s;
+
+            /* 动画延迟时间（可以解决元素动画时加颜色时在最开始的卡动效果）*/
+            animation-delay: 0.5s;
+
+            /* ********* 其他属性 ********* */
+            /* 设置动画的方式 */
+            animation-timing-function: linear;
+
+            /* 设置动画的播放次数 */
+            /* animation-iteration-count: 3; */
+            /* animation-iteration-count: infinite; */
+
+            /* 动画的方向 */
+            /* animation-direction: reverse; */
+            /* animation-direction: alternate-reverse; */
+            /* animation-direction: alternate; */
+
+            /* 动画以外的状态（不发生动画的停在哪里） */
+            animation-fill-mode: forwards;
+        }
+        .outer:hover .inner {
+            /* 动画播放状态 */
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner"></div>
+    </div>
+    <img src="../images/屏幕截图 2023-12-04 202023.png" alt="">
+</body>
+</html>

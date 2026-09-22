@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04_基本包装类型</title>
+</head>
+<body>
+  <script>
+    const str = 'pink'
+    console.log(str.length)
+    // 为什么简单数据类型也可以使用这些属性和方法呢？
+    // js底层代码
+    // const str = new String('pink')
+    // 自动地将简单数据类型包装成了引用数据类型
+
+    // 基本包装类型是一种特殊的对象
+    // 尽管基本类型是不可变的且不具备对象的属性和方法，
+    // 但 JavaScript允许你调用比如 "hello".toUpperCase()这样的方法。
+    // 这是怎么做到的呢？答案就是基本包装类型。
+    let myString = "hello";
+    console.log(myString.toUpperCase()); // 输出 "HELLO"
+    // 在这个例子中，字符串 "hello"是一个基本类型的值。
+    // 当调用.toUpperCase()方法时，JavaScript内部创建了一个 String对象作为 "hello"的包装器，
+    // 然后在这个对象上调用 toUpperCase()方法。方法调用完成后，临时创建的 String对象被销毁。
+
+    // 基本包装类型提供了一种机制，允许基本类型的值暂时拥有对象的特性。
+    // 然而，直接使用这些包装类型的构造函数来创建对象是不推荐的，
+    // 因为它们会引入不必要的复杂性和潜在的混淆。
+    // 在实际编程中，最好让JavaScript自动处理基本类型和对象之间的转换。
+  </script>
+</body>
+</html>

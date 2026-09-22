@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14_简易ATM机案例</title>
+</head>
+<body>
+  <script>
+    let money = 1000
+    while ( true) {
+      let choice = +prompt(`
+      请输入您要的服务：
+        1.存款
+        2.取款
+        3.余额
+        4.退出
+      `)
+      if (choice === 4) {
+        alert(`您已退出程序`)
+        break
+      }
+      switch (choice) {
+        case 1:
+          let depositAmount = Number(prompt(`请输入您要存款的金额`))
+          money += depositAmount
+          break
+        case 2:
+          let withdrawalAmount = Number(prompt(`请输入您要取款的金额`))
+          if (withdrawalAmount > money) {
+            alert(`余额不足`)
+          }
+          money += withdrawalAmount
+          break
+        case 3:
+          alert(`您的余额为${money}`)
+          break
+        default:
+          alert(`输入的选择不合法，请重新输入`)
+          break
+      }
+    }
+  </script>
+</body>
+</html>

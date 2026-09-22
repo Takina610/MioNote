@@ -1,0 +1,18 @@
+html {
+    font-size: 50px;
+}
+body {
+    display: block;
+}
+div:nth-child(1) {
+    background-color: pink;
+    height: 1rem;
+    font-size: .5rem;
+    color: #fff;
+}
+div:nth-child(2) {
+    background-color: purple;
+    height: 1rem;
+    font-size: .5rem;
+    color: #fff;
+}

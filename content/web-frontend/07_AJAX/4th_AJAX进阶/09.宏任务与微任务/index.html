@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微任务与宏任务</title>
+</head>
+
+<body>
+  <script>
+    /**
+     * 目标：阅读并回答打印的执行顺序
+    */
+
+    /**
+     * 宏任务（Macrotasks）
+     * 宏任务是一些主要的、通常需要较长时间执行的任务。宏任务包括但不限于：
+     *  用户交互事件
+     *  setTimeout
+     *  setInterval
+     *  AJAX请求事件
+     *  I/O 操作
+     *  UI 渲染
+     *  <script> 标签的整体代码（页面初始化时的同步代码）
+
+     * 事件循环的每一次循环会从宏任务队列中取出一个任务来执行。执行完一个宏任务之后，事件循环会检查微任务队列。
+     */
+
+     /**
+      * 微任务（Microtasks）
+      * 微任务通常是需要立即执行的短小任务，它们的执行时机在当前宏任务执行完毕之后，和下一个宏任务开始之前。微任务包括：
+      * Promise 回调（例如 Promise.then, Promise.catch, Promise.finally）
+      * MutationObserver 的回调
+      * process.nextTick（仅在Node.js环境中）
+      * 
+      * 在每个宏任务执行完毕后，如果微任务队列中有任务，事件循环将会执行所有的微任务。只有当微任务队列为空时，事件循环才会继续到下一个宏任务。这意味着微任务可以保证在同一事件循环的迭代中，紧接着当前宏任务执行。
+     */
+    console.log(1)
+    setTimeout(() => {
+      console.log(2)
+    }, 0)
+    const p = new Promise((resolve, reject) => {
+      resolve(3)
+    })
+    p.then(res => {
+      console.log(res)
+    })
+    console.log(4)
+
+    
+  </script>
+</body>
+
+</html>

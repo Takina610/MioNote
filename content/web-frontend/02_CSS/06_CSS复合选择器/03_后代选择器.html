@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>03_后代选择器</title>
+    <style>
+        /* 各种选择器是可以任意选择的 */
+        /* ul中的li(li作为ul的后代出现) */
+        ul li {
+            color: darkblue;
+        }
+        ol li {
+            color: yellowgreen;
+        }
+        ul li a {
+            color: darkgoldenrod;
+        }
+        ol li a {
+            color: orange;
+        }
+        .year li {
+            color: gold;
+        }
+        .year #now {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <span><strong><em>爱好</em></strong></span>
+    <ul>
+        <li>
+            <a href="https://china.nba.com" target="_blank">打篮球</a>
+        </li>
+        <li>玩游戏</li>
+        <div>
+            <li>敲代码</li> 
+        </div>
+    </ul>
+    <hr>
+    <span><strong><em>教育经历</em></strong></span>
+    <ol>
+        <li>第二小学</li>
+        <li>实验学校</li>
+        <li>定南中学</li>
+        <li>
+            <a href="https://www.jxycu.edu.cn" target="_blank">宜春学院</a>
+        </li>
+    </ol>
+    <hr>
+    <span><strong><em>历经年份</em></strong></span>
+    <ol class="year">
+        <li>2011-2017</li>
+        <li>2017-2020</li>
+        <li>2020-2023</li>
+        <li id="now">2023-2027</li>
+    </ol>
+</body>
+</html>

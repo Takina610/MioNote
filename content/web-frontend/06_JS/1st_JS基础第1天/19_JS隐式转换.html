@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>19_JS隐式转换</title>
+</head>
+<body>
+  <script>
+
+    // + 号两边只要有一个是字符串，都会把另外一个转换成字符串
+    console.log(2 + 2) // 4
+    console.log(2 + '2') // 22
+    
+    // 除了 + 号 以外的算术符，都会把数据类型转换为数字型
+    console.log(2 - 2)
+    console.log(2 - '2')
+
+    // + 号作为正号解析，可以转换为数字型
+    console.log(+'123') // 123(数字型)
+    
+  </script>
+</body>
+</html>

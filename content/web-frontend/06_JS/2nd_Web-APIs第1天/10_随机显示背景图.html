@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10_随机显示背景图</title>
+  <style>
+    body {
+      background: url('./images/desktop_1.jpg') no-repeat top center/cover;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    function getRandom(M, N) {
+      return Math.floor(Math.random() * (N - M + 1) + M)
+    }
+    const randomIndex = getRandom(1, 10)
+    // body元素不用获取，直接用
+    document.body.style.backgroundImage = `url('./images/desktop_${randomIndex}.jpg')`
+  </script>
+</body>
+</html>

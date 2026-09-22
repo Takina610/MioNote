@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>01_交集选择器</title>
+    <style>
+        .rich {
+            color: gold;
+        }
+        .star {
+            color: red;
+        }
+        /* "p"和"star"交集(标签和类名的交集) */
+        p.star {
+            color: green;
+        }
+        /* "rich"和"star交集(类名和类名的交集) */
+        .rich.star {
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="rich">土豪张三</h1>
+    <h1 class="star">明星李四</h1>
+    <h1 class="rich star">土豪明星王五</h1>
+    <hr>
+    <p class="star">小猪佩奇</p>
+    <p class="star">小狗旺财</p>
+</body>
+</html>

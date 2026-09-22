@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>18_作业-显示隐藏密码</title>
+  <style>
+     .box {
+            position: relative;
+            width: 400px;
+            border-bottom: 1px solid #ccc;
+            margin: 100px auto;
+        }
+
+        .box input {
+            width: 370px;
+            height: 30px;
+            border: 0;
+            outline: none;
+        }
+
+        .box label {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 24px;
+            height: 24px;
+            background-color: pink;
+            cursor: pointer;
+            background: url(./img/close.png) no-repeat;
+            background-size: cover;
+        }
+
+        .box label.active {
+            background-image: url(./img/open.png);
+        }
+  </style>
+</head>
+<body>
+   <div class="box">
+        <label for=""></label>
+        <input type="password" name="" id="pwd">
+    </div>
+  <script>
+    const label = document.querySelector('.box label')
+    const pwd = document.querySelector('.box #pwd')
+
+    let flag = true
+    label.addEventListener('click', function() {
+      label.classList.toggle('active')
+      if (flag) {
+        pwd.type = 'text'
+      } else {
+        pwd.type = 'password'
+      }
+      flag = !flag
+    })
+  </script>
+</body>
+</html>

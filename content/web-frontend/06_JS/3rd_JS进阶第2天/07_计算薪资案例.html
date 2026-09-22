@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07_计算薪资案例</title>
+</head>
+<body>
+  <script>
+    const arr = [{
+      name: '张三',
+      salary: 10000
+    }, {
+      name: '李四',
+      salary: 10000
+    }, {
+      name: '王五',
+      salary: 20000
+    },
+    ]
+
+    const total = arr.reduce((prev, current) => prev + current.salary, 0)
+    // 这里必须写将初始值设置为 0
+    console.log(total)
+
+    // 需求：每人涨薪百分之 30，计算当月支出
+    const afterTotal = arr.reduce((prev, current) => prev + (current.salary * 1.3), 0)
+    console.log(afterTotal)
+  </script>
+</body>
+</html>

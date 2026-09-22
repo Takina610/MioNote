@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14_获取设置表单的值</title>
+</head>
+<body>
+  <!-- <input type="text" value="电脑"> -->
+  <input type="checkbox" name="" id="">
+  <button>确认</button>
+  <script>
+    // const uname = document.querySelector('input')
+    // 获取表单里的值 ：表单.value
+    // console.log(uname.value) // 电脑
+    // console.log(uname.innerHTML) 得不到表单里的内容
+    // uname.value = '我要买电脑'
+    
+    // 改变表单的类型 ： 表单.type
+    // uname.type = 'password'
+
+    const ipt = document.querySelector('input')
+    // console.log(ipt.checked) // false 只接受布尔值
+    ipt.checked = true
+    // ipt.checked = 'true' // 会选中，不提倡  有隐式转换
+    const btn = document.querySelector('button')
+    // console.log(btn.disabled) // 默认是 false 不禁用
+    btn.disabled = true // 禁用按钮
+  
+  </script>
+</body>
+</html>

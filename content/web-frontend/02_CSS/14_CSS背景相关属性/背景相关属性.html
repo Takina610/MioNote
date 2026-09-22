@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>背景相关属性</title>
+    <style>
+        body {
+            background-color: gray;
+        }
+        div {
+            width: 400px;
+            height: 400px;
+            line-height: 400px;
+            border: 2px red solid;
+            text-align: center;
+            color: black;
+            font-weight: bold;
+            font-family: "华文行楷";
+            font-size: 40px;
+ 
+            /* 设置背景颜色 (默认为 transparent) */
+            /* background-color: lightblue; */
+
+            /* 设置背景图片 */
+            /* background-image: url(../images/bg.gif); */
+
+            /* 设置背景图片重复方式 */
+            /* background-repeat: no-repeat; */
+
+            /* 控制背景图片的位置  -- 第一种写法：关键词  (水平方向 - 垂直方向)*/
+            /* background-position: center center; */
+
+            /* 控制背景图片的位置 -- 第二种写法：具体像素值 (x轴 px - y轴 px)*/
+            /* background-position: 70px 120px; */
+
+            /* 复合属性 */
+            background: lightblue url(../images/bg.gif) no-repeat 70px 120px;
+        }
+    </style>
+</head>
+<body>
+    <div>你好啊！</div>
+</body>
+</html>

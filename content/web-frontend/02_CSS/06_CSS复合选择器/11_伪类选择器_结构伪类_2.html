@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>09_伪类选择器_结构伪类_2</title>
+    <style>
+        /* 重点：
+        first-child last-child nth-child()是按照所有兄弟计算的
+        first-of-type last-of-type nth-of-type()是按照所有同类型的兄弟计算的 */
+        
+        /* 结构一 (按照所有兄弟计算的) */
+        /* p:last-child {
+            color: red;
+        }
+        p:nth-child(3) {
+            color: blue;
+        } */
+
+        /* 结构二 (按照所有兄弟计算的) */
+        /* 所有偶数变成红色 */
+        /* p:nth-child(even) { / p:nth-child(2n)
+            color: red;
+        } */
+        /* 所有奇数变成红色 */
+        /* p:nth-child(odd) { / p:nth-child(2n+1)
+            color: red;
+        } */
+        /* 前五个变成红色，n的初始值为0 */
+        /* p:nth-child(-n+5) {
+            color: red;
+        } */
+
+        /* 结构三 (按照所有同类型的兄弟计算的) */
+        /* p:first-of-type {
+            color: red;  
+        }
+        p:last-of-type {
+            color: red;
+        } */
+
+        /* 结构四 (按照所有同类型的兄弟计算的) */
+        p:nth-of-type(3) {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <!-- 结构一 -->
+    <!-- <div>
+        <p>张三：99分</p> 
+        <p>李四：87分</p>
+        <p>王五：79分</p>
+        <p>黄七：68分</p>
+        <p>老八：68分</p>
+    </div> -->
+
+    <!-- 结构二 -->
+    <!-- <div>
+        <p>第1个</p>
+        <p>第2个</p>
+        <p>第3个</p>
+        <p>第4个</p>
+        <p>第5个</p>
+        <p>第6个</p>
+        <p>第7个</p>
+        <p>第8个</p>
+        <p>第9个</p>
+        <p>第10个</p>
+    </div> -->
+
+    <!-- 结构三 -->
+    <!-- <div>
+        <span>测试</span>
+        <p>张三：99分</p> 
+        <p>李四：87分</p>
+        <p>王五：79分</p>
+        <p>黄七：68分</p>
+        <p>老八：68分</p>
+        <span>测试</span>
+    </div> -->
+    
+    
+    <div>
+        <span>测试</span>
+        <p>张三：99分</p> 
+        <p>李四：87分</p>
+        <span>测试</span>
+        <p>王五：79分</p>
+        <p>黄七：68分</p>
+        <p>老八：68分</p>
+        <span>测试</span>
+    </div>
+</body>
+</html>

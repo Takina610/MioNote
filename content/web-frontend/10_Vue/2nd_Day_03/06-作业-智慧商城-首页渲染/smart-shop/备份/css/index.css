@@ -1,0 +1,352 @@
+/* 去除常见标签默认的 margin 和 padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* 设置网页统一的字体大小、行高、字体系列相关属性 */
+body {
+  font: 14px "PingFangSC-Regul", "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
+  color: #333;
+  background-color: #f7f7f7;
+}
+body,
+html {
+  height: 100%;
+}
+/* 去除列表默认样式 */
+ul,
+ol {
+  list-style: none;
+}
+/* 去除默认的倾斜效果 */
+em,
+i {
+  font-style: normal;
+}
+/* 去除a标签默认下划线，并设置默认文字颜色 */
+a {
+  text-decoration: none;
+  color: #333;
+}
+/* 设置img的垂直对齐方式为居中对齐，去除img默认下间隙 */
+img {
+  width: 100%;
+  display: block;
+}
+/* 去除input默认样式 */
+input {
+  border: none;
+  outline: none;
+  color: #333;
+}
+/* 省略号 */
+.ellipsis-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+#app {
+  padding-top: 23.4666vw;
+}
+header {
+  width: 100%;
+  height: 11.7333vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  justify-content: center;
+  background-color: #fff;
+  position: relative;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999;
+}
+header h1 {
+  font-size: 4.2667vw;
+}
+header a {
+  position: absolute;
+  width: 11.7333vw;
+  height: 11.7333vw;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+}
+header a .iconfont {
+  font-size: 4.2667vw;
+}
+.search {
+  padding: 2.6667vw;
+  background-color: #fff;
+  height: 13.3333vw;
+  width: 100%;
+  left: 0;
+  top: 11.7333vw;
+  z-index: 999;
+  position: fixed;
+}
+.search .searchCont {
+  width: 100%;
+  background-color: #f1f1f2;
+  border-radius: 13vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  justify-content: center;
+}
+.search .searchCont i {
+  font-size: 3.7333vw;
+}
+.search .searchCont p {
+  font-size: 3.7333vw;
+  height: 8vw;
+  line-height: 8vw;
+  color: #999;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 13.0667vw;
+  background-color: #fff;
+  padding: 2.1333vw 0;
+}
+footer a {
+  width: 20%;
+  text-align: center;
+  color: #7d7d7d;
+}
+footer a.iconfont {
+  font-size: 5.0667vw;
+  color: red;
+}
+footer a.cur {
+  color: red;
+}
+footer a p {
+  font-size: 3.2vw;
+}
+.commonMoney {
+  color: red;
+  font-size: 3.2vw;
+}
+.commonMoney span {
+  font-size: 3.7333vw;
+  color: red;
+}
+body {
+  background-color: #fafafa;
+  padding-bottom: 20vw;
+}
+/* header */
+header {
+  background-color: #c21401;
+  color: #fff;
+  font-size: 4.2667vw;
+  height: 11.7333vw;
+  line-height: 11.7333vw;
+  text-align: center;
+  font-weight: bold;
+}
+.search {
+  padding: 2.6667vw;
+  background-color: #f1f1f2;
+  height: 13.3333vw;
+}
+.search .searchCont {
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  justify-content: center;
+}
+.search .searchCont i {
+  font-size: 3.7333vw;
+}
+.search .searchCont p {
+  font-size: 3.7333vw;
+  height: 8vw;
+  line-height: 8vw;
+  color: #999;
+}
+.banner {
+  position: relative;
+}
+.banner .swiper {
+  width: 100vw;
+  overflow: hidden;
+  height: 49.0667vw;
+}
+.banner .swiper .swiper-wrapper img {
+  height: 100%;
+}
+.banner .swiper .swiper-pagination-bullets .swiper-pagination-bullet {
+  border-radius: 1.6vw;
+  opacity: 1;
+  width: 1.6vw;
+  height: 1.6vw;
+  background-color: #fff;
+}
+.banner .swiper .swiper-pagination-bullets .swiper-pagination-bullet-active {
+  width: 2.9333vw;
+  height: 1.3333vw;
+  background-color: #8ed6ee;
+}
+.ad {
+  position: relative;
+  background: #f2dbdb;
+  padding: 1.3333vw 3.2vw;
+  height: 9.6vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  justify-content: flex-start;
+  color: red;
+  box-sizing: border-box;
+}
+.ad .iconfont {
+  margin-right: 2.6667vw;
+}
+.ad div {
+  position: relative;
+  overflow: hidden;
+  height: 6.9333vw;
+  width: 100%;
+}
+.ad div p {
+  margin-top: 0.5333vw;
+  height: 6.9333vw;
+  position: absolute;
+  left: 0;
+  line-height: 6.9333vw;
+}
+.main {
+  padding-bottom: 50px;
+}
+.main .section1 {
+  background-color: #fff;
+  padding-top: 4.5333vw;
+  padding-left: 4.2667vw;
+  padding-right: 4.2667vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  text-align: center;
+}
+.main .section1 a {
+  width: 20%;
+}
+.main .section1 a div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  justify-content: center;
+  margin: 0 auto;
+  width: 10.6667vw;
+  height: 10.6667vw;
+}
+.main .section1 a div .iconfont {
+  font-size: 5.3333vw;
+  color: #fff;
+}
+.main .section1 a p {
+  margin-top: 2.6667vw;
+  margin-bottom: 4.5333vw;
+  font-size: 3.4667vw;
+}
+.main .section2 img {
+  width: 100%;
+}
+.main .section3 h2 {
+  background-color: #fff;
+  line-height: 8vw;
+  text-align: center;
+  padding: 1.3333vw 0;
+  font-size: 3.7333vw;
+  font-weight: normal;
+  margin-bottom: 0.5333vw;
+}
+.main .section3 ul li {
+  padding: 10px;
+  margin-bottom: 1.6vw;
+  background-color: #fff;
+}
+.main .section3 ul li a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.main .section3 ul li a img {
+  width: 32vw;
+}
+.main .section3 ul li a .goodCont {
+  width: 60%;
+}
+.main .section3 ul li a .goodCont h3 {
+  margin-top: 2.6667vw;
+  min-height: 9.0667vw;
+  line-height: 1.3;
+  white-space: normal;
+  color: #484848;
+  font-size: 3.4667vw;
+  font-weight: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.main .section3 ul li a .goodCont .selled {
+  color: #999;
+  font-size: 3.2vw;
+  margin: 1.0667vw 0;
+}
+.main .section3 ul li a .goodCont .price {
+  margin-right: 2.1333vw;
+  color: #f03c3c;
+  font-size: 4vw;
+}
+.main .section3 ul li a .goodCont .price span {
+  color: #999;
+  text-decoration: line-through;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 13.0667vw;
+  background-color: #fff;
+  padding: 2.1333vw 0;
+}
+footer a {
+  width: 20%;
+  text-align: center;
+  color: #7d7d7d;
+}
+footer a.iconfont {
+  font-size: 5.0667vw;
+  color: red;
+}
+footer a.cur {
+  color: red;
+}
+footer a p {
+  font-size: 3.2vw;
+}

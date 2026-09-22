@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>04_3D旋转</title>
+    <style>
+        .outer {
+            width: 200px;
+            height: 200px;
+            border: 2px solid black;
+            margin: 0 auto;
+            margin-top: 100px;
+
+            /* 开启 3D空间 */
+            transform-style: preserve-3d;
+
+            /* 开启景深（有了透视效果，近大远小） */
+            perspective: 500px;
+
+            /* 设置透视点位置 */
+            /* perspective-origin: 500px 300px; */
+        }
+        .inner {
+            width: 200px;
+            height: 200px;
+            background-color: rgba(135, 207, 235, 0.751);
+
+            transform: rotateX(30deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner">你好啊</div>
+    </div>
+    <img src="../images/屏幕截图 2023-12-04 074921.png" alt="">
+</body>
+</html>

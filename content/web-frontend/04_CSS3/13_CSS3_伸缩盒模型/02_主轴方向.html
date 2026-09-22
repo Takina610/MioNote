@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>02_主轴方向</title>
+    <style>
+        .outer {
+            width: 1000px;
+            height: 600px;
+            background-color: skyblue;
+
+            /* 开启弹性盒子 */
+            display: flex;
+
+            /* 调整主轴方向，水平从左到右 */
+            /* flex-direction: row; */
+
+            /* 调整主轴方向，水平从右到左 */
+            /* flex-direction: row-reverse; */
+
+            /* 调整主轴方向，垂直从上到下 */
+            /* flex-direction: column; */
+
+            /* 调整主轴方向，垂直从下到上 */
+            flex-direction: column-reverse;
+        }
+        .inner1,
+        .inner2,
+        .inner3 {
+            width: 200px;
+            height: 200px;
+            background-color: #888;
+            border: 1px solid black;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner1">1</div>
+        <div class="inner2">2</div>
+        <div class="inner3">3</div>
+    </div>
+    <img src="../images/屏幕截图 2023-12-05 135336.png" alt="">
+</body>
+</html>

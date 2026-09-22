@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>06_倒计时跳转其他页面</title>
+</head>
+<body>
+  <a href="https://www.baidu.com">支付成功，5秒后返回界面</a>
+  <script>
+    const a = document.querySelector('a')
+    setTimeout(function (){
+      location.href = 'https://www.baidu.com'
+    }, 5000)
+    
+    let i = 5
+    setInterval(function () {
+      i--
+      a.innerHTML = `支付成功，${i}秒后返回界面`
+    }, 1000)
+  </script>
+</body>
+</html>

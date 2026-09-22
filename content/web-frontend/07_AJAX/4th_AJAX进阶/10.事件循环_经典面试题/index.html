@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>事件循环经典_经典面试题</title>
+</head>
+
+<body>
+  <script>
+    // 目标：回答代码执行顺序
+    // console.log(1)
+    // setTimeout(() => {
+    //   console.log(2)
+    //   const p = new Promise(resolve => resolve(3))
+    //   p.then(result => console.log(result))
+    // }, 0)
+    // const p = new Promise(resolve => {
+    //   setTimeout(() => {
+    //     console.log(4)
+    //   }, 0)
+    //   resolve(5)
+    // })
+    // p.then(result => console.log(result))
+    // const p2 = new Promise(resolve => resolve(6))
+    // p2.then(result => console.log(result))
+    // console.log(7)
+    // 1 7 5 6 2 3 4
+    /*
+      1. 执行同步代码：
+        console.log(1) 直接执行，打印 1。
+        console.log(7) 直接执行，因为它在所有同步代码中排在最后，打印 7。
+
+      2. 设置宏任务：
+        第一个 setTimeout 调用将一个匿名函数排入宏任务队列，这个函数会打印 2，然后创建并解决一个 Promise，其 .then 回调打印 3。
+        第二个 setTimeout 被封装在 Promise 构造器中，也排入宏任务队列，这个函数会打印 4。
+
+      3. 创建并解决 Promise：
+        主线程中的 const p = new Promise(...) 创建并立即解决一个 Promise，解决值为 5。其 .then 回调打印 5 被添加到微任务队列。
+        const p2 = new Promise(resolve => resolve(6)) 创建并立即解决一个 Promise，解决值为 6。其 .then 回调打印 6 被添加到微任务队列。
+
+      4. 执行微任务：
+        执行所有微任务。首先，p.then(result => console.log(result)) 执行，打印 5。
+        接着，p2.then(result => console.log(result)) 执行，打印 6。
+
+      5. 执行宏任务：
+        第一个宏任务（第一个 setTimeout 回调）执行，打印 2，创建一个新的 Promise，其 .then 回调被添加到微任务队列。
+        在这个宏任务的微任务（.then 回调打印 3）立即执行，打印 3。
+        第二个宏任务（setTimeout 在 Promise 构造器中）执行，打印 4。
+
+      综上，代码的输出顺序为：1, 7, 5, 6, 2, 3, 4。
+    */
+
+console.log('A');
+
+setTimeout(() => {
+  console.log('B');
+  Promise.resolve().then(() => {
+    console.log('C');
+  });
+}, 0);
+
+new Promise((resolve, reject) => {
+  console.log('D');
+  resolve('E');
+}).then((result) => {
+  console.log(result);
+  setTimeout(() => {
+    console.log('F');
+  }, 0);
+});
+
+setTimeout(() => {
+  console.log('G');
+  new Promise((resolve, reject) => {
+    console.log('H');
+    resolve('I');
+  }).then((result) => {
+    console.log(result);
+  });
+}, 0);
+
+console.log('J');
+// A D J E B C G H I F
+  </script>
+  
+</body>
+
+</html>

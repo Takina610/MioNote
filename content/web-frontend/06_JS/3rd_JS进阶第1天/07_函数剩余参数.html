@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07_函数剩余参数</title>
+</head>
+<body>
+  <script>
+    // function get_sum(...arr) {
+    //   console.log(arr) //得到的是一个真数组
+    // }
+    // get_sum(1, 2, 3)
+    // get_sum(1, 2, 3, 4)
+
+    function logNames(first, second, ...others) {
+      console.log(`First: ${first}, Second: ${second}`);
+      console.log(`Others: ${others.join(", ")}`);
+    }
+
+    logNames("John", "Jane", "Mark", "Chris", "Anna");
+    // 输出:
+    // First: John, Second: Jane
+    // Others: Mark, Chris, Anna
+    // 在这个例子中，first和 second参数分别接收了第一个和第二个参数，而所有其他的参数都被包含在 others数组中。
+  </script>
+</body>
+</html>

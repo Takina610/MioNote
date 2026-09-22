@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07_JS匿名函数-函数表达式</title>
+</head>
+<body>
+  <script>
+    // 没有给函数赋予名字的函数叫做 匿名函数
+
+    // 函数表达式：将匿名函数赋值给一个变量，并且通过变量名称进行调用
+    let fn = function (x = 0, y = 0) {
+      // console.log('我是函数表达式')
+      console.log(x + y)
+    }
+    fn(1, 2)
+
+    // 函数表达式 和 具名函数 的不同
+    // 具名函数的调用可以在任意位置
+    // 函数表达式必须写声明函数表达式后调用
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10_箭头函数的参数</title>
+</head>
+<body>
+  <script>
+    // 箭头函数没有动态参数 arguments，有剩余参数
+    const getSum = (...arr) => {
+      let sum = 0
+      for (let i = 0; i < arr.length; i++) {
+        sum += arr[i]
+      }
+      return sum
+    }
+    console.log(getSum(2, 3, 4))
+  </script>
+</body>
+</html>

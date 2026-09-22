@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10_JS逻辑中断</title>
+</head>
+<body>
+  <script>
+    function fn(x, y) {
+      x = x || 0
+      y = y || 0
+    }
+
+    console.log(false && true) // 左边为假，则右边不执行返回 false，即为短路
+    console.log(true || false) // 左边为真，则右边不执行返回 true，即为短路
+
+    console.log(22 && 11) // 返回右边的值
+    console.log(22 || 11) // 返回左边的值
+  </script>
+</body>
+</html>

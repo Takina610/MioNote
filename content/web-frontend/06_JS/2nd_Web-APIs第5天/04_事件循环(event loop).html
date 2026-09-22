@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04_事件循环(event loop)</title>
+</head>
+<body>
+  <script>
+    /*
+      JavaScript的执行机制是基于"事件循环"（Event Loop）和"调用栈"（Call Stack），
+      并且利用了"任务队列"（Task Queue）和"微任务队列"（Microtask Queue）来处理异步操作。
+      理解这些概念有助于掌握JavaScript的运行原理，特别是异步编程的部分。
+
+      调用栈（Call Stack）
+      调用栈是一个数据结构，用于存储代码运行时的所有执行上下文（Execution Context）。
+      每当函数被调用时，它的执行上下文就会被创建并推入调用栈顶部；当函数执行完毕后，
+      其执行上下文会从调用栈中弹出。JavaScript引擎只有一个调用栈，因此它是单线程的。
+
+      任务队列（Task Queue）
+      任务队列是一个先进先出的队列，用于存储待处理的事件。
+      这些事件包括用户交互事件（如点击、滚动等）、定时器（setTimeout和setInterval）回调、
+      网络请求成功的回调等。只有当调用栈为空时，事件循环才会从任务队列中取出任务来执行。
+
+      事件循环（Event Loop）
+      事件循环是 JavaScript的工作原理核心，使得 JavaScript可以执行异步操作而不会阻塞代码执行。
+      事件循环的作用是监视调用栈和任务队列。如果调用栈为空，事件循环就会检查任务队列。
+      如果任务队列中有待处理的任务，它就会将第一个任务移出队列并推入调用栈中执行。
+    */
+  </script>
+</body>
+</html>

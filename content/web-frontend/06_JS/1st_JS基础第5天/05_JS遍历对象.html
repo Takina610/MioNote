@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05_JS遍历对象</title>
+</head>
+<body>
+  <script>
+    // for in 不推荐遍历数组
+    // let arr = [1, 2, 3, 4]
+    // for(let k in arr) {
+    //   console.log(k) // 数组的下标 索引号 但是字符串 '0' '1' '2'
+    //   console.log(arr[k])
+    // }
+
+    // for in 遍历对象
+    let obj = {
+      uname: 'pink老师',
+      age: 18,
+      gender: '女'
+    }
+
+    for(let k in obj) {
+      console.log(k) // 属性名 'uname' 'age' 'gender' 但是是字符串！！！
+      // console.log(obj.k) 错误的
+
+      console.log(obj[k])
+    }
+
+    //  obj[k]
+  </script>
+</body>
+</html>

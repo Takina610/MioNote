@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10_事件对象</title>
+</head>
+<body>
+  <!-- <button>点我</button> -->
+  <input type="text">
+  <script>
+    // 事件对象就是对象里有这个事件触发时的相关信息
+    // 在事件绑定的回调函数的第一个参数就是事件对象
+    // const btn = document.querySelector('button')
+    // btn.addEventListener('click', function(event) {
+    //   console.log(event)
+    // })
+
+    const input = document.querySelector('input')
+    input.addEventListener('keyup', function(event) {
+      // console.log(event.key) // 获取按下哪个键
+      if (event.key === 'Enter') {
+        console.log('我按下了回车键')
+      }
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12_map方法和join方法</title>
+</head>
+<body>
+  <script>
+    const arr = ['red', 'green', 'pink']
+
+    // map方法
+    const newArr = arr.map(function(element, index) {
+      // console.log(element) // 元素
+      // console.log(index) // 索引号
+      return element + '颜色'
+    }) // 返回一个数组
+    console.log(newArr)
+
+    // join方法  把数字转换为字符串
+    // 小括号里为空则用逗号隔开
+    console.log(newArr.join()) // red颜色,green颜色,pink颜色
+    // 小括号里为 ''则没有分隔符
+    console.log(newArr.join('')) // red颜色green颜色pink颜色
+    
+    console.log(newArr.join('|')) // red颜色|green颜色|pink颜色
+  </script>
+</body>
+</html>

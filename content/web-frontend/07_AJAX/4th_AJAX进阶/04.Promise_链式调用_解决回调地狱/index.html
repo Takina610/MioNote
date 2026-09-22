@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise链式调用_解决回调地狱</title>
+</head>
+
+<body>
+  <form>
+    <span>省份：</span>
+    <select>
+      <option class="province"></option>
+    </select>
+    <span>城市：</span>
+    <select>
+      <option class="city"></option>
+    </select>
+    <span>地区：</span>
+    <select>
+      <option class="area"></option>
+    </select>
+  </form>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    /**
+     * 目标：把回调函数嵌套代码，改成Promise链式调用结构
+     * 需求：获取默认第一个省，第一个市，第一个地区并展示在下拉菜单中
+    */
+    /*
+      .then方法可以直接使用，因为它是Promise对象的一部分。
+      axios是一个基于Promise的HTTP客户端，用于浏览器和node.js环境。
+      每当你发起一个axios请求时，它会返回一个Promise对象。Promise对象代表了异步操作的最终完成（或失败），及其结果值。
+    */
+
+    /*
+      result接收的是 Promise解析后的值，而不是 Promise对象本身。
+      这个解析后的值（在 axios请求中通常是 HTTP响应对象）是一个可以包含各种数据类型的对象，
+      例如 JSON、字符串等，具体取决于异步操作的返回值。
+    */
+
+    let pname = ''
+    // 1.获取省份名字
+    axios({url: 'http://hmajax.itheima.net/api/province'}).then(result => {
+      pname = result.data.list[9]
+      document.querySelector('.province').innerHTML = pname
+      // 2.获取城市名字
+      return axios({url: 'http://hmajax.itheima.net/api/city', params: { pname }})
+    }).then(result => {
+      const cname = result.data.list[9]
+      document.querySelector('.city').innerHTML = cname
+      return axios({url: 'http://hmajax.itheima.net/api/area', params: { pname, cname }})
+    }).then(result => {
+      const aname = result.data.list[2]
+      document.querySelector('.area').innerHTML = aname
+    })
+  </script>
+</body>
+
+</html>

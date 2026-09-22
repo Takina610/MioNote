@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>08_元素的水平位置居中</title>
+    <style>
+        body {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+        }
+        .outer {
+            width: 400px;
+            height: 400px;
+            background-color: skyblue;
+
+            display: flex;
+            
+            /* 方案一 */
+            /* justify-content: center; */
+            /* align-items: center; */
+        }
+        .inner {
+            width: 100px;
+            height: 100px;
+            background-color: orange;
+
+            /* 方案二 */
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner"></div>
+    </div>
+    <img src="../images/屏幕截图 2023-12-05 153552.png" alt="">
+</body>
+</html>

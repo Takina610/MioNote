@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>08_伪类选择器_动态伪类</title>
+    <style>
+        /* 类型只能是link-visited-hover-active顺序 (lvha -- 买了lv的包，ha哈笑) */
+        
+        /* 选中的是没有访问过的 a 元素 */
+        a:link {
+            color: gold;
+        }
+        /* 选中的是访问过的 a 元素 */
+        a:visited {
+            color: chartreuse;
+        }
+        /* 选中的是鼠标悬浮状态的 a 元素 */
+        a:hover {
+            color: skyblue;
+        }
+        /* 选中的是激活状态的 a 元素 */
+        a:active {
+            color: red;
+        }
+
+        span {
+            color: blue;
+        }
+        span:hover {
+            color: blueviolet;
+        }
+        span:active {
+            color: red;
+        }
+
+        /* focus属性只能用于表单类标签，例如input，select */
+        input:focus,select:focus {
+            color: orange;
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://www.baidu.com" target="_blank">百度</a>
+    <a href="https://www.jd.com" target="_blank">京东</a>
+    <span>小米</span><br>
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <br>
+    <select>
+        <option>GTA5</option>
+        <option>RDR:2</option>
+        <option>GTA4</option>
+    </select>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML表格基本机构</title>
+</head>
+<body>
+    <div>
+        <!--表格-->
+        <table border="1px" width="500" height="100" cellspacing="0">
+        <!--表格标题-->
+            <caption><strong>玩过的游戏</strong></caption>
+                <!--表格头部-->
+                <thead height="10" align="center" valign="middle"> 
+        <tr>    <!--行数(Title Row)-->
+            <th>游戏名</th>     <!--Title Head-->
+            <th>发行厂商</th>   
+            <th>价格</th>
+            <th>知名度</th>
+        </tr>
+                </thead>
+                <!--表格主体-->
+                <tbody height="100" align="center" valign="middle">
+        <tr>
+            <td>荒野大镖客2</td>   <!--Title Data-->
+            <td>R星</td>
+            <td>279元</td>
+            <td>高</td>    
+        </tr>       
+        <tr>
+            <td>极限竞速:地平线5</td>   <!--Title Data-->
+            <td>PG Games</td>
+            <td>248元</td>
+            <td>高</td>    
+        </tr>
+        <tr>
+            <td>我的世界</td>   <!--Title Data-->
+            <td>MoJang</td>
+            <td>89元</td>
+            <td>高</td>    
+        </tr>
+        <tr>
+            <td>PUBG</td>   <!--Title Data-->
+            <td>蓝洞</td>
+            <td>免费</td>
+            <td>高</td>
+        </tr>       
+                </tbody>
+                <!--表格脚注-->
+                <tfoot height="10" align="center" valign="middle">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>总共的游戏数:四</td>
+        </tr>
+                </tfoot>
+                <!-- tr th td 也可以写height width align vailgn-->
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01_正则表达式</title>
+</head>
+<body>
+  <script>
+    // 正则表达式：用于匹配字符串中字符组合的模式
+    // 作用：验证表单，过滤敏感词，提取想要的部分
+    // 正则表达式由普通字符（例如字母和数字）以及特殊字符（称为"元字符"）组成。
+
+    // 正则表达式的使用：
+    const str = '我们在学习前端，希望找到好工作'
+    // 定义规则
+    const reg = /前端/ // 表示检测是否有'前端'字符串
+    // 是否匹配，有返回 true，无返回 false
+    console.log(reg.test(str))
+    // console.log(reg.exec(str)) // 返回一个数组
+  </script>
+</body>
+</html>

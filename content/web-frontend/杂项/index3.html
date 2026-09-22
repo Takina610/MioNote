@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta
+         name="description"
+         content="卢佳豪的个人介绍网站，聚焦 Java 后端开发、AI 应用落地、RAG 知识库与实时通信系统。"
+     >
+    <link
+        rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230c7f87'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' font-size='30' font-family='Arial' fill='white'%3EL%3C/text%3E%3C/svg%3E"
+    >
+    <title>卢佳豪 | Personal Portfolio</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f3f0e8;
+            --bg-deep: #e7e1d5;
+            --surface: rgba(255, 255, 255, 0.5);
+            --surface-strong: rgba(255, 255, 255, 0.7);
+            --surface-soft: rgba(255, 255, 255, 0.32);
+            --border: rgba(255, 255, 255, 0.72);
+            --text: #171b22;
+            --muted: #596474;
+            --muted-strong: #394250;
+            --accent: #0c7f87;
+            --accent-deep: #0a5b61;
+            --accent-soft: rgba(12, 127, 135, 0.12);
+            --shadow: 0 24px 80px rgba(44, 56, 72, 0.14);
+            --shadow-soft: 0 10px 35px rgba(44, 56, 72, 0.08);
+            --radius-xl: 34px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --content-width: min(1180px, calc(100vw - 2rem));
+            --nav-height: 78px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "IBM Plex Sans", "Noto Sans SC", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", sans-serif;
+            background:
+                radial-gradient(circle at 18% 16%, rgba(105, 198, 213, 0.2), transparent 24rem),
+                radial-gradient(circle at 85% 22%, rgba(123, 214, 183, 0.16), transparent 22rem),
+                radial-gradient(circle at 78% 82%, rgba(255, 200, 110, 0.12), transparent 26rem),
+                linear-gradient(180deg, #f8f5ef 0%, var(--bg) 48%, var(--bg-deep) 100%);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 96px 96px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.38), transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .page-shell {
+            position: relative;
+            z-index: 1;
+            padding: 1rem 0 4rem;
+        }
+
+        .ambient {
+            position: fixed;
+            border-radius: 999px;
+            filter: blur(18px);
+            opacity: 0.72;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 14s ease-in-out infinite;
+        }
+
+        .ambient-a {
+            top: 8rem;
+            right: 10%;
+            width: 14rem;
+            height: 14rem;
+            background: radial-gradient(circle, rgba(97, 203, 215, 0.36) 0%, rgba(97, 203, 215, 0) 72%);
+        }
+
+        .ambient-b {
+            bottom: 14%;
+            left: 4%;
+            width: 17rem;
+            height: 17rem;
+            background: radial-gradient(circle, rgba(151, 205, 174, 0.34) 0%, rgba(151, 205, 174, 0) 72%);
+            animation-delay: -4s;
+        }
+
+        .ambient-c {
+            top: 46%;
+            left: 50%;
+            width: 11rem;
+            height: 11rem;
+            background: radial-gradient(circle, rgba(255, 191, 98, 0.2) 0%, rgba(255, 191, 98, 0) 72%);
+            animation-delay: -8s;
+        }
+
+        .container {
+            width: var(--content-width);
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, var(--surface-strong), var(--surface));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        .interactive-card {
+            transition:
+                transform 220ms ease,
+                border-color 220ms ease,
+                box-shadow 220ms ease,
+                background 220ms ease;
+        }
+
+        .interactive-card::before {
+            content: "";
+            position: absolute;
+            inset: -35%;
+            background:
+                radial-gradient(
+                    circle at var(--mx, 50%) var(--my, 50%),
+                    rgba(12, 127, 135, 0.14) 0%,
+                    rgba(12, 127, 135, 0.06) 20%,
+                    rgba(12, 127, 135, 0) 52%
+                );
+            opacity: 0;
+            transition: opacity 220ms ease;
+            pointer-events: none;
+        }
+
+        .interactive-card:hover,
+        .interactive-card:focus-within {
+            transform: translateY(-2px);
+            border-color: rgba(12, 127, 135, 0.18);
+            box-shadow:
+                0 18px 48px rgba(33, 48, 67, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.42);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.58));
+        }
+
+        .interactive-card:hover::before,
+        .interactive-card:focus-within::before {
+            opacity: 0.9;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 1rem;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            min-height: var(--nav-height);
+            padding: 1rem 1.25rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 0.95rem;
+            background:
+                linear-gradient(135deg, rgba(12, 127, 135, 0.9), rgba(12, 127, 135, 0.45));
+            display: grid;
+            place-items: center;
+            color: #f5fcff;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.26);
+        }
+
+        .brand-copy {
+            min-width: 0;
+        }
+
+        .brand-copy strong,
+        .brand-copy span {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .brand-copy strong {
+            font-size: 0.98rem;
+            letter-spacing: 0.04em;
+        }
+
+        .brand-copy span {
+            margin-top: 0.15rem;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 0.55rem;
+        }
+
+        .nav-links a {
+            padding: 0.7rem 0.95rem;
+            border-radius: 999px;
+            color: var(--muted-strong);
+            transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
+            font-size: 0.93rem;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text);
+            transform: translateY(-1px);
+        }
+
+        main {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr;
+            gap: 1.2rem;
+            align-items: stretch;
+        }
+
+        .hero-copy,
+        .hero-side {
+            min-height: 100%;
+        }
+
+        .hero-copy {
+            padding: 2.2rem;
+        }
+
+        .eyebrow {
+            margin: 0 0 1rem;
+            color: var(--accent-deep);
+            font-size: 0.85rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            margin: 0;
+            font-size: clamp(2.8rem, 6vw, 5.4rem);
+            line-height: 0.94;
+            letter-spacing: -0.04em;
+            text-wrap: balance;
+        }
+
+        .hero-subtitle {
+            margin: 0.9rem 0 0;
+            color: var(--muted-strong);
+            font-size: clamp(1rem, 1.6vw, 1.2rem);
+            line-height: 1.65;
+            max-width: 46rem;
+            text-wrap: pretty;
+        }
+
+        .hero-highlight {
+            margin-top: 1.5rem;
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+        }
+
+        .chip {
+            padding: 0.62rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.62);
+            border: 1px solid rgba(255, 255, 255, 0.76);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            color: var(--muted-strong);
+            font-size: 0.92rem;
+        }
+
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.85rem;
+            margin-top: 2rem;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 3rem;
+            padding: 0.85rem 1.15rem;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            font-size: 0.98rem;
+            font-weight: 600;
+            transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+        }
+
+        .button:hover,
+        .button:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(30, 51, 73, 0.14);
+        }
+
+        .button-primary {
+            color: #effcff;
+            background: linear-gradient(135deg, rgba(12, 127, 135, 0.98), rgba(12, 127, 135, 0.72));
+        }
+
+        .button-secondary {
+            color: var(--text);
+            border-color: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.48);
+        }
+
+        .hero-meta {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.8rem;
+        }
+
+        .meta-item {
+            padding: 1rem 1rem 1.1rem;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.42);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+        }
+
+        .meta-item small,
+        .section-kicker {
+            display: block;
+            font-size: 0.76rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent-deep);
+        }
+
+        .meta-item strong {
+            display: block;
+            margin-top: 0.55rem;
+            font-size: 1.03rem;
+            line-height: 1.45;
+            text-wrap: pretty;
+        }
+
+        .hero-side {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .identity-card,
+        .metrics-card,
+        .contact-card,
+        .section-card,
+        .project-card,
+        .footer-card {
+            padding: 1.5rem;
+        }
+
+        .identity-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 16rem;
+            box-shadow: var(--shadow);
+        }
+
+        .identity-card h2,
+        .section-title,
+        .project-title,
+        .cta-title {
+            margin: 0;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+        }
+
+        .identity-card h2 {
+            margin-top: 0.85rem;
+            font-size: clamp(1.5rem, 2vw, 1.95rem);
+        }
+
+        .identity-card p,
+        .section-copy,
+        .project-copy,
+        .list-note,
+        .contact-line span,
+        .timeline-copy,
+        .footer-copy {
+            color: var(--muted);
+            line-height: 1.72;
+            text-wrap: pretty;
+        }
+
+        .signature-line {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.66);
+        }
+
+        .signature-line strong {
+            font-size: 0.95rem;
+        }
+
+        .signature-line span {
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+            margin-top: 1.2rem;
+        }
+
+        .metric-box {
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.44));
+            border: 1px solid rgba(255, 255, 255, 0.74);
+        }
+
+        .metric-box strong {
+            display: block;
+            font-size: clamp(1.7rem, 2vw, 2.2rem);
+            letter-spacing: -0.05em;
+        }
+
+        .metric-box span {
+            display: block;
+            margin-top: 0.35rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: 0.86fr 1.14fr;
+            gap: 1.2rem;
+        }
+
+        .section-stack {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .section-card h3,
+        .contact-title {
+            margin: 0.8rem 0 0;
+            font-size: 1.35rem;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+        }
+
+        .fact-list,
+        .skill-list,
+        .project-points,
+        .award-list {
+            margin: 1rem 0 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .fact-list li,
+        .skill-list li,
+        .project-points li,
+        .award-list li {
+            position: relative;
+            padding-left: 1.25rem;
+            color: var(--muted-strong);
+            line-height: 1.65;
+            text-wrap: pretty;
+        }
+
+        .fact-list li::before,
+        .skill-list li::before,
+        .project-points li::before,
+        .award-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.72rem;
+            width: 0.45rem;
+            height: 0.45rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(12, 127, 135, 0.95), rgba(12, 127, 135, 0.4));
+            box-shadow: 0 0 0 0.3rem rgba(12, 127, 135, 0.08);
+        }
+
+        .skills-grid,
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .skill-card {
+            container-type: inline-size;
+        }
+
+        .skill-tags,
+        .project-tags,
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            padding: 0.48rem 0.74rem;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent-deep);
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+
+        .project-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .project-title {
+            font-size: clamp(1.45rem, 2vw, 1.8rem);
+        }
+
+        .project-period {
+            padding: 0.45rem 0.72rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.56);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            color: var(--muted-strong);
+            font-size: 0.84rem;
+        }
+
+        .project-copy {
+            margin: 0.95rem 0 0;
+        }
+
+        .project-divider {
+            margin: 1rem 0 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(12, 127, 135, 0.2), rgba(12, 127, 135, 0));
+        }
+
+        .timeline {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 8rem 1fr;
+            gap: 1rem;
+            align-items: start;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .timeline-item:first-child {
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .timeline-label {
+            color: var(--accent-deep);
+            font-size: 0.86rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .timeline-item strong {
+            display: block;
+            font-size: 1.05rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .contact-line {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            padding: 0.85rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.62);
+        }
+
+        .contact-line:first-of-type {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .contact-label {
+            min-width: 4rem;
+            color: var(--accent-deep);
+            font-size: 0.84rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .contact-line a {
+            color: var(--text);
+            text-decoration: underline;
+            text-decoration-color: rgba(12, 127, 135, 0.28);
+            text-underline-offset: 0.22em;
+        }
+
+        .contact-links a {
+            padding: 0.7rem 0.88rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.58);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: transform 180ms ease, background-color 180ms ease;
+        }
+
+        .contact-links a:hover,
+        .contact-links a:focus-visible {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.76);
+        }
+
+        .footer-card {
+            display: grid;
+            grid-template-columns: 1.1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .cta-title {
+            font-size: clamp(1.6rem, 2vw, 2rem);
+        }
+
+        .footer-copy {
+            margin: 0.7rem 0 0;
+        }
+
+        .footer-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .footer-note::before {
+            content: "";
+            width: 0.56rem;
+            height: 0.56rem;
+            border-radius: 999px;
+            background: rgba(12, 127, 135, 0.75);
+            box-shadow: 0 0 0 0.32rem rgba(12, 127, 135, 0.08);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            animation: rise-in 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 90ms;
+        }
+
+        .delay-2 {
+            animation-delay: 180ms;
+        }
+
+        .delay-3 {
+            animation-delay: 260ms;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            50% {
+                transform: translate3d(0, -12px, 0) scale(1.03);
+            }
+        }
+
+        @keyframes rise-in {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1080px) {
+            .hero,
+            .section-grid,
+            .footer-card {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-copy {
+                padding: 1.7rem;
+            }
+
+            .hero-meta,
+            .skills-grid,
+            .projects-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .footer-card {
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 740px) {
+            .page-shell {
+                padding-top: 0.65rem;
+            }
+
+            .topbar {
+                padding: 0.9rem 1rem;
+            }
+
+            .nav-links {
+                justify-content: flex-start;
+            }
+
+            .hero-copy,
+            .identity-card,
+            .metrics-card,
+            .contact-card,
+            .section-card,
+            .project-card,
+            .footer-card {
+                padding: 1.2rem;
+            }
+
+            .hero-meta,
+            .skills-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: 0.45rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .ambient,
+            .interactive-card::before,
+            .button,
+            .contact-links a,
+            .nav-links a {
+                animation: none !important;
+                transition: none !important;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient ambient-a" aria-hidden="true"></div>
+    <div class="ambient ambient-b" aria-hidden="true"></div>
+    <div class="ambient ambient-c" aria-hidden="true"></div>
+
+    <div class="page-shell">
+        <header class="container topbar glass-card interactive-card reveal is-visible">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true">L</div>
+                <div class="brand-copy">
+                    <strong>卢佳豪</strong>
+                    <span>Java 后端开发工程师 / AI 应用实践者</span>
+                </div>
+            </div>
+            <nav class="nav-links" aria-label="站点导航">
+                <a href="#about">关于我</a>
+                <a href="#skills">技能栈</a>
+                <a href="#projects">项目经历</a>
+                <a href="#contact">联系我</a>
+            </nav>
+        </header>
+
+        <main class="container">
+            <section class="hero">
+                <article class="glass-card interactive-card hero-copy reveal is-visible">
+                    <p class="eyebrow">Java Backend Engineer</p>
+                    <h1 class="hero-title">把 AI 应用、知识系统与实时通信，做成真正可交付的产品。</h1>
+                    <p class="hero-subtitle">
+                        我是卢佳豪，专注 Java 后端开发，熟悉 Spring Boot、Redis、MySQL、Spring AI 与 Netty。
+                        我关注的不只是“功能做出来”，而是让系统在实时性、扩展性与实际体验上都更可靠。
+                    </p>
+
+                    <div class="hero-highlight" aria-label="关键词">
+                        <span class="chip">Spring Boot / Spring AI</span>
+                        <span class="chip">RAG / MCP / Tool Calling</span>
+                        <span class="chip">Netty / Redis / MySQL</span>
+                    </div>
+
+                    <div class="action-row">
+                        <a class="button button-primary" href="https://blog.csdn.net/Themberfue" target="_blank" rel="noreferrer">查看个人博客</a>
+                        <a class="button button-secondary" href="https://gitee.com/takinaMio" target="_blank" rel="noreferrer">访问 Gitee</a>
+                    </div>
+
+                    <div class="hero-meta" aria-label="快速信息">
+                        <div class="meta-item">
+                            <small>定位</small>
+                            <strong>Java 后端开发工程师<br>兼具 AI 应用落地能力</strong>
+                        </div>
+                        <div class="meta-item">
+                            <small>教育背景</small>
+                            <strong>宜春学院 · 软件工程本科<br>2023.09 - 2027.06</strong>
+                        </div>
+                        <div class="meta-item">
+                            <small>亮点标签</small>
+                            <strong>性能优化 / 实时通信 / 平台扩展 / 工程协作</strong>
+                        </div>
+                    </div>
+                </article>
+
+                <div class="hero-side">
+                    <article class="glass-card interactive-card identity-card reveal delay-1">
+                        <div>
+                            <span class="section-kicker">Profile</span>
+                            <h2>后端工程视角很强，但也愿意把体验做完整。</h2>
+                            <p>
+                                在项目中，我更习惯从链路完整性出发思考问题：接口如何稳定、消息如何实时、知识如何可检索、
+                                工具如何扩展、前后端如何顺畅协作。相比只完成单点功能，我更在意系统长期演进的空间。
+                            </p>
+                        </div>
+                        <div class="signature-line">
+                            <strong>Lu Jiahao</strong>
+                            <span>Back-end / AI / Realtime Systems</span>
+                        </div>
+                    </article>
+
+                    <article class="glass-card interactive-card metrics-card reveal delay-2">
+                        <span class="section-kicker">Impact Snapshot</span>
+                        <div class="metrics-grid">
+                            <div class="metric-box">
+                                <strong>90%</strong>
+                                <span>AI 流式对话首字响应时间缩短约 90%</span>
+                            </div>
+                            <div class="metric-box">
+                                <strong>2-3x</strong>
+                                <span>并发向量化后文档吞吐量提升约 2 至 3 倍</span>
+                            </div>
+                            <div class="metric-box">
+                                <strong>20</strong>
+                                <span>智能体支持最多 20 步自主规划与工具协作</span>
+                            </div>
+                            <div class="metric-box">
+                                <strong>Realtime</strong>
+                                <span>WebSocket + Redisson 支撑即时通讯稳定分发</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="about" class="section-grid">
+                <article class="glass-card interactive-card section-card reveal">
+                    <span class="section-kicker">About</span>
+                    <h2 class="section-title">我擅长把复杂能力拆成稳定、可维护、可扩展的后端系统。</h2>
+                    <p class="section-copy">
+                        目前的项目重点集中在两类场景：一类是 AI 应用平台，包括流式对话、RAG 知识增强、MCP 工具接入与智能体自主规划；
+                        另一类是即时通讯系统，包括长连接通信、消息发布订阅、登录鉴权与缓存优化。
+                    </p>
+                    <ul class="fact-list">
+                        <li>重视链路完整性，从数据存储、服务能力到前端交互体验都会一起考虑。</li>
+                        <li>能把性能问题拆解为具体瓶颈，例如首字延迟、串行吞吐、连接稳定性与缓存命中率。</li>
+                        <li>具备前后端协作能力，可基于 Vue3、HTML、CSS、JavaScript 完成页面联调和基础展示开发。</li>
+                    </ul>
+                </article>
+
+                <div class="section-stack">
+                    <article class="glass-card interactive-card section-card reveal delay-1">
+                        <span class="section-kicker">Recognition</span>
+                        <h3>学习与成长</h3>
+                        <ul class="award-list">
+                            <li>获校级二等奖学金与三好学生，具备稳定的学习节奏与项目投入度。</li>
+                            <li>持有 CET-6 证书，能够阅读英文技术文档并跟进技术生态更新。</li>
+                            <li>通过软件设计师中级考试，具备较系统的软件工程基础。</li>
+                        </ul>
+                    </article>
+
+                    <article class="glass-card interactive-card section-card reveal delay-2">
+                        <span class="section-kicker">Focus</span>
+                        <h3>我更关注这些方向</h3>
+                        <ul class="award-list">
+                            <li>AI 能力工程化：让对话、知识检索与工具调用真正落地到业务链路。</li>
+                            <li>实时系统体验：让长连接、消息分发、在线状态维护做到稳定可感知。</li>
+                            <li>平台扩展性：为知识库、工具、配置和未来新能力预留清晰的接入路径。</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section id="skills" class="section-stack">
+                <article class="glass-card interactive-card section-card reveal">
+                    <span class="section-kicker">Skill Stack</span>
+                    <h2 class="section-title">技能栈以 Java 后端为主，也覆盖微服务、AI 与工程协作。</h2>
+                    <p class="section-copy">
+                        我倾向于把技术能力分成“稳态交付”和“能力延展”两层：前者保证系统可靠，后者推动项目真正可进化。
+                    </p>
+                </article>
+
+                <div class="skills-grid">
+                    <article class="glass-card interactive-card section-card skill-card reveal delay-1">
+                        <span class="section-kicker">Core Backend</span>
+                        <h3>Java 后端开发</h3>
+                        <ul class="skill-list">
+                            <li>熟悉 JavaSE、JavaEE、面向对象、集合框架、异常处理与基础并发模型。</li>
+                            <li>熟练使用 Spring Boot、MyBatis / MyBatis-Plus 进行接口开发、联调和业务实现。</li>
+                            <li>理解 IoC、DI、AOP 等核心机制，具备统一鉴权与重复逻辑抽离经验。</li>
+                        </ul>
+                        <div class="skill-tags">
+                            <span class="tag">Java</span>
+                            <span class="tag">Spring Boot</span>
+                            <span class="tag">MyBatis-Plus</span>
+                            <span class="tag">AOP</span>
+                        </div>
+                    </article>
+
+                    <article class="glass-card interactive-card section-card skill-card reveal delay-2">
+                        <span class="section-kicker">Data & Middleware</span>
+                        <h3>数据库与中间件</h3>
+                        <ul class="skill-list">
+                            <li>熟悉 MySQL 事务、索引、SQL 优化与业务场景下的性能优化思路。</li>
+                            <li>熟悉 Redis 常用数据结构与缓存、令牌、心跳状态等典型应用场景。</li>
+                            <li>了解 RabbitMQ 基本消息模型与异步解耦场景，具备消息链路理解能力。</li>
+                        </ul>
+                        <div class="skill-tags">
+                            <span class="tag">MySQL</span>
+                            <span class="tag">Redis</span>
+                            <span class="tag">RabbitMQ</span>
+                            <span class="tag">Redisson</span>
+                        </div>
+                    </article>
+
+                    <article class="glass-card interactive-card section-card skill-card reveal">
+                        <span class="section-kicker">AI & Distributed</span>
+                        <h3>微服务与 AI 应用</h3>
+                        <ul class="skill-list">
+                            <li>熟悉 Spring Cloud 常用组件，包括 Nacos、OpenFeign、Gateway、Seata 的基础使用。</li>
+                            <li>熟悉 Spring AI 的基础应用，能围绕流式对话、RAG 与工具调用完成能力搭建。</li>
+                            <li>了解 MCP 工具使用与开发，能构建工具接入、校验与解析链路。</li>
+                        </ul>
+                        <div class="skill-tags">
+                            <span class="tag">Spring AI</span>
+                            <span class="tag">RAG</span>
+                            <span class="tag">MCP</span>
+                            <span class="tag">Spring Cloud</span>
+                        </div>
+                    </article>
+
+                    <article class="glass-card interactive-card section-card skill-card reveal delay-1">
+                        <span class="section-kicker">Collaboration</span>
+                        <h3>前端协作与工程化</h3>
+                        <ul class="skill-list">
+                            <li>具备 Vue3、HTML、CSS、JavaScript 基础，可完成页面开发与前后端数据交互。</li>
+                            <li>熟悉 Git 版本控制与基础协作流程，具备 Linux 环境部署与基础维护能力。</li>
+                            <li>能够在页面展示层做基础设计实现，提升产品呈现与项目表达完整度。</li>
+                        </ul>
+                        <div class="skill-tags">
+                            <span class="tag">Vue3</span>
+                            <span class="tag">HTML/CSS/JS</span>
+                            <span class="tag">Git</span>
+                            <span class="tag">Linux</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="projects" class="section-stack">
+                <article class="glass-card interactive-card section-card reveal">
+                    <span class="section-kicker">Featured Projects</span>
+                    <h2 class="section-title">两个代表项目，分别体现了 AI 平台能力与实时通信能力。</h2>
+                    <p class="section-copy">
+                        我在项目里比较强调“可量化成果”和“系统性解决方案”，所以这里重点展示做了什么、为什么这么做，以及带来了什么结果。
+                    </p>
+                </article>
+
+                <div class="projects-grid">
+                    <article class="glass-card interactive-card project-card reveal delay-1">
+                        <div class="project-header">
+                            <div>
+                                <span class="section-kicker">Project 01</span>
+                                <h3 class="project-title">MioAI 智能体开发平台</h3>
+                            </div>
+                            <span class="project-period">Spring Boot / Spring AI / RAG / Vue3</span>
+                        </div>
+                        <p class="project-copy">
+                            面向 AI 智能体场景开发的前后端分离平台，支持智能体创建与管理、RAG 知识库构建、MCP 工具接入、
+                            工具调用、流式对话与会话记忆等能力。
+                        </p>
+                        <div class="project-tags">
+                            <span class="tag">Tool Calling</span>
+                            <span class="tag">Cloudflare R2</span>
+                            <span class="tag">Redis</span>
+                            <span class="tag">OSS</span>
+                        </div>
+                        <div class="project-divider" aria-hidden="true"></div>
+                        <ul class="project-points">
+                            <li>将 AI 对话从一次性字符串返回改造为基于 Spring AI + SSE 的流式输出，本地压测下首字响应时间缩短约 90%。</li>
+                            <li>基于 ExecutorService 线程池对文本切分结果分批并发执行关键词增强与向量入库，使向量化吞吐量提升约 2 至 3 倍。</li>
+                            <li>基于 ReAct 模式构建具备自主规划能力的智能体，支持最多 20 步规划执行，并可协作网页搜索、网页抓取、PDF 生成、资源下载等工具。</li>
+                            <li>设计并实现 RAG 知识库链路，完成文档上传、解析切分、关键词增强、向量入库与相似检索，支持 PDF、Markdown、TXT 等多类型文档。</li>
+                            <li>开发 MCP 工具接入与校验模块，支持 SSE / STDIO 两种模式的配置检测、服务初始化与工具解析，提高平台扩展能力。</li>
+                        </ul>
+                    </article>
+
+                    <article class="glass-card interactive-card project-card reveal delay-2">
+                        <div class="project-header">
+                            <div>
+                                <span class="section-kicker">Project 02</span>
+                                <h3 class="project-title">RemChat 桌面即时通讯软件</h3>
+                            </div>
+                            <span class="project-period">Netty / Redis / Redisson / Electron</span>
+                        </div>
+                        <p class="project-copy">
+                            面向桌面即时通讯场景开发的前后端分离系统，支持好友检索与申请、单聊 / 群聊、富媒体传输、
+                            后台管理、客户端版本更新及 AI 机器人对话，形成了完整的消息业务闭环。
+                        </p>
+                        <div class="project-tags">
+                            <span class="tag">WebSocket</span>
+                            <span class="tag">MyBatis-Plus</span>
+                            <span class="tag">SQLite</span>
+                            <span class="tag">Vue3</span>
+                        </div>
+                        <div class="project-divider" aria-hidden="true"></div>
+                        <ul class="project-points">
+                            <li>基于 Netty WebSocket 自建长连接通信服务，结合心跳检测、连接保活与断线重连，提升聊天场景的实时性与稳定性。</li>
+                            <li>基于 Redisson Topic 设计消息发布订阅链路，将业务消息生产与连接层推送解耦，统一分发私聊、群聊、好友申请、强制下线等多类消息。</li>
+                            <li>使用 Redis 缓存图形验证码、登录 Token、联系人列表、系统配置与用户心跳信息，降低数据库访问压力。</li>
+                            <li>结合 AOP 与自定义注解实现统一登录校验和管理员权限控制，减少重复鉴权逻辑，增强系统维护性。</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section id="contact" class="section-grid">
+                <article class="glass-card interactive-card section-card reveal">
+                    <span class="section-kicker">Education</span>
+                    <h2 class="section-title">在校阶段，我更希望尽早形成“能落地”的工程习惯。</h2>
+                    <p class="section-copy">
+                        除了课程学习，我更关注真实项目的结构设计、性能表现和协作方式。对我来说，好的项目经历不是简单罗列技术名词，
+                        而是能明确说明问题、方案和结果。
+                    </p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-label">2023 - 2027</div>
+                            <div>
+                                <strong>宜春学院 · 软件工程本科</strong>
+                                <div class="timeline-copy">系统学习软件工程基础，持续将课程知识迁移到后端开发、微服务与 AI 应用实践中。</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-label">Awards</div>
+                            <div>
+                                <strong>二等奖学金 / 三好学生 / CET-6 / 软件设计师中级</strong>
+                                <div class="timeline-copy">兼顾学习成绩、项目实践与技术成长，保持稳定的进步节奏。</div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="glass-card interactive-card contact-card reveal delay-1">
+                    <span class="section-kicker">Contact</span>
+                    <h3 class="contact-title">欢迎联系我，聊聊后端开发、AI 应用或项目协作。</h3>
+
+                    <div class="contact-line">
+                        <span class="contact-label">Phone</span>
+                        <span><a href="tel:+8619579874846">(+86) 195-7987-4846</a></span>
+                    </div>
+                    <div class="contact-line">
+                        <span class="contact-label">Email</span>
+                        <span><a href="mailto:ljh@tak1na.cn">ljh@tak1na.cn</a></span>
+                    </div>
+                    <div class="contact-line">
+                        <span class="contact-label">Blog</span>
+                        <span><a href="https://blog.csdn.net/Themberfue" target="_blank" rel="noreferrer">blog.csdn.net/Themberfue</a></span>
+                    </div>
+                    <div class="contact-line">
+                        <span class="contact-label">Gitee</span>
+                        <span><a href="https://gitee.com/takinaMio" target="_blank" rel="noreferrer">gitee.com/takinaMio</a></span>
+                    </div>
+
+                    <div class="contact-links">
+                        <a href="mailto:ljh@tak1na.cn">发送邮件</a>
+                        <a href="https://blog.csdn.net/Themberfue" target="_blank" rel="noreferrer">查看博客</a>
+                        <a href="https://gitee.com/takinaMio" target="_blank" rel="noreferrer">查看仓库</a>
+                    </div>
+                </article>
+            </section>
+
+            <section class="glass-card interactive-card footer-card reveal">
+                <div>
+                    <span class="section-kicker">Next Step</span>
+                    <h2 class="cta-title">如果你在寻找一位关注稳定交付、性能细节和系统扩展性的后端开发者，我们可以继续聊。</h2>
+                    <p class="footer-copy">
+                        这个页面基于简历信息整理而成，适合作为在线个人介绍页的第一版。后续还可以继续加上项目截图、博客精选文章、
+                        时间线动画或英文版本。
+                    </p>
+                </div>
+                <div class="footer-note">Minimal portfolio with subtle motion and glassmorphism cards</div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        (function () {
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const interactiveCards = document.querySelectorAll(".interactive-card");
+
+            if (!prefersReducedMotion) {
+                interactiveCards.forEach((card) => {
+                    card.addEventListener("pointermove", (event) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = ((event.clientX - rect.left) / rect.width) * 100;
+                        const y = ((event.clientY - rect.top) / rect.height) * 100;
+                        card.style.setProperty("--mx", x + "%");
+                        card.style.setProperty("--my", y + "%");
+                    });
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

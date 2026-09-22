@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="favicon.ico" rel="shortcut icon">
+  <title>01-指令修饰符</title>
+</head>
+<body>
+  <div id="app">
+    <h3>@keyup.enter → 监听键盘回车事件</h3>
+    <input @keyup.enter="fn" @click="fn" v-model="username" type="text">
+  </div>
+  <script src="./vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        username: ''
+      },
+      methods: {
+        fn(e) {
+          console.log(e)
+          console.log(this.username, '键盘回车的时候触发')
+        }
+      }
+    })
+  </script>
+</body>
+</html>

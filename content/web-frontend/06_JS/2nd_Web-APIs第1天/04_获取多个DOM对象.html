@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04_获取多个DOM对象</title>
+</head>
+<body>
+  <ul class="nav">
+    <li id="test">test</li>
+    <li>test</li>
+    <li>test</li>
+  </ul>
+  <script>
+    // document.querySelectorAll('CSS选择器')
+    // 选择所有匹配的对象
+    const lis = document.querySelectorAll('.nav li')
+    console.log(lis) // NodeList(3) [li, li, li] //返回了一个数组 (伪数组)
+    // 获取多个 DOM对象是不可以直接修改的，需要遍历该 DOM对象 
+    for (let i = 0; i < lis.length; i++) {
+      console.log(lis[i])
+    }
+
+    // 了解即可
+    // 根据 ID获取一个元素
+    document.getElementById('test')
+    // 根据 标签获取一类元素 获取页面所有 div
+    document.getElementsByTagName('div')
+    // 根据类名获取元素 获取页面所有类名为 w的
+    document.getElementsByClassName('nav')
+  </script>
+</body>
+</html>

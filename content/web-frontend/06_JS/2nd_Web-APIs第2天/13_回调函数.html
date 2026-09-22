@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>13_回调函数</title>
+</head>
+<body>
+  <script>
+    // 回调函数：
+    // 如果将函数 A作为参数传给函数 B，那么函数 A就称为回调函数
+    function fn() {
+      console.log('我是回调函数...')
+    }
+    // fn传递给了setInterval，fn就是回调函数
+    setInterval(fn, 1000)
+    // 过了1000ms，就要回过去调用 fn这个函数，所以fn称为回调函数
+  </script>
+</body>
+</html>

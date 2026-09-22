@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01_AJAX概念和axios使用</title>
+</head>
+<body>
+  <p class="myP"></p>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    // AJAX：一种在无需重新加载整个网页的情况下，能够发送和接收数据、更新网页部分内容的技术。
+    // AJAX的核心是 XMLHttpRequest对象（或在现代浏览器中使用的 Fetch API），它允许网页与服务器进行异步通信。
+    // AJAX可以让浏览器和服务器之间通信，实现动态数据交互
+
+    axios({
+      url: 'http://hmajax.itheima.net/api/province'
+    }).then(result => {
+      // console.log(result)
+      // 多打印，确认属性名
+      // console.log(result.data.list.join('<br>'))
+      document.querySelector('.myP').innerHTML = result.data.list.join('<br>')
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+.header {
+  background-color: red;
+  font-size: 14px;
+  width: 200px;
+  height: 200px;
+}
+.header a {
+  color: wheat;
+  font-size: 20px;
+}
+.header a:hover {
+  color: blue;
+}
+.nav .logo {
+  color: green;
+}
+.nav::before {
+  content: "我是伪元素";
+  display: inline-block;
+}

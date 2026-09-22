@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>09_箭头函数的基本语法</title>
+</head>
+<body>
+  <script>
+    // 箭头函数
+    // const fn = (x) => {
+    //   console.log(x)
+    // }
+    // fn(1)
+
+    // 只有一个实参的时候，可以省略小括号
+    // const fn = x => {
+    //   console.log(x)
+    // }
+    // fn(1)
+
+    // 只有一行代码的时候，可以省略大括号
+    // const fn = x => console.log(x)
+    // fn(1)
+
+    // 只有一行代码，可以省略 return
+    // const fn = x => x + 2
+    // console.log(fn(1))
+
+    // 可以直接返回一个对象
+    const fn = uname => ({uname: uname})
+    console.log(fn('刘德华'))
+  </script>
+</body>
+</html>

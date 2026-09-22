@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03_获取一个DOM对象</title>
+</head>
+<body>
+  <div class="box">123</div>
+  <div class="box">abc</div>
+
+  <ul>
+    <li>test</li>
+    <li>test</li>
+    <li>test</li>
+  </ul>
+  <script>
+    // document.querySelector('CSS选择器')
+    // 获取匹配的第一个元素，只能选一个
+    // const box = document.querySelector('div')
+    // const box = document.querySelector('.box')
+    // console.log(box)
+
+    // const li = document.querySelector('ul li')
+    const li = document.querySelector('ul li:first-child')
+    console.log(li)
+    // 返回值：CSS选择器匹配的第一个元素，一个 HTML Element对象
+
+    // document.querySelectorAll('CSS选择器')
+    // 选择所有匹配的对象
+    const lis = document.querySelectorAll('ul li')
+    console.log(lis) // NodeList(3) [li, li, li] //返回了一个数组
+    // 获取多个 DOM对象是不可以直接修改的，需要遍历该 DOM对象 
+
+  </script>
+</body>
+</html>

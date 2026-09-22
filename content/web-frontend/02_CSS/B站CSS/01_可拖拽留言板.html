@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>01_可拖拽留言板</title>
+    <style>
+        .main {
+            position: absolute;
+            display: inline-block;
+        }
+        .resize {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            resize: both;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        .resize::-webkit-resizer {
+            background-color: transparent;
+        }
+        .content {
+            box-sizing: border-box;
+            width: 400px;
+            height: 400px;
+            padding: 30px;
+            background-color: gold;
+            font-family: "翩翩体-简", "华文彩云", sans-serif;
+            font-size: 24px;
+            position: absolute;
+            right: -380px;
+            bottom: -380px;
+
+            &::before {
+                content: '';
+                background-color: red;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="resize"></div>
+        <div class="content" contenteditable="true">你好啊</div>
+    </div>
+</body>
+</html>

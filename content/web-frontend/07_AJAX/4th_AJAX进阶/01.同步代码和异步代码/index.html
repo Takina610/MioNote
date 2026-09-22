@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>同步代码和异步代码</title>
+</head>
+<body>
+  <button class="btn">点我</button>
+  <script>
+    /* 同步代码
+        同步代码是按照它们在脚本中出现的顺序执行的。每一行代码都必须等待前一行代码执行完成后，才能开始执行。
+        这意味着某些操作（尤其是耗时操作，如文件读取、网络请求等）会阻塞代码的继续执行，直到操作完成。
+    */
+
+    /*
+      异步代码
+        异步代码允许某些操作在“后台”进行，同时代码的其他部分继续执行，而不用等待这些操作完成。
+        这是通过回调函数、Promises、async/await等机制实现的。
+        异步编程模型在处理I/O（输入/输出）、网络请求、文件操作等耗时任务时特别有用，因为它们不会阻塞代码的执行。
+    */
+   
+    // 目标：阅读并回答代码执行和打印的顺序
+    const result = 0 + 1
+    console.log(result)
+    setTimeout(() => {
+      console.log(2)
+    }, 2000)
+    document.querySelector('.btn').addEventListener('click', () => {
+      console.log(3)
+    })
+    document.body.style.backgroundColor = 'pink'
+    console.log(4)
+  </script>
+</body>
+</html>

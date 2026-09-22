@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12_数组解构</title>
+</head>
+<body>
+  <script>
+    // 将数组的单元值快速批量赋值给一系列变量的简洁语法
+    const arr = [100, 60, 80]
+    // 数组解构 赋值
+    const [max, min, avg] = arr
+    // console.log(max)
+    // console.log(min)
+    // console.log(avg)
+
+    // 交换两个变量的值
+    let a = 1
+    let b = 2; // 必须有分号
+    [a, b] = [b, a]
+    console.log(a, b)
+  </script>
+</body>
+</html>

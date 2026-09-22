@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>09_封装计算时间函数</title>
+</head>
+<body>
+  <script>
+    let secondsInput = +prompt('请输入秒数：')
+
+     /**
+     * 将秒数转换为时分秒格式。
+     * @param {number} seconds - 需要转换的总秒数。
+     * @returns {Array} 包含时、分、秒的数组。
+     */
+
+    function formatTimes(unit) {
+      return unit < 10 ? '0' + unit : unit
+    }
+
+    function convertSencondsToHMS(seconds = 0) {
+      let hours = 0
+      let minutes = 0
+      let secondsRemaining = 0
+      
+      hours = parseInt(seconds / 3600)
+      
+      seconds -= hours * 3600 // 剩余秒数
+      
+      minutes = parseInt(seconds / 60)
+      
+      secondsRemaining = seconds - minutes*60 // 计算后剩余的秒数
+
+      formatTimes(hours)
+      formatTimes(minutes)
+      formatTimes(secondsRemaining)
+
+      return [hours, minutes, secondsRemaining]
+    }
+
+    let convertTime = convertSencondsToHMS(secondsInput)
+    document.write(`${secondsInput}转换为
+                    ${convertTime[0]}时
+                    ${convertTime[1]}分
+                    ${convertTime[2]}秒`)
+  </script>
+</body>
+</html>

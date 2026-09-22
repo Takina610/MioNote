@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10_生成随机颜色案例</title>
+  <style>
+    div {
+      width: 400px;
+      height: 400px;
+      border: 1px solid black;
+      box-shadow: 0px 0px 10px black;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div></div>
+  <script>
+     function getRandom(M = 0, N = 0) {
+      return Math.floor(Math.random() * (N - M + 1) + M)
+    }
+
+    function getRandomColor(flag = true) {
+      // 返回 16进制颜色表示
+      if (flag) {
+        let hexadecimalCharacters = [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f']
+
+        let randomColor = '#'
+        for (let i = 0; i < 6; i++) {
+          // 随机获取16进制字符数组下标索引
+          let randomIndex = Math.floor(Math.random() * hexadecimalCharacters.length)
+          randomColor += hexadecimalCharacters[randomIndex]
+        }
+        return randomColor
+      } else { // 返回 rgb颜色表示
+        return `rgb(${getRandom(0, 255)}, ${getRandom(0, 255)}, ${getRandom(0, 255)})`;
+      }
+    }
+    
+    // 随便看看
+    const div = document.querySelector('div')
+    div.style.backgroundColor = getRandomColor()
+  </script>
+</body>
+</html>

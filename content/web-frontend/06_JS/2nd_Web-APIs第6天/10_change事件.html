@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10_change事件</title>
+</head>
+<body>
+  <input type="text">
+  <script>
+    // 当用户改变元素的值并且元素失去焦点时，事件处理函数会被调用。
+    const input = document.querySelector('input')
+    input.addEventListener('change' ,function() {
+      alert('改变了')
+    })
+  </script>
+</body>
+</html>

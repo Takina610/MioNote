@@ -1,0 +1,96 @@
+/* #region重置样式 */
+* { 
+        font-family: Arial; 
+        font-size: 14px; 
+        margin: 0; 
+        padding: 0; 
+        border: none; 
+    }
+    a { text-decoration: none; }
+    ul { list-style: none; }
+/* #endregion重置样式 */
+html,body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-image: url(./images/bg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.page-header {
+    height: 70px;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+.nav-list {
+    display: flex;
+}
+.nav-list li a {
+    color: white;
+    font-size: 20px;
+    border: 1px solid white;
+    border-radius: 8px;
+    padding: 10px;
+    margin-left: 20px;
+    transition: all linear 0.2s;
+}
+.nav-list li a:hover {
+    color: rgb(226, 224, 224);
+}
+.page-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 110px);
+}
+.content-nav {
+    width: 1000px;
+    height: 300px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.content-nav .item {
+    width: 180px;
+    height: 300px;
+    background-color: orange;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    transition: all linear 0.2s;
+}
+.content-nav .item:hover {
+    box-shadow: 0px 0px 15px black;
+}
+.content-nav .item a span {
+    font-size: 20px;
+    color: white;
+    transition: all linear 0.2s;
+}
+.content-nav .item a:hover img {
+    transform: scale(1.2);
+}
+.content-nav .item a:hover span {
+    color: red;
+}
+.content-nav .item:nth-child(1) {
+    background-color: #595CA8;
+}
+.content-nav .item:nth-child(2) {
+    background-color: #FF9D2E;
+}
+.content-nav .item:nth-child(3) {
+    background-color: #01A6DE;
+}
+.content-nav .item:nth-child(4) {
+    background-color: #1DC128;
+}
+.content-nav .item:nth-child(5) {
+    background-color: #01A6DE;
+}

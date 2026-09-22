@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>08_JS Math内置对象</title>
+  <style>
+    a {
+      text-decoration: none;
+      margin: 0 auto;
+      font-size: 100px;
+      width: 800px;
+      height: 400px;
+      display: block;
+      color: deepskyblue;
+    }
+  </style>
+</head>
+<body>
+  <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math" target="_blank">Mdn Math对象</a>
+  <script>
+    // 属性
+    console.log(Math.PI) // 3.14159....
+
+    // 方法
+    // ceil 天花板 向上取整
+    console.log(Math.ceil(1.1)) // 2
+
+    // floor 地板 向下取整
+    console.log(Math.floor(1.1)) // 1
+
+    // round 四舍五入
+    console.log(Math.round(1.5)) // 2
+
+    console.log(Math.round(-1.5)) // 1
+    console.log(Math.round(-1.51)) // 2
+
+    // max 取一串数字最大值
+    console.log(Math.max(1,2,3,4,5)) // 5
+
+    // min 取一串数字最小值
+    console.log(Math.min(1,2,3,4,5)) // 1
+  </script>
+</body>
+</html>

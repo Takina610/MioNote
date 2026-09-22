@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11_回车发评价案例</title>
+  <style>
+    .wrapper {
+      min-width: 400px;
+      max-width: 800px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: url(./images/avatar.jpg) no-repeat center / cover;
+      margin-right: 20px;
+      display: inline-block;
+    }
+
+    .wrapper textarea {
+      outline: none;
+      border-color: transparent;
+      resize: none;
+      background: #f5f5f5;
+      border-radius: 4px;
+      flex: 1;
+      padding: 10px;
+      transition: all 0.5s;
+      height: 30px;
+    }
+
+    .wrapper textarea:focus {
+      border-color: #e4e4e4;
+      background: #fff;
+      height: 50px;
+    }
+
+    .wrapper button {
+      background: #00aeec;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      margin-left: 10px;
+      width: 70px;
+      cursor: pointer;
+    }
+
+    .wrapper .total {
+      margin-right: 80px;
+      color: #999;
+      margin-top: 5px;
+      opacity: 0;
+      transition: all 0.5s;
+    }
+
+    .list {
+      min-width: 400px;
+      max-width: 800px;
+      display: flex;
+    }
+
+    .list .item {
+      width: 100%;
+      display: flex;
+    }
+
+    .list .item .info {
+      flex: 1;
+      border-bottom: 1px dashed #e4e4e4;
+      padding-bottom: 10px;
+      display: inline-block;
+    }
+
+    .list .item p {
+      margin: 0;
+    }
+
+    .list .item .name {
+      color: #FB7299;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .list .item .text {
+      color: #333;
+      padding: 10px 0;
+    }
+
+    .list .item .time {
+      color: #999;
+      font-size: 12px;
+    }
+    .LJH {
+      position: relative;
+      bottom: 22px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <i class="avatar"></i>
+    <textarea id="tx" placeholder="发一条友善的评论" rows="2" maxlength="200"></textarea>
+    <button>发布</button>
+  </div>
+  <div class="wrapper">
+    <span class="total">0/200字</span>
+  </div>
+  <div class="list">
+    <div class="item" style="display: none;">
+      <i class="avatar LJH"></i>
+      <div class="info">
+        <p class="name">清风徐来</p>
+        <p class="text"></p>
+        <p class="time">2022-10-10 20:29:21</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let now = new Date();
+
+    const tx = document.querySelector('#tx')
+    const total = document.querySelector('.total')
+    const item = document.querySelector('.item')
+    const text = document.querySelector('.text')
+    const time = document.querySelector('.time')
+    // 检测光标聚焦
+    tx.addEventListener('focus', function() {
+      total.style.opacity = 1
+    })
+    // 光标消失
+    tx.addEventListener('blur', function() {
+      total.style.opacity = 0
+    })
+    // 检测用户输入
+    tx.addEventListener('input', function() {
+      total.innerHTML = `${tx.value.length}/200字`
+    })
+
+    // 用户回车发布信息
+    tx.addEventListener('keyup', function(event) {
+      if (event.key === 'Enter' && tx.value.trim() !== '') {
+        console.log(11);
+        item.style.display = 'block'
+        text.innerHTML = tx.value
+        tx.value = ''
+        total.innerHTML = `0/200字`
+
+        time.innerHTML = formatDateTime(now)
+      }
+    })
+
+    // 小孩子不懂事, 写着玩的
+    function formatDateTime(date) {
+      let year = date.getFullYear(); // 获取年份
+      let month = date.getMonth() + 1; // 获取月份，加1使其从1开始而非0
+      let day = date.getDate(); // 获取日期
+      let hours = date.getHours(); // 获取小时
+      let minutes = date.getMinutes(); // 获取分钟
+
+      // 确保月份、日期、小时和分钟小于10时，前面加0
+      month = month < 10 ? '0' + month : month;
+      day = day < 10 ? '0' + day : day;
+      hours = hours < 10 ? '0' + hours : hours;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+
+      // 格式化日期时间字符串
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+
+  </script>
+</body>
+
+</html>

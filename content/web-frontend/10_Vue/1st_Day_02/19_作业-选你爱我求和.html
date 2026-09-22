@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./favicon.ico" rel="shortcut icon">
+  <title>19_作业-选你爱我求和</title>
+</head>
+
+<body>
+  <div id="app">
+    <div>
+      <div style="display: inline-block" v-for="item in arr">
+        <input type="checkbox" :value="item" v-model="arr1"/>
+        <span>{{item}}</span>
+      </div>
+      <p>你选中的元素, 累加的值和为: {{total}}</p>
+    </div>
+  </div>
+  <script src="./vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        arr1: [],
+        arr: [9, 15, 19, 25, 29, 31, 48, 57, 62, 79, 87],
+      },
+      computed: {
+        total() {
+          return this.arr1.reduce((sum, item) => sum + item, 0)
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

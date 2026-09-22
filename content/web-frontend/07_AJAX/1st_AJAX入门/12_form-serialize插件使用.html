@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12_form-serialize插件使用</title>
+</head>
+
+<body>
+  <form action="javascript:;" class="example-form">
+    <input type="text" name="username">
+    <br>
+    <input type="text" name="password">
+    <br>
+    <input type="button" class="btn" value="提交">
+  </form>
+  <!-- 
+    目标：在点击提交时，使用 form-serialize插件，快速收集表单元素值
+  -->
+  <script src="./lib/form-serialize.js"></script>
+  <script>
+    document.querySelector('.btn').addEventListener('click', () => {
+      
+      // 利用 serialize快速收集表单元素数据
+      // 参数 1：要获取哪个表单的数据
+      //  表单元素需设置 name属性，值会作为返回对象的属性名
+      //  name属性值最好和接口文档提供的值一样
+
+      // 参数 2：配置对象
+      //  hash：设置获取的数据结构
+      //    -true：JS对象（推荐） —— 一般请求体里发送给服务器
+      //    -false：查询字符串
+      //  empty：设置是否获取空值
+      //    -true：获取空值（推荐） —— 数据结构和标签结构一致
+      //    -false：不获取空值
+
+      const form = document.querySelector('.example-form')
+      const data = serialize(form, {hash: true, empty: true})
+      console.log(data)
+    })
+  </script>
+</body>
+
+</html>

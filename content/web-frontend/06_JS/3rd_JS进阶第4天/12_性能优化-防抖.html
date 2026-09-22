@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>12_性能优化-防抖</title>
+  <style>
+    .box {
+      width: 500px;
+      height: 500px;
+      background-color: #ccc;
+      color: #fff;
+      text-align: center;
+      font-size: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box"></div>
+  <script src="./lodash.min.js"></script>
+  <script>
+
+    // 确保时间触发后的一段时间内没有再次触发事件时，才执行目标函数，
+    // 如果在这段延迟时间内再次触发了事件，则重新计算延迟时间。防抖常用于处理频繁触发的事件
+    
+    const box = document.querySelector('.box')
+    let i = 1
+    function mouseMove() {
+      box.innerHTML = i++
+    }
+    // box.addEventListener('mousemove', mouseMove)
+
+    // 利用 lodash库实现防抖优化 - 500ms后 +1
+    // _.debounce(fun, 时间)
+    // box.addEventListener('mousemove', _.debounce(mouseMove, 500))
+
+    // 防抖函数实现逻辑
+    // 核心是利用 setTimeout函数实现的
+    // 1.声明定时器变量
+    // 2.每次鼠标移动时都要判断是否存在定时器，如果有则需清除原先存在的定时器
+    // 3.如果没有定时器，则开启定时器，并且存到定时器变量里
+    // 4.定时器里写函数调用
+    function debounce(func, wait) {
+      let timer
+      return function() {
+        if (setTimeout) clearTimeout(timer)
+        timer = setTimeout(function() {
+          func()
+        }, wait)
+      }
+    }
+    box.addEventListener('mousemove', debounce(mouseMove, 500))
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>13_continue和break语句</title>
+</head>
+<body>
+  <script>
+    // continue
+    // continue 语句用于跳过循环中的当前迭代，
+    // 并继续执行循环的下一个迭代。换句话说，
+    // 当 continue 语句执行时，循环中位于 continue 之后的代码将不会执行，
+    // 循环会直接进入下一次迭代的条件判断。
+
+    // break
+    // break 语句用于立即退出循环，
+    // 不管循环条件是否仍然为真。
+    // break 通常用于基于条件的提前退出，或者在 switch 语句中结束一个案例的执行。
+
+    while ( true ) {
+      let love = prompt('你爱我吗')
+      if (love === '爱') {
+        break
+      }
+    }
+  </script>
+</body>
+</html>

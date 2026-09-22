@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>08_展开运算符</title>
+</head>
+<body>
+  <script>
+    // const arr1 = [1, 2, 3]
+    // // 展开运算符 可以展开数组
+    // console.log(...arr1) // 1 2 3 (其实是有逗号隔开的)
+    // // 求最大值最小值
+    // console.log(Math.max(...arr1)) // 3
+    // console.log(Math.min(...arr1)) // 1
+
+    // // 合并数组
+    // const arr2 = [4, 5, 6]
+    // const arr = [...arr1, ...arr2]
+    // console.log(arr) 
+
+    // 在函数调用中使用
+    function sum(x, y, z) {
+      return x + y + z
+    }
+
+    const numbers = [1, 2, 3]
+
+    // 1. 使用展开运算符传递数组元素作为独立参数
+    console.log(sum(...numbers)) // 输出: 6
+
+
+    // 2. 在数组字面量中使用
+    const fruits = ['apple', 'banana']
+    const moreFruits = ['orange', 'grape', ...fruits]
+
+    console.log(moreFruits) // 输出: ['orange', 'grape', 'apple', 'banana']
+
+
+    // 3. 在对象字面量中使用
+    const user = { name: 'John', age: 30 }
+    const clonedUser = { ...user }
+
+    console.log(clonedUser) // 输出: { name: 'John', age: 30 }
+
+
+    // 4. 结合剩余参数和展开运算符
+    function myFunction(...rest) {
+      console.log(rest); // 将参数收集到一个数组中
+    }
+
+    const parts = [4, 5];
+    myFunction(1, 2, 3, ...parts); // 输出: [1, 2, 3, 4, 5]
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01_浅拷贝</title>
+</head>
+<body>
+  <script>
+    // 只有引用数据类型才有 深，浅拷贝
+    const obj = {
+      uname: 'pink',
+      age: 18
+    }
+    // 浅拷贝 不会对原对象进行修改(仅限第一层，但如果对象里面又套了个对象，
+    // 那么第二层对象赋值的操作还是赋值其地址)
+
+    // const o = {...obj}
+    // o.age = 20
+    // console.log(o)
+    // console.log(obj)
+
+    const o = {}
+    Object.assign(o, obj)
+    o.age = 20
+    console.log(o)
+    console.log(obj)
+
+    /*
+      浅拷贝只能复制对象的一层属性，对于嵌套的对象或数组等引用类型，
+      浅拷贝会导致原始对象和拷贝对象共享内存地址。
+      这意味着，修改嵌套的对象或数组时，原始对象和拷贝对象都会受到影响。
+      如果需要复制对象的所有层级，应该使用深拷贝（Deep Copy）。
+    */
+
+  </script>
+</body>
+</html>

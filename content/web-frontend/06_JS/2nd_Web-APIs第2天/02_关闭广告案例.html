@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <title>02_关闭广告案例</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+    }
+     .box {
+      position: relative;
+      width: 1000px;
+      height: 200px;
+      background-color: deepskyblue;
+      margin: 100px auto;
+      text-align: center;
+      font-size: 50px;
+      line-height: 200px;
+      font-weight: 700;
+    }
+    .closed {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      /* width: 20px;
+      height: 20px; */
+      text-align: center;
+      line-height: 0px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+    .closed:hover {
+      color: gold;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    我是广告
+    <div class="closed">
+      <i class="bi bi-x-circle"></i>
+    </div>
+  </div>
+  
+  <script>
+    const closed = document.querySelector('.closed')
+    const box = document.querySelector('.box')
+
+    closed.addEventListener('click', function() {
+      box.style.display = 'none'
+    })
+  </script>
+</body>
+</html>

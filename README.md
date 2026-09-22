@@ -12,10 +12,9 @@ bun install
 bun run dev          # http://localhost:5178
 ```
 
-> **这一版只在 dev 模式跑。**
-> `bun run build` 能过（用来验证客户端能编译成生产产物），但产出的 `dist/` 里没有接口层——
-> Vite 插件是 `apply: 'serve'`，`bun run preview` 打不开应用。
-> 静态产物是上云阶段的事（见 `docs/SPEC.md` 第六节）。
+> 两种跑法：`bun run dev` 是开发模式（Vite 插件直接读 D: 上的原文件，改笔记刷新即见）；
+> `bun run build` 产出完整静态站（API JSON + 文本都在 `dist/` 里），线上发布和安卓包用的都是它，
+> `bun run preview` 可在本地预览产物。
 
 首次启动会打印一份扫描报告：
 
@@ -143,6 +142,39 @@ bun run scripts/preflight.ts    # 传之前可以先看看桶里有什么、会�
 **注意它和 `content/` 是两件事**：`content/` 是文本快照（对应笔记内容），
 `assets.manifest.json` 是图片账本（对应 R2 上传状态）。两者都要提交。
 
+## 安卓端（Tauri）
+
+同一个网页套进 Tauri 的 WebView 就是安卓应用——界面代码网页端和安卓端完全共用，Tauri 这层只是个壳。
+
+前提（装好一次就行）：Rust（MSVC 工具链）、JDK 17、Android SDK + NDK，再补四个交叉编译 target：
+
+```bash
+rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+```
+
+> **Windows 还要开「开发者模式」**（设置 → 系统 → 开发者选项，一次开关，需管理员）。
+> Tauri 打包时要把 Rust 编出的 `.so` 以符号链接接进安卓工程，不开的话
+> `android:dev` / `android:build` 会在 Rust 编译完成后报
+> `Creation symbolic link is not allowed for this system`。
+
+日常命令：
+
+```bash
+bun run android:dev            # 接上设备/模拟器直接开发（自动起 vite、装到手机、热更新）
+bun run android:build:debug    # debug APK，自动签名，装上就能跑
+bun run android:build          # release APK（对外发布前要配自己的签名）
+```
+
+几点说明：
+
+- **包里是完整离线内容**：APK 打包的是 `bun run build` 的完整静态产物，装上就能离线读全部笔记；
+  图片仍指向 R2，联网才显示。
+- 应用标识 `com.mionote.app`（`src-tauri/tauri.conf.json`），对外发布后就别再改。
+- `src-tauri/gen/android/` 是生成的安卓工程，**要提交进 git**（自定义 Gradle 配置写在这里才不会丢）；
+  编译产物已被各层 `.gitignore` 覆盖。
+- 应用图标目前还是 Tauri 默认图；有了 logo 跑 `bunx tauri icon logo.png` 一键换全套。
+- 桌面端（Windows 壳等）暂时不开发，但配置是现成的：要跑的时候 `bun run tauri dev` 即可。
+
 ## 目录结构
 
 ```
@@ -164,6 +196,9 @@ scripts/publish.ts         图片 → R2（SigV4 直传，增量 + 断点续传�
 scripts/build-site.ts      在 vite build 之后把 dist/ 补成静态站
 scripts/verify-site.ts     对 preview 起的产物跑自检
 content/                   提交进 git 的文本快照（构建输入，不用手改）
+src-tauri/                 Tauri 壳（安卓端宿主，界面代码与网页端共用）
+  tauri.conf.json            Tauri 配置：应用标识、前端产物路径、构建前置命令
+  gen/android/               生成的安卓 Gradle 工程（提交进 git）
 src/generated/icons.ts     生成产物（勿手改），bun run icons 重新生成
 src/api/contentSource.ts   ContentSource 接口 + 按环境选实现
 src/api/staticContentSource.ts  线上实现：读构建出来的 JSON，图片指向 R2

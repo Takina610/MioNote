@@ -14,9 +14,14 @@
     "icons": "node scripts/generate-icons.mjs",
     "sync": "bun run scripts/sync-content.ts",
     "publish": "bun run scripts/publish.ts",
-    "publish:dry": "bun run scripts/publish.ts --dry-run"
+    "publish:dry": "bun run scripts/publish.ts --dry-run",
+    "tauri": "tauri",
+    "android:dev": "tauri android dev",
+    "android:build": "tauri android build --apk",
+    "android:build:debug": "tauri android build --debug --apk"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.11.1",
     "aws4fetch": "^1.0.20",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
@@ -25,6 +30,7 @@
     "shiki": "^4.4.3"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.11.5",
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

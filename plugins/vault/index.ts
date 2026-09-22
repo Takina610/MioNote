@@ -224,7 +224,11 @@ function printReport(server: ViteDevServer, store: VaultStore): void {
 
   log('')
   log(`  MioNote · 已索引 ${index.sections.length} 个笔记文件夹（${index.scanMs} ms）`)
-  log(`  笔记 ${index.stats.notes} 篇 · demo ${index.stats.demos} 个 · 正文 ${formatBytes(index.stats.noteBytes)}`)
+  log(
+    `  笔记 ${index.stats.notes} 篇 · demo ${index.stats.demos} 个 · 源码 ${
+      index.sections.reduce((sum, s) => sum + s.counts.codes, 0)
+    } 个 · 正文 ${formatBytes(index.stats.noteBytes)}`,
+  )
   log('')
 
   const nameWidth = Math.max(...index.sections.map((s) => displayWidth(s.name)), 0)
@@ -234,7 +238,9 @@ function printReport(server: ViteDevServer, store: VaultStore): void {
     log(
       `    ${flag} ${section.name}${pad}   笔记 ${String(section.counts.notes).padStart(3)} · demo ${String(
         section.counts.demos,
-      ).padStart(3)}   ${PUBLISH_LABEL[section.publish]}   ${section.available ? '' : '（目录不存在）'}`,
+      ).padStart(3)} · 源码 ${String(section.counts.codes).padStart(4)}   ${
+        PUBLISH_LABEL[section.publish]
+      }   ${section.available ? '' : '（目录不存在）'}`,
     )
   }
 

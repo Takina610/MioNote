@@ -3,7 +3,7 @@ import type { Highlighter } from 'shiki'
 import { useDemo, useFile } from '../hooks/useContent'
 import { formatBytes } from '../lib/format'
 import { CodeView, langFromExt } from './CodeView'
-import { FileIcon, resolveFileIcon } from './FileIcon'
+import { CopyButton } from './CopyButton'
 import { Icon } from './Icon'
 
 interface DemoViewProps {
@@ -27,20 +27,22 @@ interface DemoViewProps {
  * （css/js/图片）全都能按原样解析——不用重写 HTML，也不用构建。
  *
  * 线上：`demo.url` 是 null（服务端生成的 payload 里就是 null），因为 demo 的运行素材
- * ——图片、字体、视频——没有上传到云端，iframe 跑起来只会是缺图少字体的坏页面。
+ * ——图片、字体、视频——没有上传到云端，iframe 跑起来只会是缺图少字的坏页面。
  * 这时只提供「看源码」。判断由服务端给，这里不猜。
+ *
+ * 「看源码」只看这个 HTML 自己，没有同目录文件的切换标签：相邻的 .js/.css 就在侧栏
+ * 同一层里（它们现在都是树节点），从那里点开读到的是一整页，比在预览页顶上挤一排
+ * 标签更清楚。
  */
 export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntry }: DemoViewProps) {
   const { data: demo, error, loading } = useDemo(sectionId, path)
   const [tab, setTab] = useState<'preview' | 'source'>('preview')
-  const [activeFile, setActiveFile] = useState(path)
   const [frameKey, setFrameKey] = useState(0)
 
   const onOpenEntryRef = useRef(onOpenEntry)
   onOpenEntryRef.current = onOpenEntry
 
   useEffect(() => {
-    setActiveFile(path)
     setTab('preview')
   }, [path])
 
@@ -60,7 +62,7 @@ export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntr
     })
   }, [demo])
 
-  const source = useFile(sectionId, activeFile, tab === 'source')
+  const source = useFile(sectionId, path, tab === 'source')
 
   if (loading && !demo) {
     return (
@@ -189,23 +191,6 @@ export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntr
               </div>
             ) : (
               <>
-                {demo.files.length > 1 ? (
-                  <div className="file-tabs">
-                    {demo.files.map((file) => (
-                      <button
-                        type="button"
-                        key={file.path}
-                        className={file.path === activeFile ? 'file-tab file-tab--active' : 'file-tab'}
-                        onClick={() => setActiveFile(file.path)}
-                        title={file.path}
-                      >
-                        <FileIcon icon={resolveFileIcon(file.name)} size={14} />
-                        {file.name}
-                      </button>
-                    ))}
-                  </div>
-                ) : null}
-
                 {source.loading ? (
                   <div className="placeholder">正在读取源码…</div>
                 ) : source.error ? (
@@ -220,14 +205,17 @@ export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntr
                   <div className="source">
                     <div className="source__meta">
                       <span>{source.data.path}</span>
-                      <span>
-                        {formatBytes(source.data.bytes)}
-                        {source.data.truncated ? '（已截断）' : ''}
+                      <span className="source__actions">
+                        <span>
+                          {formatBytes(source.data.bytes)}
+                          {source.data.truncated ? '（已截断）' : ''}
+                        </span>
+                        <CopyButton text={source.data.text} />
                       </span>
                     </div>
                     <CodeView
                       code={source.data.text}
-                      lang={langFromExt(activeFile.slice(activeFile.lastIndexOf('.')))}
+                      lang={langFromExt(path.slice(path.lastIndexOf('.')))}
                       highlighter={highlighter}
                     />
                   </div>

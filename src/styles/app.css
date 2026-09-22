@@ -401,8 +401,7 @@ mark {
   .code-block__body,
   .source,
   .markdown pre,
-  .markdown table,
-  .file-tabs
+  .markdown table
 ) {
   /* Firefox */
   scrollbar-width: thin;
@@ -418,8 +417,7 @@ mark {
   .code-block__body,
   .source,
   .markdown pre,
-  .markdown table,
-  .file-tabs
+  .markdown table
 )::-webkit-scrollbar {
   width: var(--scrollbar-size);
   height: var(--scrollbar-size);
@@ -433,8 +431,7 @@ mark {
   .code-block__body,
   .source,
   .markdown pre,
-  .markdown table,
-  .file-tabs
+  .markdown table
 )::-webkit-scrollbar-track {
   background: transparent;
 }
@@ -447,8 +444,7 @@ mark {
   .code-block__body,
   .source,
   .markdown pre,
-  .markdown table,
-  .file-tabs
+  .markdown table
 )::-webkit-scrollbar-thumb {
   /* 用透明边框 + background-clip 做出"离轨道有一点边距"的细滑块 */
   border: 3px solid transparent;
@@ -465,8 +461,7 @@ mark {
   .code-block__body,
   .source,
   .markdown pre,
-  .markdown table,
-  .file-tabs
+  .markdown table
 )::-webkit-scrollbar-thumb:hover {
   background: var(--scroll-thumb-hover);
   background-clip: padding-box;
@@ -521,6 +516,88 @@ mark {
 .icon-btn:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+/* ---------- 主题切换（深暗色） ---------- */
+
+/*
+ * View Transitions 的两条硬规则，照搬自参考项目（DigitalComInteOpHub/frontend）：
+ *
+ *   1. 关掉默认的整页交叉淡入淡出——那会盖住下面那条 clip-path 动画
+ *      （animation: none + mix-blend-mode: normal）。
+ *   2. 谁盖在谁上面：变浅色时让"新"画面在最上层（从点击处长出来盖住旧的），
+ *      变深色时反过来让"旧"画面在最上层（缩回去露出新的）。
+ *      两个 z-index 用极端值，免得被别的堆叠上下文插队。
+ */
+::view-transition-new(root),
+::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2147483646;
+}
+
+html[data-theme='dark']::view-transition-old(root) {
+  z-index: 2147483646;
+}
+
+html[data-theme='dark']::view-transition-new(root) {
+  z-index: 1;
+}
+
+/*
+ * 按钮上那个太阳/月亮。整套时长和曲线都是从参考项目原样搬的：
+ * 太阳是个实心圆，被一个可移动的黑色小圆（SVG mask）啃掉一块就成了月亮；
+ * 换主题时 mask 圆滑走/滑回（0.5s），太阳缩到一半再长回来（1.6s），光芒转半圈（1.6s 带回弹）。
+ * 这几个值调快调慢都会变味，别顺手改。
+ */
+.theme-toggle__moon > circle {
+  transition: transform 0.5s cubic-bezier(0, 0, 0.3, 1);
+}
+
+.theme-toggle__sun {
+  fill: currentColor;
+  stroke: none;
+  transform-origin: center center;
+  transition: transform 1.6s cubic-bezier(0.25, 0, 0.2, 1);
+}
+
+.theme-toggle__sun-beams {
+  stroke: currentColor;
+  transform-origin: center center;
+  transition:
+    transform 1.6s cubic-bezier(0.5, 1.5, 0.75, 1.25),
+    opacity 0.6s cubic-bezier(0.25, 0, 0.3, 1);
+}
+
+.theme-toggle.is-light .theme-toggle__sun {
+  transform: scale(0.5);
+}
+
+.theme-toggle.is-light .theme-toggle__sun-beams {
+  transform: rotateZ(0.25turn);
+}
+
+.theme-toggle.is-dark .theme-toggle__moon > circle {
+  transform: translateX(-20px);
+}
+
+.theme-toggle.is-dark .theme-toggle__sun-beams {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle__moon > circle,
+  .theme-toggle__sun,
+  .theme-toggle__sun-beams {
+    transition: none;
+  }
 }
 
 .search-trigger {
@@ -796,7 +873,8 @@ mark {
   padding: 36px 40px 96px;
 }
 
-.doc--demo {
+.doc--demo,
+.doc--code {
   max-width: 68rem;
 }
 
@@ -831,7 +909,9 @@ mark {
   letter-spacing: -0.01em;
 }
 
-.doc__title--demo {
+/* demo 标题和源码文件名都带扩展名，等宽字体下更好认 */
+.doc__title--demo,
+.doc__title--file {
   font-family: var(--font-mono);
   font-size: 19px;
   font-weight: 600;
@@ -1123,17 +1203,22 @@ mark {
   color: var(--text-faint);
 }
 
-.code-block__copy {
-  font-size: 11.5px;
-  padding: 2px 7px;
-  border-radius: 5px;
-  color: var(--text-faint);
+/*
+ * 复制按钮。markdown 代码块的标题栏、源码文件页、demo 的「看源码」三处共用，
+ * 所以样式只有这一份（组件是 CopyButton）。
+ */
+.copy-btn {
   display: inline-flex;
   align-items: center;
   gap: 3px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  color: var(--text-faint);
 }
 
-.code-block__copy:hover {
+.copy-btn:hover {
   background: var(--bg);
   color: var(--text);
 }
@@ -1411,42 +1496,6 @@ mark {
   border: 0;
 }
 
-.file-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 8px;
-}
-
-.file-tab {
-  padding: 3px 9px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--text-muted);
-  max-width: 220px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.file-tab:hover {
-  border-color: var(--border-strong);
-  color: var(--text);
-}
-
-/*
- * 同样要和 :hover 一起写，理由见上面 .tree__row--active 那段注释：
- * 否则选中的标签页一悬浮就丢掉了强调色边框。
- */
-.file-tab--active,
-.file-tab--active:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
 .source {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1455,6 +1504,7 @@ mark {
 
 .source__meta {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 6px 12px;
@@ -1463,6 +1513,18 @@ mark {
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-faint);
+}
+
+/*
+ * 右侧那组（大小 + 复制）。不许它被左边的长路径挤扁——路径那一侧才是该换行的那个，
+ * 所以这里 flex-shrink: 0，配 white-space: nowrap 让按钮和数字始终完整可见。
+ */
+.source__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .notice {

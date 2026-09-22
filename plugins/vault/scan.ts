@@ -23,10 +23,8 @@ export interface SectionScan {
   notes: ScannedFile[]
   demos: ScannedFile[]
   codes: ScannedFile[]
-  /** 目录相对路径 → 该目录直接包含的文本文件，给 demo 的「看源码」用 */
-  filesByDir: Map<string, ScannedFile[]>
   tree: VaultNode[]
-  counts: { notes: number; demos: number; folders: number }
+  counts: { notes: number; demos: number; codes: number; folders: number }
 }
 
 interface DirEntry {
@@ -35,10 +33,11 @@ interface DirEntry {
   dirs: Map<string, DirEntry>
   notes: ScannedFile[]
   demos: ScannedFile[]
+  codes: ScannedFile[]
 }
 
 function emptyDir(name: string, rel: string): DirEntry {
-  return { name, rel, dirs: new Map(), notes: [], demos: [] }
+  return { name, rel, dirs: new Map(), notes: [], demos: [], codes: [] }
 }
 
 /**
@@ -47,6 +46,9 @@ function emptyDir(name: string, rel: string): DirEntry {
  * 只把 .md（笔记）、demo 扩展名、以及可读的源码文件收进来；图片、字体、二进制
  * 一律当成「资源」——它们不进内容树，只在正文里被引用时按需读取。
  * 所以 Web 前端那 1 GB 里真正进索引的只有几千个文本文件，扫描是毫秒级的。
+ *
+ * 四种文件**都进树**（笔记 / demo / 源码 / 文件夹）：.html 能预览，其余只能读，
+ * 而能读的前提是能被找到——`.vue`、`.css` 这类不在树里的话，界面上根本看不见。
  */
 export function scanSection(config: VaultConfig, section: VaultSectionConfig): SectionScan {
   const ignoreDirs = new Set(config.ignoreDirs)
@@ -61,9 +63,8 @@ export function scanSection(config: VaultConfig, section: VaultSectionConfig): S
     notes: [],
     demos: [],
     codes: [],
-    filesByDir: new Map(),
     tree: [],
-    counts: { notes: 0, demos: 0, folders: 0 },
+    counts: { notes: 0, demos: 0, codes: 0, folders: 0 },
   }
 
   if (!fs.existsSync(root)) return result
@@ -147,17 +148,13 @@ export function scanSection(config: VaultConfig, section: VaultSectionConfig): S
         dirEntry.demos.push(file)
         result.demos.push(file)
       } else {
+        dirEntry.codes.push(file)
         result.codes.push(file)
       }
-
-      // 同目录的文本文件都进「看源码」的候选，包括 md 和 demo 自己
-      const bucket = result.filesByDir.get(relDir)
-      if (bucket) bucket.push(file)
-      else result.filesByDir.set(relDir, [file])
     }
   }
 
-  const nodeFor = (f: ScannedFile, kind: 'note' | 'demo'): VaultNode => ({
+  const nodeFor = (f: ScannedFile, kind: 'note' | 'demo' | 'code'): VaultNode => ({
     kind,
     id: `${section.id}:${f.rel}`,
     name: f.name,
@@ -166,12 +163,19 @@ export function scanSection(config: VaultConfig, section: VaultSectionConfig): S
     mtime: f.mtime,
   })
 
-  const kindRank = { note: 0, demo: 1, folder: 2 } as const
+  /*
+   * 同级排序：笔记 → demo → 源码 → 文件夹。
+   *
+   * 文件夹排最后是原来的选择（先看到能读的东西），源码插在 demo 和文件夹之间：
+   * 它是"能读但读起来是代码"的那一类，放在文件夹前面，比混在 demo 里好找。
+   */
+  const kindRank = { note: 0, demo: 1, code: 2, folder: 3 } as const
 
   const toNodes = (dirEntry: DirEntry): VaultNode[] => {
     const nodes: VaultNode[] = []
     for (const n of dirEntry.notes) nodes.push(nodeFor(n, 'note'))
     for (const d of dirEntry.demos) nodes.push(nodeFor(d, 'demo'))
+    for (const c of dirEntry.codes) nodes.push(nodeFor(c, 'code'))
     for (const child of dirEntry.dirs.values()) {
       const children = toNodes(child)
       // 只放图片/二进制的目录不进树——软考的 img1~img4 就是这么被挡在外面的
@@ -193,23 +197,14 @@ export function scanSection(config: VaultConfig, section: VaultSectionConfig): S
 
   result.tree = toNodes(dirRoot)
 
-  // 顺便把每个目录下的源码文件排好序，供 demo 源码标签页使用
-  for (const [dir, files] of result.filesByDir) {
-    files.sort((a, b) => {
-      // demo 自己排最前，然后 html / css / js 之类
-      if (a.kind !== b.kind) return a.kind === 'demo' ? -1 : b.kind === 'demo' ? 1 : 0
-      return naturalCompare(a.name, b.name)
-    })
-    result.filesByDir.set(dir, files)
-  }
-
   const countNodes = (nodes: VaultNode[]): void => {
     for (const n of nodes) {
       if (n.kind === 'folder') {
         result.counts.folders += 1
         if (n.children) countNodes(n.children)
       } else if (n.kind === 'note') result.counts.notes += 1
-      else result.counts.demos += 1
+      else if (n.kind === 'demo') result.counts.demos += 1
+      else result.counts.codes += 1
     }
   }
   countNodes(result.tree)

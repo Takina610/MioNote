@@ -2,6 +2,7 @@ export type Route =
   | { kind: 'home' }
   | { kind: 'note'; sectionId: string; path: string }
   | { kind: 'demo'; sectionId: string; path: string }
+  | { kind: 'code'; sectionId: string; path: string }
 
 /**
  * 用 hash 路由而不是 history 路由，原因很实际：
@@ -27,12 +28,13 @@ export function parseHash(hash: string): Route {
   if (!sectionId || !path) return { kind: 'home' }
   if (head === 'n') return { kind: 'note', sectionId, path }
   if (head === 'd') return { kind: 'demo', sectionId, path }
+  if (head === 'c') return { kind: 'code', sectionId, path }
   return { kind: 'home' }
 }
 
 export function toHash(route: Route): string {
   if (route.kind === 'home') return '#/'
-  const prefix = route.kind === 'note' ? 'n' : 'd'
+  const prefix = route.kind === 'note' ? 'n' : route.kind === 'demo' ? 'd' : 'c'
   const path = route.path.split('/').map(encodeURIComponent).join('/')
   return `#/${prefix}/${encodeURIComponent(route.sectionId)}/${path}`
 }

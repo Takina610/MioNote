@@ -3,7 +3,7 @@ import { usePersistentState } from './usePersistentState'
 
 export interface RecentEntry {
   id: string
-  kind: 'note' | 'demo'
+  kind: 'note' | 'demo' | 'code'
   sectionId: string
   path: string
   title: string

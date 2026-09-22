@@ -38,7 +38,10 @@ bun run dev          # http://localhost:5178
 |---|---|
 | 全文搜索 | `Ctrl + K`（中文子串直接搜，多个词用空格隔开） |
 | 折叠 / 展开小节 | 点小节标题；或笔记顶部的「全部折叠 / 全部展开」 |
-| 主题 | 侧栏左上角的图标，在 浅色 → 深色 → 跟随系统 之间循环 |
+| 深暗色切换 | 侧栏左上角的太阳/月亮图标，点击切换（新主题从鼠标位置铺满整屏） |
+| 看 demo 源码 | demo 页右上角的「看源码」；只看这个 html，不跑它 |
+| 读源码文件 | 侧栏里直接点 `.js` / `.css` / `.vue` / `.ts` / `.json` 等文件；只有 `.html` 能预览 |
+| 复制代码 | 代码块右上角的「复制」（源码文件页、demo 的「看源码」、笔记里的代码块都有） |
 | 收起 / 展开侧栏 | 侧栏左上角的箭头，或 `Ctrl + B`；收起后左下角有开关 |
 | 调整侧栏宽度 | 拖侧栏右边缘；双击恢复默认宽度 |
 | 打开上一篇 / 下一篇 | 笔记底部的按钮，按文件名编号顺序 |
@@ -146,6 +149,7 @@ vault.config.ts            笔记从哪儿来 + 发布配置（唯一需要你�
 .env.example               发布凭证的模板（复制成 .env.local 填真实值）
 assets.manifest.json       图片上传账本（提交进 git，构建靠它知道图在不在）
 shared/types.ts            内容契约：三个平台共用
+shared/code-lang.ts        扩展名 → shiki 语言表（服务端和客户端共用同一张）
 plugins/vault/             Vite 插件 + 构建期逻辑
   scan.ts                    遍历文件夹、建内容树
   markdown.ts                解析标题 / 代码块 / 图片引用、自适应切分小节
@@ -164,7 +168,10 @@ src/api/contentSource.ts   ContentSource 接口 + 按环境选实现
 src/api/staticContentSource.ts  线上实现：读构建出来的 JSON，图片指向 R2
 src/components/            界面
   FileIcon.tsx               文件/文件夹图标 + 名字解析
-  Icon.tsx                   界面图标（搜索、关闭、主题…）
+  Icon.tsx                   界面图标（搜索、关闭、收起…）
+  ThemeToggle.tsx            深暗色切换（圆形扩散 + 太阳/月亮图标动画）
+  CodeFileView.tsx           源码文件视图（只读，不预览）
+  CopyButton.tsx             复制按钮（三处代码视图共用）
 src/lib/search.ts          子串全文搜索
 docs/SPEC.md               设计决定与理由，动手改之前先看它
 ```
@@ -187,6 +194,12 @@ docs/SPEC.md               设计决定与理由，动手改之前先看它
 - **图片路径映射有三种结果**：外链 / 本地缺失 / 正常。外链和缺失混成一个值，
   断链报告就不可信了。
 - **demo 的 iframe 需要 `allow-same-origin`**，否则用 XHR 的 demo 会被跨域策略拒掉。
+- **深暗色切换的动画是一套的**：`startViewTransition` + `clipPath` 圆形扩散（JS 在 `useTheme.ts`），
+  配 `app.css` 里那四条 `::view-transition-*` 与 `html[data-theme='dark']` 的 z-index 规则，
+  少一条动画就是坏的（要么淡入淡出，要么方向反）。里面那个 `flushSync` 也不能删：
+  React 不 flush 的话浏览器拍到的新快照还是旧主题。
+- **`shared/code-lang.ts` 那张表两边共用**。服务端拿它算要加载哪些 shiki 语法，客户端拿它决定
+  按什么语言渲染；各写一份的话，漏掉的扩展名只会安静地变成纯文本，很难看出是哪儿错了。
 - **展开动画用 `grid-template-rows: 0fr → 1fr`**，别改成 `max-height`——那要猜上限，
   还会被图片加载后的高度变化搞乱。
 - **子树展开后不卸载**。一收起就卸载的话，收起动画没有内容可动。

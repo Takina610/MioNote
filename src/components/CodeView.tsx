@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import type { Highlighter } from 'shiki'
+import { langForExt } from '../../shared/code-lang'
 import { highlightCode } from '../lib/highlighter'
 
 /**
@@ -38,6 +39,11 @@ export function CodeView({
   )
 }
 
+/**
+ * 扩展名 → shiki 语言 id。表在 shared/code-lang.ts：服务端算「要加载哪些语法」
+ * 用的是同一张表，两边分叉会让某个扩展名静默退化成纯文本。
+ * 认不出来就返回空串，highlightCode 会直接走退化路径。
+ */
 export function langFromExt(ext: string): string {
-  return ext.replace(/^\./, '').toLowerCase()
+  return langForExt(ext) ?? ''
 }

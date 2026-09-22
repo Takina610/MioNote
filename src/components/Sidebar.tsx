@@ -1,9 +1,10 @@
 import type { PublishLevel, VaultIndex, VaultNode, VaultSection } from '../../shared/types'
 import type { RecentEntry } from '../hooks/useReadingState'
-import type { ThemeChoice } from '../hooks/useTheme'
+import type { ThemeState } from '../hooks/useTheme'
 import { formatRelative } from '../lib/format'
 import { FileIcon, resolveFolderIcon } from './FileIcon'
 import { Icon, type IconName } from './Icon'
+import { ThemeToggle } from './ThemeToggle'
 import { TreeView } from './TreeView'
 
 interface SidebarProps {
@@ -12,12 +13,11 @@ interface SidebarProps {
   expanded: Record<string, boolean>
   activeId: string | null
   recent: RecentEntry[]
-  themeChoice: ThemeChoice
+  theme: ThemeState
   onToggleTree: (id: string) => void
   onOpenNode: (sectionId: string, node: VaultNode) => void
   onOpenRecent: (entry: RecentEntry) => void
   onOpenSearch: () => void
-  onCycleTheme: () => void
   /** 收起侧栏（桌面）／关闭抽屉（窄屏）——两种情况都是同一个动作 */
   onCollapse: () => void
 }
@@ -58,18 +58,14 @@ export function Sidebar({
   expanded,
   activeId,
   recent,
-  themeChoice,
+  theme,
   onToggleTree,
   onOpenNode,
   onOpenRecent,
   onOpenSearch,
-  onCycleTheme,
   onCollapse,
 }: SidebarProps) {
   const activeSectionId = activeId?.split(':')[0] ?? null
-
-  const themeLabel =
-    themeChoice === 'light' ? '浅色' : themeChoice === 'dark' ? '深色' : '跟随系统'
 
   return (
     <div className="sidebar__inner">
@@ -78,9 +74,7 @@ export function Sidebar({
           <span className="sidebar__title">MioNote</span>
         </div>
         <div className="sidebar__tools">
-          <button type="button" className="icon-btn" title={`主题：${themeLabel}（点击切换）`} onClick={onCycleTheme}>
-            <Icon name="theme" size={16} />
-          </button>
+          <ThemeToggle isDark={theme.isDark} onToggle={theme.toggle} />
           <button type="button" className="icon-btn" title="收起侧栏（Ctrl+B）" onClick={onCollapse}>
             <Icon name="collapse" size={16} />
           </button>

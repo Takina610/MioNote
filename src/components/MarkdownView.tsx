@@ -1,10 +1,10 @@
-import { isValidElement, useMemo, useState, type ReactNode } from 'react'
+import { isValidElement, useMemo, type ReactNode } from 'react'
 import Markdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import type { Highlighter } from 'shiki'
 import type { ImageRefMap } from '../../shared/types'
-import { Icon } from './Icon'
 import { CodeView } from './CodeView'
+import { CopyButton } from './CopyButton'
 
 interface MarkdownViewProps {
   markdown: string
@@ -53,8 +53,6 @@ function CodeBlock({
   children?: ReactNode
   highlighter: Highlighter | null
 }) {
-  const [copied, setCopied] = useState(false)
-
   const codeElement = Array.isArray(children) ? children[0] : children
   const isElement = isValidElement(codeElement)
   const props = isElement
@@ -64,13 +62,6 @@ function CodeBlock({
   const lang = /language-([\w+#.-]+)/.exec(className)?.[1] ?? ''
   const code = isElement ? textOf(props?.children ?? children).replace(/\n$/, '') : ''
 
-  const copy = () => {
-    void navigator.clipboard?.writeText(code).then(() => {
-      setCopied(true)
-      window.setTimeout(() => setCopied(false), 1200)
-    })
-  }
-
   // 不是标准的 ``` 代码块（比如内联 HTML），原样放着就行
   if (!isElement) return <pre>{children}</pre>
 
@@ -78,10 +69,7 @@ function CodeBlock({
     <div className="code-block">
       <div className="code-block__bar">
         <span className="code-block__lang">{lang || 'text'}</span>
-        <button type="button" className="code-block__copy" onClick={copy}>
-          <Icon name={copied ? 'check' : 'copy'} size={13} />
-          {copied ? '已复制' : '复制'}
-        </button>
+        <CopyButton text={code} />
       </div>
       <CodeView code={code} lang={lang} highlighter={highlighter} className="code-block__body" />
     </div>

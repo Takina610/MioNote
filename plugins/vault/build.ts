@@ -35,6 +35,8 @@ export interface SiteSectionReport {
   name: string
   notes: number
   demos: number
+  /** 源码文件（.js/.css/.vue…）：线上只能读，但和 demo 一样要出现在树里 */
+  codes: number
   textFiles: number
   bytes: number
 }
@@ -70,11 +72,15 @@ function writeJson(abs: string, data: unknown): number {
   return Buffer.byteLength(text, 'utf8')
 }
 
-function collectNodes(nodes: VaultNode[], out: { notes: VaultNode[]; demos: VaultNode[] }): void {
+function collectNodes(
+  nodes: VaultNode[],
+  out: { notes: VaultNode[]; demos: VaultNode[]; codes: VaultNode[] },
+): void {
   for (const node of nodes) {
     if (node.kind === 'folder') collectNodes(node.children ?? [], out)
     else if (node.kind === 'note') out.notes.push(node)
-    else out.demos.push(node)
+    else if (node.kind === 'demo') out.demos.push(node)
+    else out.codes.push(node)
   }
 }
 
@@ -210,7 +216,7 @@ export function buildStaticSite(
   let demoCount = 0
 
   for (const section of index.sections) {
-    const nodes = { notes: [] as VaultNode[], demos: [] as VaultNode[] }
+    const nodes = { notes: [] as VaultNode[], demos: [] as VaultNode[], codes: [] as VaultNode[] }
     collectNodes(section.children, nodes)
 
     for (const node of nodes.notes) {
@@ -241,6 +247,7 @@ export function buildStaticSite(
       name: section.name,
       notes: nodes.notes.length,
       demos: nodes.demos.length,
+      codes: nodes.codes.length,
       textFiles: measured.files,
       bytes: measured.bytes,
     })
@@ -325,7 +332,9 @@ export function printSiteReport(report: SiteReport, options: { allowMissingAsset
     console.log(
       `    ${section.name.padEnd(10)} 笔记 ${String(section.notes).padStart(3)} · demo ${String(
         section.demos,
-      ).padStart(3)} · 文本 ${String(section.textFiles).padStart(4)} 个 ${humanBytes(section.bytes).padStart(8)}`,
+      ).padStart(3)} · 源码 ${String(section.codes).padStart(4)} · 文本 ${String(
+        section.textFiles,
+      ).padStart(4)} 个 ${humanBytes(section.bytes).padStart(8)}`,
     )
   }
   console.log('')

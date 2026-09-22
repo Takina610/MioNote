@@ -15,6 +15,7 @@ import type {
 } from '../../shared/types.ts'
 import { parseNote, type AssetResolution, type ParsedNote } from './markdown.ts'
 import { flattenNotes, scanSection, type ScannedFile } from './scan.ts'
+import { langForExt } from '../../shared/code-lang.ts'
 import {
   assetUrl,
   extractExternalHosts,
@@ -130,6 +131,17 @@ export class VaultStore {
 
       const ordered = flattenNotes(scan.tree)
       states.set(cfg.id, { scan, byId, ordered, parsed, raw })
+
+      /*
+       * 高亮语法清单的第二个来源：源码文件的扩展名。
+       *
+       * 少了这一步，点开 `.vue` 会因为 shiki 没加载 vue 语法而退化成纯文本
+       * ——代码照样能读，但"能读"和"读得下去"是两件事。
+       */
+      for (const file of scan.codes) {
+        const lang = langForExt(file.ext)
+        if (lang) languages.add(lang)
+      }
 
       noteCount += scan.counts.notes
       demoCount += scan.counts.demos
@@ -279,9 +291,6 @@ export class VaultStore {
     const demoFile = st.scan.demos.find((d) => d.rel === rel)
     if (!demoFile) return null
 
-    const dir = rel.includes('/') ? rel.slice(0, rel.lastIndexOf('/')) : ''
-    const files = st.scan.filesByDir.get(dir) ?? []
-
     let externalHosts: string[] = []
     let analysisSkipped = false
     if (demoFile.size > this.config.maxCodeBytes) {
@@ -298,12 +307,6 @@ export class VaultStore {
       url: this.options.demoRunnable === false ? null : assetUrl(sectionId, rel),
       externalHosts,
       analysisSkipped,
-      files: files.map((f) => ({
-        name: f.name,
-        path: f.rel,
-        ext: f.ext,
-        readable: f.size <= this.config.maxCodeBytes,
-      })),
     }
   }
 

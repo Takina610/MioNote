@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import type { Highlighter } from 'shiki'
 import type { VaultNode } from '../shared/types'
+import { CodeFileView } from './components/CodeFileView'
 import { DemoView } from './components/DemoView'
 import { HomeView } from './components/HomeView'
 import { Icon } from './components/Icon'
@@ -160,12 +161,10 @@ export function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   })
 
+  /** 叶子节点的 kind（note / demo / code）和路由 kind 一一对应；文件夹由树自己展开 */
   const openNode = (sectionId: string, node: VaultNode) => {
-    navigate(
-      node.kind === 'note'
-        ? { kind: 'note', sectionId, path: node.path }
-        : { kind: 'demo', sectionId, path: node.path },
-    )
+    if (node.kind === 'folder') return
+    navigate({ kind: node.kind, sectionId, path: node.path })
     setSidebarOpen(false)
   }
 
@@ -228,12 +227,11 @@ export function App() {
           expanded={expanded}
           activeId={activeId}
           recent={reading.recent}
-          themeChoice={theme.choice}
+          theme={theme}
           onToggleTree={toggleTree}
           onOpenNode={openNode}
           onOpenRecent={openRecent}
           onOpenSearch={() => setSearchOpen(true)}
-          onCycleTheme={theme.cycle}
           onCollapse={toggleSidebar}
         />
         {/*
@@ -286,6 +284,15 @@ export function App() {
             onOpenEntry={reading.pushRecent}
             getProgress={reading.getProgress}
             saveProgress={reading.saveProgress}
+          />
+        ) : route.kind === 'code' ? (
+          <CodeFileView
+            key={activeId}
+            sectionId={route.sectionId}
+            path={route.path}
+            sectionName={activeSection.name}
+            highlighter={highlighter}
+            onOpenEntry={reading.pushRecent}
           />
         ) : (
           <DemoView

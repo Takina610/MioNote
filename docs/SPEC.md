@@ -258,7 +258,7 @@ React 19 对离散事件（click）的 state 更新是**异步刷新**的，所�
 .tree__row--active:hover { background: var(--accent); color: #fff; }
 ```
 
-同样的坑在文件标签页（`.file-tab--active`）上也存在，一并修了。**加任何 `--active` 类时
+同样的坑后来在别处也踩过几次（`.section--active` 那一段就是）。**加任何 `--active` 类时
 都要顺手写一遍 `:hover` 分支**，否则就是"选中会闪一下"这类说不清的小毛病。
 
 **同族的第二个问题：高亮要落在最小的那个元素上。** 分区高亮原本写在 `.section--active` 上，
@@ -316,10 +316,17 @@ React 19 对离散事件（click）的 state 更新是**异步刷新**的，所�
 ContentSource 接口
 ├── getIndex(refresh?)   → VaultIndex     目录树 + 统计 + 警告
 ├── getNote(section,path)→ NotePayload    小节 / 标题 / 图片映射 / 断链 / 上一篇下一篇
-├── getDemo(section,path)→ DemoPayload    iframe URL + 同目录文件 + 外部域名
+├── getDemo(section,path)→ DemoPayload    iframe URL + 外部域名（能不能跑、要不要联网）
 ├── getFile(section,path)→ FilePayload    只读文本（有白名单）
 └── getSearchIndex()     → SearchIndexPayload
 ```
+
+树节点有四种：`folder` / `note` / `demo` / `code`。前三种一直在，`code`（源码文件）是
+2026-09-22 加的，理由见第十节——**它同时是「看源码」的入口**：.html 能预览，其余只能读，
+而能读的前提是能被找到。
+
+`getDemo` 不再返回「同目录有哪些文件」：那个字段原本只服务于 demo 页顶部的文件标签栏，
+标签栏已经删掉了（第十节）。demo 自己该不该跑、要不要联网仍由它回答。
 
 当前只有一个实现：`src/api/contentSource.ts` 里的 HTTP 版，由 Vite 插件提供。
 
@@ -382,7 +389,9 @@ Workers Assets 放站点壳、R2 放图（R2 出网免费）。
 
 - **`13_Eletron/13_Electron/` 是重复目录**（拼错了的那份里面还嵌了一整份）。
   内容树里两个都会出现。建议在源文件夹里合并掉——这是动你的文件，我没代劳。
-- **Vue 的 demo 跑不起来**：`.vue` 需要打包器，只能当源码看。
+- **Vue / React 的 demo 跑不起来**：`.vue` 需要打包器、`.jsx` 需要运行时，它们在只读阅读器里
+  **只能当代码读**（现在可以从侧栏直接点开，见第十节）；能预览的只有 `demoExtensions`
+  里的 .html / .htm。
 - **引用根路径的 demo 会挂**：demo 的 HTML 里如果写 `/js/app.js`（而不是相对路径），
   在 `/@vault/` 下解析不到。当前没发现这类，但换文件夹后可能出现。
 - **文件监听依赖 `fs.watch` 的递归支持**。某些环境下会失灵；失灵时重启 dev server 即可
@@ -627,3 +636,61 @@ R2_PUBLIC_BASE=http://localhost:5178/@vault bun run build --allow-missing-assets
 - **R2 挂自定义域名**（或先用 r2.dev 的地址试水——Cloudflare 明确说那个地址有限流，不适合长期）
 - 域名定了之后，`R2_PUBLIC_BASE` 写进 `.env.local`，`bun run publish` 会因为域名变化自动重传一遍
   （账本里记着上次用的域名）
+
+## 十、2026-09-22 三个界面决定（用户要求）
+
+### 1. 源码文件进树；能预览的只有 html
+
+原来的树只有笔记和 demo，`.js / .css / .vue / .ts / .json` 这些**扫到了、也能读，但没有入口**
+（它们只出现在 demo 页顶部的文件标签栏里，而且仅限"和这个 html 同目录"的那些）。
+用户的原话是「都看不了 vue、react、css、js，只能看到 html」，要求是**都能看，但只有 html 可以预览**。
+
+改法：
+
+- `VaultNodeKind` 加 `code`，`scan.ts` 把 `codeExtensions` 收进来的文件也放进树
+  （同级排序：笔记 → demo → 源码 → 文件夹）
+- 路由加 `#/c/<section>/<path>`，新的 `CodeFileView` 只做一件事：把文件读出来高亮显示
+- 预览仍然只在 `demoExtensions`（.html/.htm）里发生。这不是保守，是事实：
+  `.vue` 需要打包器、`.js` 需要一个宿主页面，只读阅读器不提供这两样
+
+**高亮跟着一起改。** `stats.languages` 原来只统计笔记里代码块标注的语言，现在并上
+**源码文件的扩展名**（`shared/code-lang.ts` 那张表）——不然点开 `.vue` 会是纯文本，
+因为 shiki 手上压根没加载 vue 语法。表放在 `shared/` 是因为服务端（算要加载哪些语法）
+和客户端（决定按什么语言渲染）都要用，分叉的代价是安静的：只是没高亮，看不出是哪儿错了。
+
+搜索仍然只搜笔记：`stats.search-index` 是「正文」，把 889 个源码文件塞进去会让索引大一圈，
+而用户要的是"能看"，不是"能搜代码"。
+
+**复制按钮。** 用户随后要求「看代码时右上角应该有个复制按钮」，于是把它做成共用组件
+`CopyButton`：源码文件页、demo 的「看源码」、以及笔记里的 markdown 代码块三处都用它
+（第三处原来有一份自己的实现，顺手合并了——「按下去会怎样」只该有一份代码）。
+位置在代码块顶部那条 meta 栏的右端（`.source__actions`），和原来的文件大小挨着。
+复制的是**显示出来的文本**（截断的文件就复制截断后的那份，所见即所得），
+按下变「已复制」、1.2 秒后自己变回来。剪贴板写失败（权限被拒、非安全上下文）安静处理：
+不弹提示，但也要显式接住拒绝，否则控制台会多一条未处理的 Promise。
+
+### 2. demo 的「看源码」去掉文件标签栏
+
+原来 demo 页在预览下方有一排文件标签（同目录的 .css/.js 都能点着看）。删掉的理由是
+**入口重复了**：有了第 1 条之后，那些文件在侧栏里就是正常的树节点，点开是一整页，
+比在预览页顶上挤一排标签更好读。现在「看源码」只看这个 demo 自己。
+
+技术上也顺势瘦了一圈：`DemoPayload.files`、扫描期维护的 `filesByDir`、`.file-tabs` 那套样式
+全部删除（留着就是"没人用的契约"，下次改的人还得猜它为什么在）。
+
+### 3. 深暗色切换照搬参考项目（带圆形扩散动画）
+
+用户要求"照搬" `D:\WorkCode\DigitalComInteOpHub\frontend`（vben-admin）的深暗色切换，
+所以 `theme-button.vue` 那套东西整体搬了过来：
+
+- **点击处圆形扩散**：`document.startViewTransition` + `clipPath` 动画（450ms ease-in），
+  圆心是鼠标位置、半径算到最远的屏幕角；动的是 `::view-transition-new/old(root)` 伪元素，
+  哪一层在上由 CSS 里的 z-index 决定（见 `app.css` 那两条 `html[data-theme='dark']` 规则）
+- **图标动画**：太阳是个实心圆，被一个可移动的黑色小圆（SVG mask）啃掉一块就成了月亮。
+  时长与贝塞尔曲线原样保留（1.6s / 0.5s），调快调慢都变味
+- React 侧唯一的新知识点是 `flushSync`：startViewTransition 的回调必须**在返回前**把 DOM
+  改成最终状态，而 setState 是异步批处理的，不 flush 的话浏览器拍到的新快照还是旧主题
+
+**只有明暗两档，没有「跟随系统」这一档可选项**（用户看过第一版后要求去掉悬浮菜单：
+"直接点击切换就好"）。默认值仍是 `system`——首次打开跟着系统走，点一下就固定成浅色或深色。
+`prefers-reduced-motion` 或不支持 View Transitions 的浏览器（Firefox）退化成直接切换。

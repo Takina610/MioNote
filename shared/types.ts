@@ -41,8 +41,14 @@ export interface VaultConfig {
   maxCodeBytes: number
 }
 
-/** 树节点只有三种：文件夹、笔记、demo。图片之类的资源不进树，只在正文里引用。 */
-export type VaultNodeKind = 'folder' | 'note' | 'demo'
+/**
+ * 树节点有四种：文件夹、笔记、demo、源码文件。
+ *
+ * 源码（.js/.css/.vue/.ts/.json…）也进树是有意的：`demoExtensions` 里的 .html 能预览，
+ * 而 `codeExtensions` 里那些只能读——它们得先能被**找到**才谈得上读。
+ * 图片之类的资源仍然不进树，只在正文里引用。
+ */
+export type VaultNodeKind = 'folder' | 'note' | 'demo' | 'code'
 
 export interface VaultNode {
   kind: VaultNodeKind
@@ -67,7 +73,7 @@ export interface VaultSection {
   icon?: string
   /** 根目录不存在时不会让整个应用挂掉，只是这个 section 显示为不可用 */
   available: boolean
-  counts: { notes: number; demos: number; folders: number }
+  counts: { notes: number; demos: number; codes: number; folders: number }
   children: VaultNode[]
 }
 
@@ -90,7 +96,12 @@ export interface VaultIndex {
     /** 笔记正文总字节数 */
     noteBytes: number
     missingAssets: MissingAsset[]
-    /** 扫描到的代码块语言，客户端照这份清单按需加载高亮语法 */
+    /**
+     * 扫描到的代码语言，客户端照这份清单按需加载高亮语法。
+     *
+     * 两个来源：笔记里代码块标注的语言，以及**源码文件的扩展名**——
+     * 否则点开一个 `.vue` 只会以纯文本展示，因为 shiki 手上没有 vue 语法。
+     */
     languages: string[]
   }
   warnings: string[]
@@ -140,14 +151,6 @@ export interface NotePayload {
   next: { id: string; title: string; path: string } | null
 }
 
-export interface DemoFileRef {
-  name: string
-  path: string
-  ext: string
-  /** 二进制或过大，只能看不能读 */
-  readable: boolean
-}
-
 export interface DemoPayload {
   id: string
   sectionId: string
@@ -161,8 +164,6 @@ export interface DemoPayload {
    * 而不是给一个注定白屏的预览。判断依据由服务端给，客户端不猜。
    */
   url: string | null
-  /** 同目录下的文件，给「看源码」当标签页 */
-  files: DemoFileRef[]
   /**
    * demo 自己引用的外部域名。
    * 空数组表示自包含，打开就能跑；非空说明它要联网，而其中不少接口（比如黑马那套

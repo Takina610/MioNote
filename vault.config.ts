@@ -1,4 +1,4 @@
-import type { VaultConfig } from './shared/types.ts'
+import type { DeployConfig, VaultConfig } from './shared/types.ts'
 
 /**
  * 你的笔记从哪儿来。
@@ -105,4 +105,62 @@ export const vault: VaultConfig = {
   ],
 
   maxCodeBytes: 512 * 1024,
+}
+
+/**
+ * 发布配置：文本进 content/（提交进仓库），图片进 R2。
+ *
+ * 为什么是这个边界：见 docs/SPEC.md 的「九、上云」。
+ * 一句话版本——文本要进 git（你要能 diff 自己的笔记），图片不进 git（732 MB 放不进任何仓库），
+ * 而线上的站点壳由 Cloudflare Workers Assets 托管、图片由 R2 出。
+ *
+ * 凭证（R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY）放 `.env.local`，
+ * 不在这个文件里。这个文件是要提交的。
+ */
+export const deploy: DeployConfig = {
+  contentDir: 'content',
+
+  /**
+   * 只有这些扩展名会被当成"资源"上传。**但真正的上传集合是笔记正文引用到的那些图**
+   * ——这个白名单只是第二道闸：白名单之外的东西（字体、视频、yarn.lock）一律不传。
+   *
+   * 当前的决定是「严格只传图片」。想放开字体就把 '.ttf' / '.woff2' 加进来，
+   * 想放开视频就加 '.mp4' / '.mp3'——上传集合会自动跟着变，不用改代码。
+   */
+  assetExtensions: ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.ico', '.bmp', '.avif'],
+
+  /**
+   * 不想上传的目录前缀（section 内相对路径，比如 '杂项/个人网站'）。
+   * 默认空：当前没有任何目录需要排除。
+   */
+  assetExclude: [],
+
+  /** 这些不是内容，是构建产物，同步进快照时会跳过 */
+  contentSkipFiles: ['package-lock.json', 'yarn.lock'],
+
+  r2: {
+    /**
+     * 项目用的桶。2026-09-22 的实际情况：账号里唯一的桶是 `file-bucket`，
+     * 它同时装着用户的私人文件（pdf_files/、印制电路工/、以及几个 yaml 配置）。
+     *
+     * MioNote 在桶里只用各 section 的 id 作前缀（web-frontend/、interview/、soft-exam/、
+     * csharp/、japanese/），不会覆盖别人的对象；`--prune` 也只删自己上传过的（从账本出发，
+     * 不列桶）。但**混用一个桶的代价是真的**：想单独锁域名或清理时会互相牵连。
+     * 哪天想分开，建个新桶、把这里改掉、重跑 publish 就行（域名变了会自动重传）。
+     */
+    bucket: 'file-bucket',
+    /**
+     * 桶里的文件夹。MioNote 的 1078 张图会放在 `file-bucket/MioNote/…` 下，
+     * 而不是铺在桶根和你的 pdf_files/、印制电路工/、几个 yaml 混在一起。
+     *
+     * 改这个值等于换一套 key：下次 `bun run publish` 会把所有图传到新前缀下
+     * （旧的那些会被认成"已不在上传集合"，加 --prune 才删）。
+     */
+    prefix: 'MioNote',
+    /**
+     * 公共访问域名。`.env.local` 里的 R2_PUBLIC_BASE 优先于这里——
+     * 这里写的是"没有本地配置时用它"，好在 CI 上也能构建。
+     */
+    publicBase: 'https://cdn.tak1na.cn',
+  },
 }

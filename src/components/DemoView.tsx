@@ -23,8 +23,12 @@ interface DemoViewProps {
 /**
  * demo 预览。
  *
- * iframe 直接用 /@vault/ 下 demo 的真实路径，所以它里面的相对引用
+ * dev 模式：iframe 直接用 /@vault/ 下 demo 的真实路径，所以它里面的相对引用
  * （css/js/图片）全都能按原样解析——不用重写 HTML，也不用构建。
+ *
+ * 线上：`demo.url` 是 null（服务端生成的 payload 里就是 null），因为 demo 的运行素材
+ * ——图片、字体、视频——没有上传到云端，iframe 跑起来只会是缺图少字体的坏页面。
+ * 这时只提供「看源码」。判断由服务端给，这里不猜。
  */
 export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntry }: DemoViewProps) {
   const { data: demo, error, loading } = useDemo(sectionId, path)
@@ -39,6 +43,11 @@ export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntr
     setActiveFile(path)
     setTab('preview')
   }, [path])
+
+  // payload 到了才知道这个环境能不能跑 demo（线上不能），这时把标签页切到源码
+  useEffect(() => {
+    if (demo && demo.url === null) setTab('source')
+  }, [demo])
 
   useEffect(() => {
     if (!demo) return
@@ -82,6 +91,7 @@ export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntr
   }
 
   const needsNetwork = demo.externalHosts.length > 0
+  const canRun = demo.url !== null
 
   return (
     <>
@@ -100,13 +110,15 @@ export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntr
 
             <div className="doc__actions">
               <div className="tabs">
-                <button
-                  type="button"
-                  className={tab === 'preview' ? 'tab tab--active' : 'tab'}
-                  onClick={() => setTab('preview')}
-                >
-                  预览
-                </button>
+                {canRun ? (
+                  <button
+                    type="button"
+                    className={tab === 'preview' ? 'tab tab--active' : 'tab'}
+                    onClick={() => setTab('preview')}
+                  >
+                    预览
+                  </button>
+                ) : null}
                 <button
                   type="button"
                   className={tab === 'source' ? 'tab tab--active' : 'tab'}
@@ -115,17 +127,32 @@ export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntr
                   看源码
                 </button>
               </div>
-              <button type="button" className="btn btn--ghost" onClick={() => setFrameKey((k) => k + 1)}>
-                <Icon name="refresh" size={13} />
-                重新加载
-              </button>
-              <a className="btn btn--ghost" href={demo.url} target="_blank" rel="noreferrer">
-                <Icon name="external" size={13} />
-                新标签页打开
-              </a>
+              {canRun ? (
+                <>
+                  <button type="button" className="btn btn--ghost" onClick={() => setFrameKey((k) => k + 1)}>
+                    <Icon name="refresh" size={13} />
+                    重新加载
+                  </button>
+                  <a className="btn btn--ghost" href={demo.url ?? '#'} target="_blank" rel="noreferrer">
+                    <Icon name="external" size={13} />
+                    新标签页打开
+                  </a>
+                </>
+              ) : null}
             </div>
 
-            {needsNetwork ? (
+            {!canRun ? (
+              <div className="notice notice--muted">
+                <Icon name="warning" size={15} />
+                <div>
+                  <strong>这里只提供源码</strong>
+                  <p>
+                    这个 demo 的运行素材（图片、字体、视频）没有上传到云端，跑起来会是缺图少字体的坏页面，
+                    所以线上只展示源码。想看它真正跑起来，在本地打开同一个 demo。
+                  </p>
+                </div>
+              </div>
+            ) : needsNetwork ? (
               <div className="notice">
                 <Icon name="public" size={15} />
                 <div>
@@ -147,7 +174,7 @@ export function DemoView({ sectionId, path, sectionName, highlighter, onOpenEntr
           </header>
 
           <div className="doc__body doc__body--demo">
-            {tab === 'preview' ? (
+            {tab === 'preview' && demo.url !== null ? (
               <div className="frame">
                 <iframe
                   key={frameKey}

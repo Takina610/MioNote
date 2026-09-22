@@ -163,7 +163,6 @@ export function SearchPalette({ open, onClose, sections, onOpenHit }: SearchPale
           <span>
             <kbd>Esc</kbd> 关闭
           </span>
-          {data ? <span className="palette__stat">已索引 {data.docs.length} 篇</span> : null}
         </div>
       </div>
     </div>

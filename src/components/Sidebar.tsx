@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import type { PublishLevel, VaultIndex, VaultNode, VaultSection } from '../../shared/types'
 import type { RecentEntry } from '../hooks/useReadingState'
 import type { ThemeChoice } from '../hooks/useTheme'
-import { formatBytes, formatRelative } from '../lib/format'
+import { formatRelative } from '../lib/format'
 import { FileIcon, resolveFolderIcon } from './FileIcon'
 import { Icon, type IconName } from './Icon'
 import { TreeView } from './TreeView'
@@ -19,9 +18,8 @@ interface SidebarProps {
   onOpenRecent: (entry: RecentEntry) => void
   onOpenSearch: () => void
   onCycleTheme: () => void
-  onRescan: () => void
-  rescanning: boolean
-  onClose?: () => void
+  /** 收起侧栏（桌面）／关闭抽屉（窄屏）——两种情况都是同一个动作 */
+  onCollapse: () => void
 }
 
 function PublishBadge({ level }: { level: PublishLevel }) {
@@ -66,11 +64,8 @@ export function Sidebar({
   onOpenRecent,
   onOpenSearch,
   onCycleTheme,
-  onRescan,
-  rescanning,
-  onClose,
+  onCollapse,
 }: SidebarProps) {
-  const [showIssues, setShowIssues] = useState(false)
   const activeSectionId = activeId?.split(':')[0] ?? null
 
   const themeLabel =
@@ -81,28 +76,14 @@ export function Sidebar({
       <header className="sidebar__head">
         <div className="sidebar__brand">
           <span className="sidebar__title">MioNote</span>
-          <span className="sidebar__subtitle">
-            {index.stats.notes} 篇笔记 · {formatBytes(index.stats.noteBytes)}
-          </span>
         </div>
         <div className="sidebar__tools">
           <button type="button" className="icon-btn" title={`主题：${themeLabel}（点击切换）`} onClick={onCycleTheme}>
             <Icon name="theme" size={16} />
           </button>
-          <button
-            type="button"
-            className="icon-btn"
-            title="重新扫描笔记文件夹"
-            onClick={onRescan}
-            disabled={rescanning}
-          >
-            <Icon name="refresh" size={16} className={rescanning ? 'spin' : undefined} />
+          <button type="button" className="icon-btn" title="收起侧栏（Ctrl+B）" onClick={onCollapse}>
+            <Icon name="collapse" size={16} />
           </button>
-          {onClose ? (
-            <button type="button" className="icon-btn" title="关闭侧栏" onClick={onClose}>
-              <Icon name="close" size={16} />
-            </button>
-          ) : null}
         </div>
       </header>
 
@@ -152,10 +133,6 @@ export function Sidebar({
                     className="section__icon"
                   />
                   <span className="section__name">{section.name}</span>
-                  <span className="section__counts">
-                    {section.counts.notes}
-                    {section.counts.demos > 0 ? ` · ${section.counts.demos} demo` : ''}
-                  </span>
                 </button>
                 <PublishBadge level={section.publish} />
               </div>
@@ -179,50 +156,6 @@ export function Sidebar({
           )
         })}
       </nav>
-
-      <footer className="sidebar__foot">
-        <div className="stats">
-          <span>
-            笔记 {index.stats.notes} · demo {index.stats.demos}
-          </span>
-          <span>扫描 {index.scanMs} ms</span>
-        </div>
-
-        {index.stats.missingAssets.length > 0 ? (
-          <div className="issues">
-            <button
-              type="button"
-              className="issues__toggle"
-              aria-expanded={showIssues}
-              onClick={() => setShowIssues((v) => !v)}
-            >
-              <Icon name="warning" size={13} />
-              {index.stats.missingAssets.length} 张图找不到
-              <span className="issues__caret">{showIssues ? '收起' : '查看'}</span>
-            </button>
-            <div className="branch" data-open={showIssues ? '' : undefined}>
-              <div className="branch__inner">
-                <ul className="issues__list">
-                  {index.stats.missingAssets.map((item) => (
-                    <li key={`${item.section}:${item.note}:${item.ref}`}>
-                      <span className="issues__note">{item.note}</span>
-                      <code>{item.ref}</code>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        ) : null}
-
-        {index.warnings
-          .filter((warning) => !warning.includes('图片引用'))
-          .map((warning) => (
-            <p className="sidebar__warning" key={warning}>
-              <Icon name="warning" size={13} /> {warning}
-            </p>
-          ))}
-      </footer>
     </div>
   )
 }

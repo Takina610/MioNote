@@ -153,8 +153,14 @@ export interface DemoPayload {
   sectionId: string
   path: string
   title: string
-  /** demo 自身的可访问 URL，给 iframe 用 */
-  url: string
+  /**
+   * demo 自身的可访问 URL，给 iframe 用。
+   *
+   * **null 表示这个环境不提供运行 demo**（线上的情况）：demo 的运行素材——图片、字体、视频
+   * ——没有上传到云端，iframe 跑起来会是缺图少字体的坏页面。客户端遇到 null 就只提供「看源码」，
+   * 而不是给一个注定白屏的预览。判断依据由服务端给，客户端不猜。
+   */
+  url: string | null
   /** 同目录下的文件，给「看源码」当标签页 */
   files: DemoFileRef[]
   /**
@@ -188,4 +194,38 @@ export interface SearchDoc {
 export interface SearchIndexPayload {
   generatedAt: string
   docs: SearchDoc[]
+}
+
+/* ------------------------------------------------------------ 发布（上云） */
+
+/**
+ * 发布配置。
+ *
+ * 这里只放不敏感的东西。R2 的凭证在 `.env.local`（已被 .gitignore 的 `*.local` 覆盖），
+ * 只有 scripts/publish.ts 会读它——Vite 插件和浏览器都碰不到凭证。
+ */
+export interface DeployConfig {
+  /** 文本发布快照目录（相对仓库根）。它会被提交进 git，构建时就是站点内容 */
+  contentDir: string
+  /** 允许上传到 R2 的扩展名。注意：**只有笔记正文引用到的文件才真的会上传** */
+  assetExtensions: string[]
+  /** 不上传的目录前缀（section 内相对路径），命中的整棵跳过 */
+  assetExclude: string[]
+  /** 同步进 content/ 时要跳过的文件名（构建产物，不是内容） */
+  contentSkipFiles: string[]
+  r2: {
+    bucket: string
+    /**
+     * 对象键的前缀，也就是桶里的"文件夹"：
+     * `MioNote/soft-exam/img/x.png` 而不是 `soft-exam/img/x.png`。
+     *
+     * 为什么要它：桶可能是和别人共用、或者你本来就拿它当通用文件桶用
+     * （装 pdf、电路图、各种 yaml）。收进一个前缀里，MioNote 的东西
+     * 就是一个自包含的文件夹，不和根目录上的别的文件混着。
+     * 空字符串 = 直接放桶根。
+     */
+    prefix: string
+    /** 公共访问域名。留空表示还没挂域名：上传能跑，但站点拼不出图片 URL */
+    publicBase: string
+  }
 }

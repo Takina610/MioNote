@@ -90,14 +90,12 @@ function useResource<T>(key: string | null, load: () => Promise<T>): ResourceSta
 }
 
 /**
- * refreshToken 由「重新扫描」按钮递增。
- * 它同时做两件事：换一个缓存 key（绕过本地缓存），以及让服务端强制重扫磁盘。
- * 这样就不用在渲染期清缓存——渲染期做副作用会在并发渲染下出错。
+ * refreshToken 由「笔记改动」递增（文件监听推来的 vault:changed）。
+ * 它换一个缓存 key，从而绕过本地缓存重新请求——这样就不用在渲染期清缓存，
+ * 渲染期做副作用会在并发渲染下出错。
  */
 export function useVaultIndex(refreshToken = 0): ResourceState<VaultIndex> {
-  return useResource<VaultIndex>(`vault-index#${refreshToken}`, () =>
-    contentSource.getIndex({ refresh: refreshToken > 0 }),
-  )
+  return useResource<VaultIndex>(`vault-index#${refreshToken}`, () => contentSource.getIndex())
 }
 
 export function useNote(sectionId: string, path: string): ResourceState<NotePayload> {

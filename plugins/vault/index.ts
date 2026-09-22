@@ -14,6 +14,9 @@ const ASSET_PREFIX = '/@vault/'
  * 这里实现的是 ContentSource 契约的「本地」版本：
  * 浏览器和 React 只认 /api/* 和 /@vault/*，将来 Tauri 用 IPC、云端用静态文件
  * 各自实现同一套约定，界面代码一行都不用改。
+ *
+ * 这个插件只做「读」：没有上传、没有发布状态、也没有手动重扫的入口。
+ * 笔记改动靠文件监听自动发现，监听失灵时重启 dev server 即可。
  */
 export function vaultPlugin(config: VaultConfig): Plugin {
   const store = new VaultStore(config)
@@ -54,11 +57,6 @@ function createHandler(server: ViteDevServer, store: VaultStore): Connect.NextHa
     try {
       switch (endpoint) {
         case 'vault': {
-          // 手动兜底：文件监听在某些环境下会失灵，侧栏的「重新扫描」走这里
-          if (query.get('refresh') === '1') {
-            store.invalidate()
-            server.config.logger.info('[mionote] 手动重新扫描')
-          }
           sendJson(res, store.getIndex())
           return
         }
@@ -151,8 +149,8 @@ function escapeRegExp(s: string): string {
 /**
  * 监听笔记文件夹，改动后让前端重新取数据。
  *
- * 手动重新扫描的入口也留着（侧栏底部），因为递归监听在个别环境下会失灵，
- * 而这个应用的失败模式必须是「数据旧了」，不能是「数据错了」。
+ * 没有"手动重新扫描"的入口（那个按钮去掉了）：递归监听在个别环境下会失灵，
+ * 但那种情况下重启 dev server 就够了，不值得为它在界面上常驻一个按钮。
  */
 function attachWatchers(server: ViteDevServer, store: VaultStore, config: VaultConfig): void {
   const ignoreRe =

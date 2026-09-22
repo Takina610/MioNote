@@ -7,12 +7,17 @@
   "description": "把散落在硬盘上的笔记文件夹变成一个能读、能搜的本地阅读器",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && bun run scripts/build-site.ts",
+    "build:spa": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "icons": "node scripts/generate-icons.mjs"
+    "icons": "node scripts/generate-icons.mjs",
+    "sync": "bun run scripts/sync-content.ts",
+    "publish": "bun run scripts/publish.ts",
+    "publish:dry": "bun run scripts/publish.ts --dry-run"
   },
   "dependencies": {
+    "aws4fetch": "^1.0.20",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-markdown": "^10.1.0",

@@ -52,6 +52,7 @@ const CHROME = {
   copy: 'copy',
   link: 'link',
   filter: 'list-filter',
+  collapse: 'chevron-left',
 }
 
 /**

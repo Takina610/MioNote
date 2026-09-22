@@ -5,18 +5,20 @@ import type {
   SearchIndexPayload,
   VaultIndex,
 } from '../../shared/types'
+import { StaticContentSource } from './staticContentSource'
 
 /**
  * 内容来源。
  *
  * 这个接口是整个项目里最关键的一道缝：界面只认它，不关心内容从哪儿来。
- * 现在只有一个实现（本地 Vite 中间件的 HTTP 接口），将来的两个是：
- *   · Tauri 桌面端 —— 走 IPC 直接读磁盘，能读还没索引的新文件
- *   · 云端静态站   —— 读构建时生成的静态 JSON
- * 三个实现形状一致，所以这一版的 React 代码可以整体搬过去。
+ * 现在有两个实现，按环境自动切换：
+ *   · dev  —— HTTP 接口，由 Vite 插件读磁盘（改完笔记立刻能看到，图片也是原图）
+ *   · 生产 —— 构建时生成的静态 JSON，图片指向 R2（见 plugins/vault/build.ts）
+ * 形状完全一致，所以这一版的 React 代码在两边都能跑。
+ * 将来的第三个是 Tauri 桌面端（走 IPC 直接读磁盘，能读还没索引的新文件）。
  */
 export interface ContentSource {
-  getIndex(options?: { refresh?: boolean }): Promise<VaultIndex>
+  getIndex(): Promise<VaultIndex>
   getNote(sectionId: string, path: string): Promise<NotePayload>
   getDemo(sectionId: string, path: string): Promise<DemoPayload>
   getFile(sectionId: string, path: string): Promise<FilePayload>
@@ -44,8 +46,8 @@ function endpoint(name: string, params: Record<string, string>): string {
 }
 
 class HttpContentSource implements ContentSource {
-  getIndex(options?: { refresh?: boolean }): Promise<VaultIndex> {
-    return fetchJson<VaultIndex>(`/api/vault${options?.refresh ? '?refresh=1' : ''}`)
+  getIndex(): Promise<VaultIndex> {
+    return fetchJson<VaultIndex>('/api/vault')
   }
 
   getNote(sectionId: string, path: string): Promise<NotePayload> {
@@ -65,4 +67,6 @@ class HttpContentSource implements ContentSource {
   }
 }
 
-export const contentSource: ContentSource = new HttpContentSource()
+export const contentSource: ContentSource = import.meta.env.DEV
+  ? new HttpContentSource()
+  : new StaticContentSource()

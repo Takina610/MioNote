@@ -3,7 +3,7 @@ import type { Highlighter } from 'shiki'
 import type { ImageRefMap, NoteSection } from '../../shared/types'
 import { useNote } from '../hooks/useContent'
 import { useCollapsedSections } from '../hooks/useReadingState'
-import { breadcrumb, formatBytes, formatRelative } from '../lib/format'
+import { breadcrumb } from '../lib/format'
 import { navigate } from '../lib/router'
 import { Icon } from './Icon'
 import { MarkdownView } from './MarkdownView'
@@ -223,18 +223,6 @@ export function NoteView({
             </div>
 
             <h1 className="doc__title">{note.title}</h1>
-
-            <div className="doc__meta">
-              {splittable ? <span>{note.sections.length} 个小节</span> : null}
-              <span>{formatBytes(note.bytes)}</span>
-              <span>改于 {formatRelative(note.mtime)}</span>
-              {note.missing.length > 0 ? (
-                <span className="doc__meta-warn" title={note.missing.join('\n')}>
-                  <Icon name="warning" size={13} />
-                  {note.missing.length} 张图没找到
-                </span>
-              ) : null}
-            </div>
 
             <div className="doc__actions">
               {splittable ? (

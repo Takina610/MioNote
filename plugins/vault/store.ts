@@ -38,6 +38,44 @@ interface Built {
   search: SearchIndexPayload
 }
 
+/** 一张被正文引用到的本地图片。解析出 URL 的同时把这三样一起给出去，免得调用方再反解 URL。 */
+export interface ResolvedAsset {
+  sectionId: string
+  /** section 内相对路径 */
+  rel: string
+  abs: string
+}
+
+export interface VaultStoreOptions {
+  /**
+   * 图片 URL 怎么生成。返回 null 表示"这张图在这个环境里拿不到"，标签会渲染成断链占位。
+   *
+   * 默认 `/@vault/<section>/<rel>`（本地，中间件直接从磁盘流）。静态构建时换成 R2 域名——
+   * 于是**同一份解析逻辑在两个环境下产出不同的 URL**，客户端一行都不用改：
+   * 它只是把 payload 里给的字符串塞进 `<img src>`。
+   */
+  assetUrlFor?: (asset: ResolvedAsset) => string | null
+  /**
+   * 图片"存在"的判断依据：
+   *
+   *   'disk'     —— 看磁盘上有没有这个文件。dev 和 publish 用这个（图片确实在本机）。
+   *   'registry' —— 交给 assetUrlFor 决定，不看磁盘。静态构建用这个：
+   *                 构建时 `content/` 里只有文本，图片全在 R2，磁盘上当然没有，
+   *                 照磁盘判断会把每一张图都误报成断链。
+   */
+  assetLookup?: 'disk' | 'registry'
+  /**
+   * 正文里引用了、但磁盘上**没有**这个文件时的回调（只在 assetLookup: 'disk' 下会触发）。
+   *
+   * publish 用它把"本来就坏的链接"记进上传账本，这样静态构建才能把
+   * "还没上传"和"链接本身就是坏的"分开——否则构建会把一张永远不存在的图
+   * 当成"待上传"，于是怎么传都过不了那一道关。
+   */
+  onMissingAsset?: (asset: ResolvedAsset) => void
+  /** 线上不跑 demo：url 置 null，客户端就只提供「看源码」 */
+  demoRunnable?: boolean
+}
+
 /**
  * 扫描结果和解析结果都缓存在内存里，改文件时整块作废重建。
  * 全量重建的成本：104 篇笔记 / 0.4 MB 正文，毫秒级。
@@ -45,7 +83,10 @@ interface Built {
 export class VaultStore {
   private built: Built | null = null
 
-  constructor(private readonly config: VaultConfig) {}
+  constructor(
+    private readonly config: VaultConfig,
+    private readonly options: VaultStoreOptions = {},
+  ) {}
 
   invalidate(): void {
     this.built = null
@@ -145,7 +186,29 @@ export class VaultStore {
       const rel = toPosix(path.posix.normalize(joined))
       if (rel && rel !== '.' && !rel.startsWith('..')) {
         const abs = resolveInside(cfg.root, rel)
-        if (abs && isFile(abs)) resolution = { url: assetUrl(cfg.id, rel) }
+        if (abs) {
+          const asset: ResolvedAsset = { sectionId: cfg.id, rel, abs }
+          /*
+           * 注意这里不能用 `assetUrlFor?.(asset) ?? assetUrl(...)`：
+           * `??` 会把"策略说了这张图拿不到（返回 null）"和"没提供策略"混成一件事，
+           * 于是构建时缺失的图会被悄悄换成 /@vault/ 这个不存在的地址，
+           * 既不成断链也不进 missing 报告。必须显式判断。
+           */
+          const pickUrl = (): string | null =>
+            this.options.assetUrlFor ? this.options.assetUrlFor(asset) : assetUrl(cfg.id, rel)
+
+          if (this.options.assetLookup === 'registry') {
+            // 图片不在本机（在 R2），所以"有没有"完全由 assetUrlFor 判断
+            const url = pickUrl()
+            resolution = url === null ? 'missing' : { url }
+          } else if (isFile(abs)) {
+            const url = pickUrl()
+            resolution = url === null ? 'missing' : { url }
+          } else {
+            // 引用了、但文件不在。交给 publish 记进账本（见 onMissingAsset 的说明）
+            this.options.onMissingAsset?.(asset)
+          }
+        }
       }
       cache.set(key, resolution)
       return resolution
@@ -232,7 +295,7 @@ export class VaultStore {
       sectionId,
       path: rel,
       title: rel.slice(rel.lastIndexOf('/') + 1),
-      url: assetUrl(sectionId, rel),
+      url: this.options.demoRunnable === false ? null : assetUrl(sectionId, rel),
       externalHosts,
       analysisSkipped,
       files: files.map((f) => ({

@@ -12,20 +12,6 @@ interface TreeViewProps {
   onOpen: (node: VaultNode) => void
 }
 
-/** 文件夹右边的数字是「里面有多少东西」，递归数一次就缓存住 */
-const leafCounts = new WeakMap<VaultNode, number>()
-
-function countLeaves(node: VaultNode): number {
-  const cached = leafCounts.get(node)
-  if (cached !== undefined) return cached
-  let total = 0
-  for (const child of node.children ?? []) {
-    total += child.kind === 'folder' ? countLeaves(child) : 1
-  }
-  leafCounts.set(node, total)
-  return total
-}
-
 /** 笔记去掉 .md 后缀，读起来更像标题；demo 保留后缀，因为 index.html 去掉后缀就认不出来了 */
 function displayName(node: VaultNode): string {
   return node.kind === 'note' ? node.name.replace(/\.md$/i, '') : node.name
@@ -78,7 +64,6 @@ function FolderNode({ node, depth, expanded, onToggle, activeId, onOpen }: Folde
           />
         </span>
         <span className="tree__name">{node.name}</span>
-        <span className="tree__count">{countLeaves(node)}</span>
       </button>
 
       <div className="branch" data-open={open ? '' : undefined}>
@@ -141,7 +126,6 @@ export function TreeView({
                 className="tree__icon"
               />
               <span className="tree__name">{displayName(node)}</span>
-              {node.sectionCount ? <span className="tree__count">{node.sectionCount}</span> : null}
             </button>
           </li>
         )

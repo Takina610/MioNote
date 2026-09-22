@@ -34,9 +34,20 @@
   --toc-width: 252px;
   --read-width: 46rem;
 
+  /*
+   * 滚动条。系统默认那份在 Windows 上是灰底白槽的方角，放在这个界面里像从别的程序里
+   * 剪下来的，所以内容区换成自定义滚动条：透明轨道 + 圆角滑块，悬浮时加深。
+   * 侧栏则是把滚动条整个藏掉（见 .sidebar__inner）。
+   */
+  --scrollbar-size: 10px;
+  --scroll-thumb: rgb(15 23 42 / 18%);
+  --scroll-thumb-hover: rgb(15 23 42 / 34%);
+
   /* 展开/收起动画。所有折叠交互共用这两个值，改一处全局一致。 */
   --expand-dur: 190ms;
   --expand-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  /* 侧栏收起/展开的过渡时长 */
+  --sidebar-dur: 180ms;
 
   --shadow-lg: 0 18px 48px rgb(15 23 42 / 18%);
   --shadow-sm: 0 1px 2px rgb(15 23 42 / 6%);
@@ -60,6 +71,8 @@
   --ok: #6cc48c;
   --ok-soft: #17271d;
   --mark: #4a3c14;
+  --scroll-thumb: rgb(255 255 255 / 16%);
+  --scroll-thumb-hover: rgb(255 255 255 / 30%);
   --shadow-lg: 0 18px 48px rgb(0 0 0 / 55%);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
 }
@@ -187,16 +200,6 @@ mark {
   transition-delay: 0s;
 }
 
-.spin {
-  animation: spin 0.9s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* ---------- 启动态与占位 ---------- */
 
 .boot {
@@ -267,19 +270,81 @@ mark {
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   height: 100vh;
   height: 100dvh;
+  transition: grid-template-columns var(--sidebar-dur) var(--expand-ease);
 }
 
+/*
+ * 拖拽改宽时关掉过渡：不加这行，宽度会"追着"指针慢慢移，手感是黏的。
+ * 顺手把整页的文字选中也关掉，否则拖拽会一路选中侧栏里的文字。
+ */
+.app--resizing {
+  transition: none;
+  cursor: col-resize;
+  user-select: none;
+}
+
+/*
+ * 侧栏本身不滚动，滚动交给里面的 .sidebar__inner。
+ *
+ * 为什么拆成两层：右边缘那个拖拽手柄要绝对定位贴在边框上，而绝对定位的
+ * 子元素在滚动容器里会跟着内容一起滚走。外层不滚，手柄就永远钉在右边。
+ */
 .sidebar {
-  overflow-y: auto;
+  position: relative;
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
   background: var(--surface);
   border-right: 1px solid var(--border);
-  overscroll-behavior: contain;
 }
 
 .sidebar__inner {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0;
   min-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* 侧栏不显示滚动条：它常驻在屏幕边上，一根常亮的滚动条比内容本身还抢眼。
+     滚动仍然可用（滚轮、触控板、键盘都好使），只是不画那根条。 */
+  scrollbar-width: none;
+}
+
+.sidebar__inner::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* 拖拽手柄：压在侧栏右边框上的一条细带，鼠标移近时给一点颜色提示 */
+.sidebar__resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 6px;
+  cursor: col-resize;
+  touch-action: none;
+  background: transparent;
+  transition: background 120ms ease;
+}
+
+.sidebar__resizer:hover,
+.app--resizing .sidebar__resizer {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* 桌面收起点整条侧栏。窄屏的抽屉另有一套规则，所以这里限定宽度。 */
+@media (min-width: 901px) {
+  .app--collapsed {
+    grid-template-columns: 0 minmax(0, 1fr);
+  }
+
+  .app--collapsed .sidebar {
+    visibility: hidden;
+    border-right-width: 0;
+  }
 }
 
 .view {
@@ -321,6 +386,96 @@ mark {
   display: none;
 }
 
+/* ---------- 自定义滚动条 ---------- */
+
+/*
+ * 会滚动的那几个区域共用同一套样式：正文、目录、搜索面板、搜索命中列表、
+ * 代码块（横向）、markdown 里的宽表格和 pre。列表写在这里是唯一的真相来源——
+ * 加一个新的滚动区域时记得把它加进来。
+ */
+:is(
+  .reader,
+  .toc-col,
+  .palette__body,
+  .hits,
+  .code-block__body,
+  .source,
+  .markdown pre,
+  .markdown table,
+  .file-tabs
+) {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+
+/* Chromium / WebKit */
+:is(
+  .reader,
+  .toc-col,
+  .palette__body,
+  .hits,
+  .code-block__body,
+  .source,
+  .markdown pre,
+  .markdown table,
+  .file-tabs
+)::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+:is(
+  .reader,
+  .toc-col,
+  .palette__body,
+  .hits,
+  .code-block__body,
+  .source,
+  .markdown pre,
+  .markdown table,
+  .file-tabs
+)::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:is(
+  .reader,
+  .toc-col,
+  .palette__body,
+  .hits,
+  .code-block__body,
+  .source,
+  .markdown pre,
+  .markdown table,
+  .file-tabs
+)::-webkit-scrollbar-thumb {
+  /* 用透明边框 + background-clip 做出"离轨道有一点边距"的细滑块 */
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: var(--scroll-thumb);
+  background-clip: padding-box;
+}
+
+:is(
+  .reader,
+  .toc-col,
+  .palette__body,
+  .hits,
+  .code-block__body,
+  .source,
+  .markdown pre,
+  .markdown table,
+  .file-tabs
+)::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
+  background-clip: padding-box;
+}
+
+:is(.reader, .toc-col, .palette__body)::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* ---------- 侧栏顶部 ---------- */
 
 .sidebar__head {
@@ -342,11 +497,6 @@ mark {
   font-size: 16px;
   font-weight: 650;
   letter-spacing: 0.01em;
-}
-
-.sidebar__subtitle {
-  font-size: 11.5px;
-  color: var(--text-faint);
 }
 
 .sidebar__tools {
@@ -462,7 +612,15 @@ mark {
   border-radius: var(--radius-sm);
 }
 
-.section--active {
+/*
+ * 「当前所在的分区」只给**标题行**上色，不给整块。
+ *
+ * 原来背景加在 .section 上（整块，含展开后的整棵子树）：于是当前笔记所在的分区会整片
+ * 变成淡蓝，而文件行的 :hover 又会画一块灰底——灰块嵌在蓝底里，看起来像缺了一角。
+ * 颜色收回到标题行之后，树区域保持中性的表面色，hover 的灰底就正常了；
+ * 「我在哪个笔记本里」这个信息也还在。
+ */
+.section--active > .section__head {
   background: var(--accent-soft);
 }
 
@@ -491,11 +649,6 @@ mark {
 .section__name {
   font-size: 13px;
   font-weight: 600;
-}
-
-.section__counts {
-  font-size: 11px;
-  color: var(--text-faint);
 }
 
 .section__empty {
@@ -556,13 +709,21 @@ mark {
   background: var(--surface-2);
 }
 
-.tree__row--active {
+/*
+ * 选中态要连 :hover 一起写。
+ *
+ * 只写 `.tree__row--active` 是不够的：它的特异性 (0,1,0) 低于上面的
+ * `.tree__row:hover` (0,2,0)，于是鼠标一移到选中的条目上，蓝色就被 hover 的灰盖掉
+ * ——看起来像"选中丢了一下"。写成 `.tree__row--active:hover` 后两者同分，
+ * 后出现的这条赢。
+ */
+.tree__row--active,
+.tree__row--active:hover {
   background: var(--accent);
   color: #fff;
 }
 
 .tree__row--active .tree__icon,
-.tree__row--active .tree__count,
 .tree__row--active .chev {
   color: rgb(255 255 255 / 80%);
 }
@@ -627,80 +788,6 @@ mark {
   white-space: nowrap;
 }
 
-.tree__count {
-  font-size: 10.5px;
-  color: var(--text-faint);
-  font-variant-numeric: tabular-nums;
-}
-
-/* ---------- 侧栏底部 ---------- */
-
-.sidebar__foot {
-  margin-top: auto;
-  padding: 10px 12px 14px;
-  border-top: 1px solid var(--border);
-  font-size: 11.5px;
-  color: var(--text-faint);
-}
-
-.stats {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.issues {
-  margin-top: 8px;
-}
-
-.issues__toggle {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--warn);
-  font-size: 11.5px;
-}
-
-.issues__caret {
-  margin-left: auto;
-  color: var(--text-faint);
-}
-
-.issues__list {
-  list-style: none;
-  margin: 6px 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  max-height: 180px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-.issues__list li {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.issues__note {
-  color: var(--text-muted);
-}
-
-.issues__list code {
-  font-size: 10.5px;
-  word-break: break-all;
-  color: var(--text-faint);
-}
-
-.sidebar__warning {
-  display: flex;
-  gap: 5px;
-  margin: 6px 0 0;
-  color: var(--warn);
-}
-
 /* ---------- 文档 ---------- */
 
 .doc {
@@ -758,13 +845,6 @@ mark {
   gap: 12px;
   font-size: 12px;
   color: var(--text-faint);
-}
-
-.doc__meta-warn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--warn);
 }
 
 .doc__path {
@@ -1229,10 +1309,6 @@ mark {
   gap: 4px;
 }
 
-.palette__stat {
-  margin-left: auto;
-}
-
 .hits {
   list-style: none;
   margin: 0;
@@ -1360,7 +1436,12 @@ mark {
   color: var(--text);
 }
 
-.file-tab--active {
+/*
+ * 同样要和 :hover 一起写，理由见上面 .tree__row--active 那段注释：
+ * 否则选中的标签页一悬浮就丢掉了强调色边框。
+ */
+.file-tab--active,
+.file-tab--active:hover {
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent);
@@ -1414,28 +1495,6 @@ mark {
 }
 
 /* ---------- 首页 ---------- */
-
-.home__lede {
-  margin: 4px 0 14px;
-  font-size: 14.5px;
-  line-height: 1.8;
-  color: var(--text-muted);
-  max-width: 40rem;
-}
-
-.home__stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.home__stats strong {
-  font-size: 16px;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
 
 .home__block {
   margin-top: 32px;
@@ -1529,25 +1588,6 @@ mark {
   font-weight: 620;
 }
 
-.card__counts {
-  font-size: 11.5px;
-  color: var(--text-faint);
-  font-variant-numeric: tabular-nums;
-}
-
-.card__desc {
-  margin: 0;
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: var(--text-muted);
-}
-
-.card__path {
-  font-size: 10.5px;
-  color: var(--text-faint);
-  word-break: break-all;
-}
-
 .card__publish {
   display: flex;
   align-items: center;
@@ -1561,11 +1601,50 @@ mark {
   color: var(--warn);
 }
 
+/* ---------- 悬浮的侧栏开关 ---------- */
+
+/*
+ * 只在"侧栏不在眼前"时出现：窄屏下它是抽屉的入口，桌面收起后它是展开入口。
+ * 两处共用同一个按钮，所以具体样式写在媒体查询外面，只有 display 按条件切换。
+ */
+.floating-menu {
+  display: none;
+  place-items: center;
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 20;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text-muted);
+  box-shadow: var(--shadow-lg);
+}
+
+.floating-menu:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+@media (min-width: 901px) {
+  .app--collapsed .floating-menu {
+    display: grid;
+  }
+}
+
 /* ---------- 窄屏 ---------- */
 
 @media (max-width: 1100px) {
   .doc {
     padding: 28px 26px 80px;
+  }
+}
+
+@media (max-width: 900px) {
+  .floating-menu {
+    display: grid;
   }
 }
 
@@ -1586,6 +1665,11 @@ mark {
     box-shadow: var(--shadow-lg);
   }
 
+  /* 窄屏是抽屉，改宽没有意义（也没有可拖的边缘） */
+  .sidebar__resizer {
+    display: none;
+  }
+
   .app--nav-open .sidebar {
     transform: none;
   }
@@ -1596,22 +1680,6 @@ mark {
     inset: 0;
     z-index: 29;
     background: rgb(15 23 42 / 30%);
-  }
-
-  .floating-menu {
-    display: grid;
-    place-items: center;
-    position: fixed;
-    left: 12px;
-    bottom: 12px;
-    z-index: 20;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--bg);
-    color: var(--text-muted);
-    box-shadow: var(--shadow-lg);
   }
 
   .view {
@@ -1663,13 +1731,10 @@ mark {
   :root {
     /* 动画时长趋近于 0，隐藏延迟也随之趋近于 0，展开收起变成瞬时的 */
     --expand-dur: 0.01ms;
+    --sidebar-dur: 0.01ms;
   }
 
   .reader {
     scroll-behavior: auto;
-  }
-
-  .spin {
-    animation: none;
   }
 }

@@ -44,6 +44,8 @@ android {
                     .plus(getDefaultProguardFile("proguard-android-optimize.txt"))
                     .toList().toTypedArray()
             )
+            // 本地自用：release 没配正式 keystore，先借 debug 签名让 APK 可安装
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     kotlinOptions {

@@ -1,5 +1,8 @@
 buildscript {
     repositories {
+    // 国内镜像：Maven Central 直连经常被掐断 TLS，阿里云先解析一遍
+    maven { url = uri("https://maven.aliyun.com/repository/public") }
+    maven { url = uri("https://maven.aliyun.com/repository/google") }
         google()
         mavenCentral()
     }
@@ -11,6 +14,9 @@ buildscript {
 
 allprojects {
     repositories {
+    // 国内镜像：Maven Central 直连经常被掐断 TLS，阿里云先解析一遍
+    maven { url = uri("https://maven.aliyun.com/repository/public") }
+    maven { url = uri("https://maven.aliyun.com/repository/google") }
         google()
         mavenCentral()
     }

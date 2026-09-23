@@ -23,3 +23,7 @@ serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
 tauri = { version = "2.11.6", features = [] }
 tauri-plugin-log = "2"
+
+# 安卓正式包瘦身：去掉调试符号（debug 包 130MB 的 .so 主要是符号）
+[profile.release]
+strip = true

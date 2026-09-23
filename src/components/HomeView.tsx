@@ -23,12 +23,16 @@ function firstReadable(nodes: VaultNode[]): VaultNode | null {
   return null
 }
 
+/**
+ * 发布状态只留一个两三个字的标记（隐私信号），解释一句都不说——
+ * 公开是默认态，什么都不显示；想看策略详情是侧栏同名 badge 的 hover title 的事。
+ */
 function PublishNote({ section }: { section: VaultSection }) {
   if (section.publish === 'never') {
     return (
       <p className="card__publish card__publish--never">
         <Icon name="block" size={13} />
-        永不发布：这个文件夹里是敏感内容，只有本地阅读器能读
+        不发布
       </p>
     )
   }
@@ -36,16 +40,11 @@ function PublishNote({ section }: { section: VaultSection }) {
     return (
       <p className="card__publish">
         <Icon name="lock" size={13} />
-        发布时需登录才能读
+        需登录
       </p>
     )
   }
-  return (
-    <p className="card__publish">
-      <Icon name="public" size={13} />
-      允许发布到云端
-    </p>
-  )
+  return null
 }
 
 export function HomeView({ index, recent, onOpenSection, onOpenRecent, onOpenSearch }: HomeViewProps) {

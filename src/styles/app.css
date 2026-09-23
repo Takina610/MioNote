@@ -606,7 +606,27 @@ mark {
   }
 }
 
+/*
+ * 窄屏的三件目录套件：右缘圆钮（进度把手）、快速标题栏（点圆钮展开）、
+ * 底部目录抽屉 + 「打开文档目录」按钮。桌面上一个都不存在（桌面的入口是
+ * 上面的 .toc-reveal），基础样式只留 display: none 把守，真正的样式全在窄屏媒体查询里。
+ */
+.toc-strip,
+.toc-sheet,
+.toc-sheet-trigger,
+.toc-handle {
+  display: none;
+}
+
 .scrim {
+  display: none;
+}
+
+/*
+ * 窄屏目录抽屉的遮罩，桌面没有抽屉这回事——不给这条，桌面端它会是个
+ * 无样式的 div 落进 .view 的栅格里，多占一格。
+ */
+.toc-scrim {
   display: none;
 }
 
@@ -628,6 +648,7 @@ mark {
   .hits,
   .code-block__body,
   .source,
+  .toc-sheet,
   .markdown pre,
   .markdown table
 ) {
@@ -1551,6 +1572,12 @@ html[data-theme='dark']::view-transition-new(root) {
   color: var(--text);
 }
 
+/* scroll-spy 算出的当前小节：描色 + 左侧标线跟着描色 */
+.toc__item--active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+}
+
 .toc__item--collapsed {
   color: var(--text-faint);
   opacity: 0.75;
@@ -2078,35 +2105,243 @@ html[data-theme='dark']::view-transition-new(root) {
 
   .view {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
   }
 
-  /* 窄屏上目录顶到正文上方；用 order 而不是重复渲染一份 DOM */
+  /*
+   * 窄屏没有桌面那列目录：入口是右缘的快捷条和底部的「打开文档目录」按钮，
+   * 完整列表在底部抽屉里。整列 display: none——桌面右列的样式一条都不参与
+   * （display: none 没有盒子，换页过渡也不会给它拍快照）。
+   */
   .toc-col {
-    order: -1;
+    display: none;
+  }
+
+  /*
+   * 手机上正文那条滚动条整个不要（WebView 滚动时会闪出来，怎么都难看）；
+   * 位置感由右缘的进度圆钮给，它比滚动条更好摸。
+   */
+  .reader {
+    scrollbar-width: none;
+  }
+
+  .reader::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 抽屉的遮罩，和左侧栏的 .scrim 同一套淡入淡出 */
+  .toc-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 29;
+    background: rgb(15 23 42 / 30%);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--sidebar-dur) var(--expand-ease),
+      visibility 0s linear var(--sidebar-dur);
+  }
+
+  .toc-scrim--show {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  /*
+   * 底部目录抽屉：从屏幕下缘滑上来（唤起它的按钮在底部，方向对着来）。
+   * 收起时整块沉回屏幕外，visibility 排在动画末尾，老规矩。
+   */
+  .toc-sheet {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 31;
+    max-height: 72vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-radius: 16px 16px 0 0;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(102%);
+    visibility: hidden;
+    transition:
+      transform var(--sidebar-dur) var(--expand-ease),
+      visibility 0s linear var(--sidebar-dur);
+  }
+
+  .toc-sheet--open {
+    transform: none;
+    visibility: visible;
+    transition:
+      transform var(--sidebar-dur) var(--expand-ease),
+      visibility 0s;
+  }
+
+  .toc-sheet .toc {
     width: auto;
-    max-height: 34vh;
-    border-left: 0;
-    border-bottom: 1px solid var(--border);
+    padding: 10px 16px calc(24px + env(safe-area-inset-bottom, 0px));
   }
 
-  .toc {
-    width: auto;
-    padding: 12px 12px 10px;
+  /* 抽屉标题行右端的按钮在窄屏兼做「收起抽屉」的把手 */
+  .toc__collapse {
+    display: grid;
   }
 
-  .toc__list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    border-left: 0;
-  }
-
+  /* 抽屉里的列表用回基础样式的竖排，只把触控目标放大一点 */
   .toc__item {
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+
+  /*
+   * 右缘的「快速目录」标题栏：只有点按/按住圆钮才展开（--open）。
+   * 底色是一层右缘实、往左渐透的纱（linear-gradient to left），不是全透明浮字；
+   * 上下两端再用 mask 渐隐。选中态直接落在标题行自己身上（--active 那条胶囊），
+   * 没有独立的悬浮胶囊。整片是拖拽面：按住上下拖，正文实时跟着滚。
+   */
+  .toc-strip {
+    display: block;
+    position: fixed;
+    right: 0;
+    top: 96px;
+    bottom: 96px;
+    height: auto;
+    z-index: 21;
+    width: min(46vw, 210px);
+    overflow: hidden;
+    background: linear-gradient(to left, var(--bg) 55%, transparent);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(0 0 0 / 30%) 12%,
+      #000 25%,
+      #000 75%,
+      rgb(0 0 0 / 30%) 88%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(0 0 0 / 30%) 12%,
+      #000 25%,
+      #000 75%,
+      rgb(0 0 0 / 30%) 88%,
+      transparent
+    );
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--expand-dur) ease,
+      visibility 0s linear var(--expand-dur);
+  }
+
+  .toc-strip--open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--expand-dur) ease;
+  }
+
+  .toc-strip__track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    will-change: transform;
+    transition: transform 300ms ease;
+  }
+
+  .toc-strip__item {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 0 10px;
+    font-size: 13px;
+    line-height: 34px;
+    color: var(--text);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /*
+   * 选中态就是标题行本身：那一行直接变成深色胶囊（反着主题色用），不另立悬浮元素。
+   * 宽度收成内容宽并居中，胶囊只裹住文字，不再通栏。
+   */
+  .toc-strip__item--active {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    font-weight: 600;
+  }
+
+  /*
+   * 圆钮 = 阅读进度把手：左半全圆、右缘贴屏幕边，同参考图。垂直位置由 JS 按滚动
+   * 进度实时写进 style.top（随滚动上下移动）；按住上下拖是它的主手势——
+   * touch-action: none 是入场券（不放行的话手指一动整页先滚走了）。
+   */
+  .toc-handle {
+    display: block;
+    position: fixed;
+    right: 0;
+    top: 96px;
+    z-index: 21;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 46px;
+    border: 1px solid var(--border);
+    border-right: 0;
+    border-radius: 999px 0 0 999px;
+    background: var(--bg);
+    color: var(--text-muted);
+    box-shadow: var(--shadow-sm);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /*
+   * 底部的「打开文档目录」：和快捷条同进同出。居中靠 left + translateX(-50%)，
+   * 显隐只动 opacity/visibility 不碰 transform，不然两股 transform 打架。
+   */
+  .toc-sheet-trigger {
+    display: block;
+    position: fixed;
+    left: 50%;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    z-index: 21;
+    padding: 9px 20px;
     border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 3px 9px;
-    max-width: 60vw;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 13px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--expand-dur) ease,
+      visibility 0s linear var(--expand-dur);
+  }
+
+  .toc-sheet-trigger--show {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--expand-dur) ease;
   }
 
   .doc__foot {
